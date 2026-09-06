@@ -1,0 +1,3011 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ziventa Gaushala — Gir Gold Club Membership</title>
+<meta name="description" content="Join the Ziventa Gir Gold Club — a founding circle of 250 families receiving hand-churned, traditional Bilona-method A2 Gir cow ghee and Panchgavya products.">
+<script>document.documentElement.className+=' js';</script>
+</head>
+<body>
+<!-- design-decisions
+Role: product / membership marketing landing page for a small ghee-producing gaushala brand.
+Stance: this brand is selling trust and patronage, not a jar of ghee — every design choice should make the reader feel like they are being let into something small and honest, not funneled through a store.
+Claims per section: Hero=this is patronage not a purchase; Stats=the numbers back that up; Story=why membership beats a shop; Benefits=what patronage actually gets you; Herd=the cows are individuals, not livestock units; Process=nothing here is rushed or automated; Shop=member pricing is real and itemised; Reviews=real families already trust this; Pricing=the deal is refundable and honestly priced; Join=the ask is small (leave details), the commitment is not.
+Interactions: animated count-up stats, scroll-spy nav, click-to-expand benefit cards, scroll-progress Bilona ritual timeline, testimonial carousel, regular-vs-member pricing toggle, validated pre-register form with success state.
+Sting: you don't want to be a customer of this place, you want to be one of the 250 families who get to see the medical reports.
+Typography: system serif (Georgia stack) for display/headline voice = warmth + tradition; system sans (ui-sans stack) for body = readability, zero external font requests.
+Color: warm cream ground, deep gaushala-green = trust/tradition, hand-ghee gold = premium/CTA. Two jobs, used consistently.
+-->
+
+<noscript><style>
+  .reveal{opacity:1 !important;transform:none !important;}
+  .gallery-item.reveal{clip-path:none !important;}
+  .churn{opacity:1 !important;transform:none !important;}
+  .scroll-progress{display:none;}
+</style></noscript>
+
+<div class="scroll-progress" aria-hidden="true"><span id="scrollProgressBar"></span></div>
+
+<a class="skip-link" href="#main">Skip to content</a>
+
+<header class="site-header" id="siteHeader">
+  <div class="header-inner">
+    <a href="#top" class="brand" aria-label="Ziventa Gaushala home">
+      <span class="brand-mark" aria-hidden="true"><svg class="brand-leaf" viewBox="252.85 -31.71 94 94" xmlns="http://www.w3.org/2000/svg"><path d="M271.46 17.91 C270.77 15.52 270.77 12.99 271.45 10.6 C271.67 9.84 272.3 9.2 273.18 8.98 C275.73 8.34 278.43 8.34 280.98 8.98 C283.44 9.6 285.77 10.82 287.7 12.63 L287.71 12.64 C289.65 14.45 290.95 16.64 291.61 18.95 C292.29 21.33 292.29 23.86 291.61 26.25 C291.4 27.02 290.76 27.66 289.88 27.87 C287.33 28.51 284.64 28.51 282.09 27.87 C279.62 27.25 277.29 26.04 275.36 24.22 L275.35 24.21 C273.42 22.4 272.12 20.22 271.46 17.91 M275.88 13.13 C275.73 14.33 275.83 15.56 276.16 16.73 C276.61 18.29 277.49 19.77 278.79 21 C280.1 22.22 281.68 23.04 283.34 23.46 C284.59 23.78 285.9 23.86 287.18 23.72 C287.33 22.52 287.24 21.3 286.9 20.12 C286.46 18.56 285.58 17.08 284.27 15.86 C282.96 14.63 281.39 13.81 279.72 13.39 C278.47 13.08 277.16 12.99 275.88 13.13"/><path d="M323.25 12.85 C322.43 15.71 320.83 18.41 318.44 20.65 L318.43 20.66 C316.05 22.9 313.17 24.4 310.12 25.17 C307.42 25.84 304.59 25.94 301.86 25.47 C301.35 22.91 301.46 20.25 302.18 17.73 C303 14.87 304.6 12.17 306.99 9.92 C309.38 7.68 312.27 6.18 315.32 5.41 C318.01 4.74 320.84 4.63 323.57 5.11 C324.08 7.67 323.97 10.32 323.25 12.85 M327.96 2.62 C327.75 1.86 327.11 1.22 326.24 1 C322.25 0 318.04 0 314.06 1 C310.21 1.97 306.58 3.87 303.56 6.7 L303.55 6.7 C300.53 9.54 298.5 12.94 297.47 16.55 C296.41 20.28 296.41 24.22 297.47 27.95 C297.68 28.72 298.32 29.36 299.19 29.58 C303.18 30.58 307.39 30.58 311.37 29.58 C314.46 28.8 317.41 27.41 320.02 25.43 C320.03 25.42 320.04 25.42 320.05 25.42 C320.39 25.23 321.16 24.53 321.74 24 C321.78 23.96 321.82 23.93 321.87 23.89 C321.85 23.9 321.84 23.91 321.83 23.92 C321.84 23.91 321.85 23.9 321.86 23.89 L321.87 23.89 L321.87 23.88 L321.88 23.88 L321.88 23.87 C321.93 23.82 321.98 23.77 322.03 23.72 C322.26 23.5 322.43 23.34 322.43 23.34 L322.42 23.33 C325.14 20.6 326.99 17.4 327.96 14.03 C329.02 10.3 329.02 6.36 327.96 2.62"/></svg></span>
+      <span class="brand-text">Ziventa<em>Gaushala</em></span>
+    </a>
+    <nav class="main-nav" id="mainNav" aria-label="Primary">
+      <a href="#story" class="nav-link">Our Story</a>
+      <a href="#membership" class="nav-link">Membership</a>
+      <a href="#process" class="nav-link">Process</a>
+      <a href="#shop" class="nav-link">Shop</a>
+      <a href="#reviews" class="nav-link">Reviews</a>
+      <a href="#gallery" class="nav-link">Gallery</a>
+      <a href="#join" class="nav-cta">Reserve a Seat</a>
+    </nav>
+    <button class="cart-btn" id="cartBtn" aria-label="Open cart">
+      <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z" key="hou9p0"/><path d="M3 6h18" key="d0wm0j"/><path d="M16 10a4 4 0 0 1-8 0" key="1ltviw"/></svg>
+      <span class="cart-count" id="cartCount" hidden>0</span>
+    </button>
+    <button class="nav-toggle" id="navToggle" aria-expanded="false" aria-controls="mainNav" aria-label="Open menu">
+      <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="4" x2="20" y1="12" y2="12" key="1e0a9i"/><line x1="4" x2="20" y1="6" y2="6" key="1owob3"/><line x1="4" x2="20" y1="18" y2="18" key="yk5zj1"/></svg>
+      <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18" key="1bl5f8"/><path d="m6 6 12 12" key="d8bk6v"/></svg>
+    </button>
+  </div>
+</header>
+
+<div class="trust-strip" aria-hidden="true">
+  <div class="trust-track">
+    <span>100% A2 Gir Cow Milk</span><span class="dot">•</span>
+    <span>Traditional Bilona Method</span><span class="dot">•</span>
+    <span>Hand-Churned, No Machines</span><span class="dot">•</span>
+    <span>Founding Members Only — 250 Seats</span><span class="dot">•</span>
+    <span>No Preservatives, No Shortcuts</span><span class="dot">•</span>
+    <span>100% A2 Gir Cow Milk</span><span class="dot">•</span>
+    <span>Traditional Bilona Method</span><span class="dot">•</span>
+    <span>Hand-Churned, No Machines</span><span class="dot">•</span>
+    <span>Founding Members Only — 250 Seats</span><span class="dot">•</span>
+    <span>No Preservatives, No Shortcuts</span><span class="dot">•</span>
+  </div>
+</div>
+
+<main id="main">
+
+<section class="hero" id="top">
+  <div class="hero-inner">
+    <div class="hero-logo">
+      <svg class="hero-logo-mark" viewBox="0 0 329.02 86.34" role="img" aria-label="Ziventa">
+        <path fill="#164a00" d="M31.06 32.22 L7.81 32.22 L2.96 16.73 L52.32 16.73 C54.97 16.73 56.6 19.64 55.2 21.9 L26.07 69.23 L55.51 69.23 L55.6 84.76 L3.43 84.76 C1.3 84.76 0 82.43 1.12 80.62 Z"/>
+        <path fill="#164a00" d="M76.65 35.72 L76.65 84.86 L61.36 84.86 L61.36 35.77 ZM75.64 25.89 C74.94 27.07 73.98 28.03 72.77 28.77 C71.55 29.5 70.21 29.87 68.74 29.87 C67.27 29.87 65.94 29.52 64.76 28.82 C63.55 28.08 62.59 27.11 61.88 25.89 C61.15 24.61 60.78 23.25 60.78 21.82 C60.78 20.35 61.13 19 61.84 17.79 C62.6 16.54 63.58 15.57 64.76 14.86 C65.94 14.16 67.27 13.81 68.74 13.81 C70.21 13.81 71.55 14.16 72.77 14.86 C73.95 15.57 74.91 16.54 75.64 17.79 C76.35 19 76.7 20.35 76.7 21.82 C76.7 23.35 76.35 24.71 75.64 25.89"/>
+        <path fill="#164a00" d="M128.63 38.15 L105.55 83.77 C104.92 85.01 103.15 84.99 102.54 83.75 L80.27 38.21 C79.72 37.1 80.53 35.81 81.76 35.8 L93.57 35.73 C94.24 35.72 94.85 36.12 95.12 36.73 L102.67 53.95 C103.26 55.3 105.16 55.29 105.74 53.95 L113.18 36.73 C113.44 36.12 114.05 35.72 114.72 35.72 L127.14 35.72 C128.39 35.72 129.2 37.04 128.63 38.15"/>
+        <path fill="#164a00" d="M152.45 47.61 C150.3 47.61 148.29 48.15 146.4 49.24 C145.26 49.94 144.14 50.93 143.05 52.21 L161.84 52.21 C160.76 50.93 159.64 49.94 158.49 49.24 C156.6 48.15 154.59 47.61 152.45 47.61 M177.23 49.53 C178.67 52.75 179.39 56.21 179.39 59.88 L179.39 60.31 C179.39 60.47 179.37 60.65 179.34 60.84 L179.24 61.66 L173.3 61.66 L173.3 61.75 L140.32 61.75 C140.7 64.44 141.87 66.75 143.82 68.7 C146.28 71.13 149.15 72.35 152.45 72.35 C155.77 72.35 158.65 71.13 161.08 68.7 L161.17 68.61 L161.32 68.42 L161.46 68.27 L161.56 68.13 L169.8 79.92 C167.44 81.84 165.04 83.29 162.61 84.28 C159.35 85.56 155.96 86.2 152.45 86.2 C147.68 86.2 143.26 85.07 139.17 82.8 C134.98 80.5 131.67 77.35 129.24 73.35 C126.75 69.36 125.5 64.87 125.5 59.88 C125.5 56.14 126.22 52.69 127.66 49.53 C129.1 46.33 131.08 43.55 133.6 41.18 C136.16 38.76 139.04 36.92 142.23 35.67 C145.53 34.39 148.93 33.75 152.45 33.75 C155.96 33.75 159.35 34.39 162.61 35.67 C165.84 36.92 168.73 38.74 171.29 41.14 C173.81 43.47 175.79 46.27 177.23 49.53"/>
+        <path fill="#164a00" d="M202.98 47.61 C199.08 47.77 197.13 50.48 197.13 55.76 L197.13 84.76 L181.79 84.76 L181.79 55.76 C181.79 41.79 188.85 34.46 202.98 33.75 L203.84 33.75 C217.97 34.46 225.03 41.79 225.03 55.76 L225.03 84.76 L209.69 84.76 L209.69 55.76 C209.69 50.48 207.74 47.77 203.84 47.61 Z"/>
+        <path fill="#164a00" d="M237.54 48.76 L227.43 48.76 L230.88 35.62 L237.54 35.62 L237.54 16.73 L252.84 16.83 L252.84 35.62 L263 35.62 L259.6 48.76 L252.84 48.76 L252.84 65.01 C252.84 69.36 255.55 71.53 260.98 71.53 C262.74 71.53 264.09 71.32 265.01 70.91 L260.6 86.15 C259.8 86.28 259.02 86.34 258.25 86.34 C253.68 86.34 249.88 85.61 246.84 84.14 C243.77 82.67 241.46 80.45 239.89 77.48 C238.32 74.54 237.54 70.78 237.54 66.21 Z"/>
+        <path fill="#164a00" d="M284.15 51.67 C283.01 53.48 282.41 55.56 282.41 57.69 C282.4 61.03 283.65 63.91 286.17 66.34 C288.64 68.72 291.58 69.91 294.96 69.91 C298.38 69.91 301.32 68.72 303.8 66.34 C306.32 63.91 307.58 61.02 307.56 57.67 C307.55 55.54 306.95 53.47 305.82 51.67 C304.66 49.82 303.11 48.35 301.17 47.25 C299.25 46.18 297.18 45.65 294.96 45.65 C292.8 45.65 290.74 46.18 288.8 47.25 C286.86 48.35 285.31 49.82 284.15 51.67 M307.61 80.68 C306.6 81.12 305.87 81.41 305.4 81.57 C302.08 82.85 298.6 83.5 294.96 83.5 C290.16 83.5 285.64 82.38 281.37 80.16 C277.11 77.9 273.72 74.83 271.22 70.94 C268.68 66.99 267.41 62.59 267.41 57.73 C267.41 54.06 268.15 50.65 269.62 47.48 C271.09 44.35 273.11 41.62 275.68 39.3 C278.22 36.98 281.17 35.21 284.52 33.99 C287.88 32.71 291.36 32.06 294.96 32.06 C298.53 32.06 302.01 32.69 305.4 33.94 C308.78 35.2 311.73 36.98 314.24 39.3 C316.87 41.68 318.91 44.41 320.35 47.48 C321.82 50.65 322.56 54.06 322.56 57.73 L322.52 81.13 C322.51 83.9 320.26 86.13 317.49 86.11 L307.61 86.01 Z"/>
+        <path fill="#e3cc00" d="M271.46 17.91 C270.77 15.52 270.77 12.99 271.45 10.6 C271.67 9.84 272.3 9.2 273.18 8.98 C275.73 8.34 278.43 8.34 280.98 8.98 C283.44 9.6 285.77 10.82 287.7 12.63 L287.71 12.64 C289.65 14.45 290.95 16.64 291.61 18.95 C292.29 21.33 292.29 23.86 291.61 26.25 C291.4 27.02 290.76 27.66 289.88 27.87 C287.33 28.51 284.64 28.51 282.09 27.87 C279.62 27.25 277.29 26.04 275.36 24.22 L275.35 24.21 C273.42 22.4 272.12 20.22 271.46 17.91 M275.88 13.13 C275.73 14.33 275.83 15.56 276.16 16.73 C276.61 18.29 277.49 19.77 278.79 21 C280.1 22.22 281.68 23.04 283.34 23.46 C284.59 23.78 285.9 23.86 287.18 23.72 C287.33 22.52 287.24 21.3 286.9 20.12 C286.46 18.56 285.58 17.08 284.27 15.86 C282.96 14.63 281.39 13.81 279.72 13.39 C278.47 13.08 277.16 12.99 275.88 13.13"/>
+        <path fill="#e3cc00" d="M323.25 12.85 C322.43 15.71 320.83 18.41 318.44 20.65 L318.43 20.66 C316.05 22.9 313.17 24.4 310.12 25.17 C307.42 25.84 304.59 25.94 301.86 25.47 C301.35 22.91 301.46 20.25 302.18 17.73 C303 14.87 304.6 12.17 306.99 9.92 C309.38 7.68 312.27 6.18 315.32 5.41 C318.01 4.74 320.84 4.63 323.57 5.11 C324.08 7.67 323.97 10.32 323.25 12.85 M327.96 2.62 C327.75 1.86 327.11 1.22 326.24 1 C322.25 0 318.04 0 314.06 1 C310.21 1.97 306.58 3.87 303.56 6.7 L303.55 6.7 C300.53 9.54 298.5 12.94 297.47 16.55 C296.41 20.28 296.41 24.22 297.47 27.95 C297.68 28.72 298.32 29.36 299.19 29.58 C303.18 30.58 307.39 30.58 311.37 29.58 C314.46 28.8 317.41 27.41 320.02 25.43 C320.03 25.42 320.04 25.42 320.05 25.42 C320.39 25.23 321.16 24.53 321.74 24 C321.78 23.96 321.82 23.93 321.87 23.89 C321.85 23.9 321.84 23.91 321.83 23.92 C321.84 23.91 321.85 23.9 321.86 23.89 L321.87 23.89 L321.87 23.88 L321.88 23.88 L321.88 23.87 C321.93 23.82 321.98 23.77 322.03 23.72 C322.26 23.5 322.43 23.34 322.43 23.34 L322.42 23.33 C325.14 20.6 326.99 17.4 327.96 14.03 C329.02 10.3 329.02 6.36 327.96 2.62"/>
+      </svg>
+      <span class="hero-logo-tag"><i aria-hidden="true"></i>Pure by Nature<i aria-hidden="true"></i></span>
+    </div>
+    <p class="eyebrow"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9.937 15.5A2 2 0 0 0 8.5 14.063l-6.135-1.582a.5.5 0 0 1 0-.962L8.5 9.936A2 2 0 0 0 9.937 8.5l1.582-6.135a.5.5 0 0 1 .963 0L14.063 8.5A2 2 0 0 0 15.5 9.937l6.135 1.581a.5.5 0 0 1 0 .964L15.5 14.063a2 2 0 0 0-1.437 1.437l-1.582 6.135a.5.5 0 0 1-.963 0z" key="4pj2yx"/><path d="M20 3v4" key="1olli1"/><path d="M22 5h-4" key="1gvqau"/><path d="M4 17v2" key="vumght"/><path d="M5 18H3" key="zchphs"/></svg> Founding Membership Open · Limited to 250 Families</p>
+    <h1>Pure is not enough.</h1>
+    <p class="hero-lede">True purity isn't bottled once — it's nurtured every single day. The Ziventa Gir Gold Club is a small, trusted circle of families who stand behind our cows for the long term, in return for the purest hand-churned A2 Gir cow ghee and Panchgavya we can make.</p>
+    <div class="hero-actions">
+      <a href="#join" class="btn btn-primary">Reserve Your Membership <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14" key="1ays0h"/><path d="m12 5 7 7-7 7" key="xquz4c"/></svg></a>
+      <a href="#process" class="btn btn-ghost">See How It's Made</a>
+    </div>
+    <p class="hero-note">No spam. No countdown timers. If a seat is open, we'll say so honestly.</p>
+  </div>
+
+  <div class="hero-scene" aria-hidden="true">
+    <svg viewBox="0 -420 1200 760" preserveAspectRatio="xMidYMax slice" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <linearGradient id="zgSky" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0" stop-color="#F7EBCE"/><stop offset="1" stop-color="#F3E4C6" stop-opacity="0"/>
+        </linearGradient>
+        <radialGradient id="zgSun" cx="50%" cy="50%" r="50%">
+          <stop offset="0" stop-color="#FBE7B4" stop-opacity=".85"/>
+          <stop offset=".55" stop-color="#F6DCA6" stop-opacity=".35"/>
+          <stop offset="1" stop-color="#F6DCA6" stop-opacity="0"/>
+        </radialGradient>
+        <linearGradient id="zgH1" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0" stop-color="#EBE2C6"/><stop offset="1" stop-color="#DCD8B4"/>
+        </linearGradient>
+        <linearGradient id="zgH2" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0" stop-color="#D2D4AE"/><stop offset="1" stop-color="#BCC79B"/>
+        </linearGradient>
+        <linearGradient id="zgMid" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0" stop-color="#AFC08D"/><stop offset="1" stop-color="#94AB77"/>
+        </linearGradient>
+        <linearGradient id="zgNear" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0" stop-color="#8CA46F"/><stop offset="1" stop-color="#718B5B"/>
+        </linearGradient>
+        <linearGradient id="zgFore" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0" stop-color="#6E8858"/><stop offset="1" stop-color="#556E45"/>
+        </linearGradient>
+        <linearGradient id="zgCow" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0" stop-color="#FFFEFA"/><stop offset=".62" stop-color="#F6F2E6"/><stop offset="1" stop-color="#DED8C6"/>
+        </linearGradient>
+        <linearGradient id="zgSkirt" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0" stop-color="#F6D26A"/><stop offset="1" stop-color="#E0AE33"/>
+        </linearGradient>
+        <linearGradient id="zgDup" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0" stop-color="#E75C8B"/><stop offset="1" stop-color="#C63466"/>
+        </linearGradient>
+        <linearGradient id="zgThatch" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0" stop-color="#E0C089"/><stop offset="1" stop-color="#BE9A5C"/>
+        </linearGradient>
+      </defs>
+
+      <rect class="zf-sky" x="0" y="-420" width="1200" height="580"/>
+      <ellipse class="zf-sun" cx="890" cy="-105" rx="330" ry="250"/>
+      <circle class="zf-sundisc" cx="890" cy="-105" r="44"/>
+
+      <g class="zf-cloud zf-cloud-1"><g transform="translate(0,-140)">
+        <ellipse cx="0" cy="0" rx="74" ry="20"/><ellipse cx="52" cy="9" rx="50" ry="15"/><ellipse cx="-50" cy="10" rx="44" ry="14"/>
+      </g></g>
+      <g class="zf-cloud zf-cloud-2"><g transform="translate(0,-98)">
+        <ellipse cx="0" cy="0" rx="54" ry="15"/><ellipse cx="38" cy="7" rx="36" ry="11"/><ellipse cx="-36" cy="8" rx="32" ry="10"/>
+      </g></g>
+      <g class="zf-cloud zf-cloud-3"><g transform="translate(0,-52)">
+        <ellipse cx="0" cy="0" rx="44" ry="12"/><ellipse cx="30" cy="6" rx="30" ry="9"/><ellipse cx="-28" cy="6" rx="26" ry="8"/>
+      </g></g>
+
+      <g class="zf-birds"><g class="zf-birds-fly"><g transform="translate(0,-118)">
+        <path class="zf-bird" d="M0 0 q9 -8 18 0 q9 -8 18 0"/>
+        <path class="zf-bird" d="M52 22 q7 -6 14 0 q7 -6 14 0"/>
+        <path class="zf-bird" d="M22 44 q6 -5 12 0 q6 -5 12 0"/>
+      </g></g></g>
+
+      <path class="zf-h1" d="M0 118 C200 94 380 132 600 114 C820 98 1000 128 1200 110 L1200 340 L0 340 Z"/>
+      <path class="zf-h2" d="M0 158 C220 138 420 170 660 152 C880 136 1040 164 1200 148 L1200 340 L0 340 Z"/>
+      <path class="zf-haze" d="M0 150 C240 132 460 166 720 148 C940 132 1060 158 1200 144 L1200 214 L0 214 Z"/>
+      <path class="zf-mid" d="M0 198 C240 178 460 212 720 194 C940 178 1060 204 1200 190 L1200 340 L0 340 Z"/>
+      <path class="zf-near" d="M0 252 C260 234 520 266 800 248 C1000 234 1100 256 1200 244 L1200 340 L0 340 Z"/>
+      <path class="zf-fore" d="M0 302 C200 291 420 312 660 301 C900 290 1050 308 1200 299 L1200 340 L0 340 Z"/>
+
+      <g class="zb"><g class="zb-fly"><g transform="translate(0,64)"><path class="zb-w" d="M0 0 q8 -7 16 0 q8 -7 16 0"/><path class="zb-w" d="M46 18 q6 -5 12 0 q6 -5 12 0"/></g></g></g>
+
+      <g transform="translate(70,96)">
+        <path class="zs-thatch" d="M-8 44 L140 -6 L288 44 Z"/>
+        <path class="zs-thatch2" d="M-8 44 L288 44 L278 58 L2 58 Z"/>
+        <rect class="zs-post" x="18" y="56" width="11" height="92" rx="3"/>
+        <rect class="zs-post" x="134" y="56" width="11" height="92" rx="3"/>
+        <rect class="zs-post" x="250" y="56" width="11" height="92" rx="3"/>
+        <path class="zs-rail" d="M22 92 H257 M22 118 H257"/>
+      </g>
+
+      <g transform="translate(112,168) scale(0.62)">
+        <ellipse class="zc-shadow" cx="104" cy="104" rx="96" ry="9"/>
+        <path class="zc-body" d="M14 78 C14 58 34 46 62 46 C84 36 108 36 124 48 C152 50 178 56 190 72 C198 84 194 96 182 100 C150 104 108 106 74 105 C40 104 18 98 14 88 Z"/>
+        <path class="zc-shade" d="M62 46 C84 36 108 36 124 48 C106 43 82 43 62 46 Z"/>
+        <ellipse class="zc-udder" cx="86" cy="104" rx="14" ry="8"/>
+        <g class="zc-head zc-head-a">
+          <path class="zc-neck" d="M176 62 C196 62 212 70 220 82 C214 92 200 96 188 92 C182 80 176 72 168 68 Z"/>
+          <path class="zc-face" d="M214 66 C230 66 244 74 246 86 C247 96 238 102 226 100 C212 98 202 90 200 79 C199 71 205 66 214 66 Z"/>
+          <ellipse class="zc-muzzle" cx="239" cy="94" rx="9" ry="6"/>
+          <path class="zc-ear" d="M206 66 C198 58 186 58 181 63 C186 71 197 74 206 69 Z"/>
+          <path class="zc-horn" d="M210 60 C205 44 213 32 224 29 C221 41 217 51 217 62 Z"/>
+          <path class="zc-horn" d="M198 63 C190 50 193 37 202 32 C201 43 202 53 205 62 Z"/>
+          <circle class="zc-eye" cx="222" cy="80" r="3"/>
+        </g>
+      </g>
+
+      <g transform="translate(600,152) scale(0.72)">
+        <ellipse class="zc-shadow" cx="104" cy="136" rx="96" ry="9"/>
+        <path class="zc-leg-far" d="M48 84 h14 v52 h-14 z"/>
+        <path class="zc-leg-far" d="M150 84 h14 v52 h-14 z"/>
+        <g class="zc-tail zc-tail-b">
+          <path class="zc-tailline" d="M18 70 C8 88 8 108 16 124"/>
+          <path class="zc-tuft" d="M16 120 C23 125 23 136 16 141 C9 136 9 125 16 120 Z"/>
+        </g>
+        <path class="zc-body" d="M14 74 C14 52 36 40 64 40 C86 28 112 28 128 42 C156 45 182 52 194 68 C202 80 200 92 190 96 C158 100 112 102 76 101 C42 100 18 94 14 84 Z"/>
+        <path class="zc-shade" d="M64 40 C86 28 112 28 128 42 C108 36 84 36 64 40 Z"/>
+        <path class="zc-leg" d="M56 88 h15 v50 h-15 z"/>
+        <path class="zc-leg" d="M158 88 h15 v50 h-15 z"/>
+        <rect class="zc-hoof" x="55" y="133" width="17" height="6" rx="2"/>
+        <rect class="zc-hoof" x="157" y="133" width="17" height="6" rx="2"/>
+        <ellipse class="zc-udder" cx="92" cy="106" rx="15" ry="9"/>
+        <path class="zc-teat" d="M85 114 v7 M99 114 v7"/>
+        <g class="zc-head zc-head-b">
+          <path class="zc-neck" d="M180 58 C198 62 212 76 218 92 C210 100 196 102 186 96 C182 82 176 70 168 64 Z"/>
+          <path class="zc-face" d="M210 86 C226 84 242 92 245 105 C247 116 238 123 225 121 C210 118 200 109 199 98 C198 90 202 86 210 86 Z"/>
+          <ellipse class="zc-muzzle" cx="238" cy="114" rx="9" ry="6"/>
+          <path class="zc-ear" d="M204 86 C196 78 184 78 179 84 C185 92 196 94 204 89 Z"/>
+          <path class="zc-horn" d="M208 80 C203 63 212 51 223 48 C220 60 216 70 216 82 Z"/>
+          <path class="zc-horn" d="M196 83 C188 70 191 56 200 51 C199 63 200 73 203 82 Z"/>
+          <circle class="zc-eye" cx="221" cy="100" r="3"/>
+        </g>
+      </g>
+
+      <g transform="translate(930,178) scale(0.6)">
+        <ellipse class="zc-shadow" cx="104" cy="136" rx="96" ry="9"/>
+        <path class="zc-leg-far" d="M48 84 h14 v52 h-14 z"/>
+        <path class="zc-leg-far" d="M150 84 h14 v52 h-14 z"/>
+        <g class="zc-tail zc-tail-c">
+          <path class="zc-tailline" d="M18 70 C8 88 8 108 16 124"/>
+          <path class="zc-tuft" d="M16 120 C23 125 23 136 16 141 C9 136 9 125 16 120 Z"/>
+        </g>
+        <path class="zc-body" d="M14 74 C14 52 36 40 64 40 C86 28 112 28 128 42 C156 45 182 52 194 68 C202 80 200 92 190 96 C158 100 112 102 76 101 C42 100 18 94 14 84 Z"/>
+        <path class="zc-shade" d="M64 40 C86 28 112 28 128 42 C108 36 84 36 64 40 Z"/>
+        <path class="zc-leg" d="M56 88 h15 v50 h-15 z"/>
+        <path class="zc-leg" d="M158 88 h15 v50 h-15 z"/>
+        <rect class="zc-hoof" x="55" y="133" width="17" height="6" rx="2"/>
+        <rect class="zc-hoof" x="157" y="133" width="17" height="6" rx="2"/>
+        <g class="zc-head zc-head-c">
+          <path class="zc-neck" d="M180 58 C198 62 212 76 218 92 C210 100 196 102 186 96 C182 82 176 70 168 64 Z"/>
+          <path class="zc-face" d="M210 86 C226 84 242 92 245 105 C247 116 238 123 225 121 C210 118 200 109 199 98 C198 90 202 86 210 86 Z"/>
+          <ellipse class="zc-muzzle" cx="238" cy="114" rx="9" ry="6"/>
+          <path class="zc-ear" d="M204 86 C196 78 184 78 179 84 C185 92 196 94 204 89 Z"/>
+          <path class="zc-horn" d="M208 80 C203 63 212 51 223 48 C220 60 216 70 216 82 Z"/>
+          <path class="zc-horn" d="M196 83 C188 70 191 56 200 51 C199 63 200 73 203 82 Z"/>
+          <circle class="zc-eye" cx="221" cy="100" r="3"/>
+        </g>
+      </g>
+
+      <g transform="translate(268,212)">
+        <ellipse class="zc-shadow" cx="110" cy="126" rx="104" ry="9"/>
+        <path class="zc-leg-far" d="M52 78 h14 v48 h-14 z"/>
+        <path class="zc-leg-far" d="M154 78 h14 v48 h-14 z"/>
+        <g class="zc-tail zc-tail-a">
+          <path class="zc-tailline" d="M18 64 C8 82 8 102 16 118"/>
+          <path class="zc-tuft" d="M16 114 C23 119 23 130 16 135 C9 130 9 119 16 114 Z"/>
+        </g>
+        <path class="zc-body" d="M14 68 C14 46 36 34 64 34 C86 22 112 22 128 36 C156 39 182 46 194 62 C202 74 200 86 190 90 C158 94 112 96 76 95 C42 94 18 88 14 78 Z"/>
+        <path class="zc-shade" d="M64 34 C86 22 112 22 128 36 C108 30 84 30 64 34 Z"/>
+        <path class="zc-leg" d="M60 82 h16 v44 h-16 z"/>
+        <path class="zc-leg" d="M162 82 h16 v44 h-16 z"/>
+        <rect class="zc-hoof" x="59" y="121" width="18" height="6" rx="2"/>
+        <rect class="zc-hoof" x="161" y="121" width="18" height="6" rx="2"/>
+        <ellipse class="zc-udder" cx="92" cy="100" rx="18" ry="10"/>
+        <path class="zc-teat" d="M84 108 v7 M100 108 v7"/>
+        <g class="zc-head zc-head-d">
+          <path class="zc-neck" d="M180 52 C200 52 216 60 224 74 C218 84 202 88 190 84 C184 70 178 62 170 58 Z"/>
+          <path class="zc-face" d="M218 56 C234 56 248 64 250 77 C251 88 242 94 229 92 C214 90 204 82 203 70 C202 62 208 56 218 56 Z"/>
+          <ellipse class="zc-muzzle" cx="243" cy="85" rx="9" ry="6"/>
+          <path class="zc-ear" d="M210 56 C202 47 189 47 184 53 C190 61 201 64 210 58 Z"/>
+          <path class="zc-horn" d="M214 50 C209 32 218 19 230 16 C227 29 223 39 223 52 Z"/>
+          <path class="zc-horn" d="M201 53 C193 39 196 25 206 20 C205 32 206 42 209 52 Z"/>
+          <circle class="zc-eye" cx="227" cy="70" r="3.2"/>
+        </g>
+        <g class="zw">
+          <path class="zw-squirt" d="M86 112 C87 118 88 122 89 128"/>
+          <path class="zw-squirt zw-squirt-2" d="M100 112 C99 118 98 122 97 128"/>
+          <rect class="zw-stool" x="-6" y="110" width="44" height="8" rx="2"/>
+          <rect class="zw-stool" x="0" y="118" width="6" height="14" rx="2"/>
+          <rect class="zw-stool" x="26" y="118" width="6" height="14" rx="2"/>
+          <path class="zw-dupback" d="M-13 114 C-21 96 -19 76 -7 64 C0 57 10 53 18 55 C10 70 4 92 8 114 Z"/>
+          <path class="zw-saree" d="M-9 86 C3 75 30 77 38 91 C46 101 45 110 41 114 L-13 114 C-17 106 -16 94 -9 86 Z"/>
+          <path class="zw-fold" d="M4 113 C4 101 8 91 15 85 M27 113 C27 102 24 93 20 86"/>
+          <path class="zw-border" d="M-13 110 L41 110"/>
+          <path class="zw-blouse" d="M-3 82 C9 72 28 74 34 84 C23 89 7 89 -3 82 Z"/>
+          <circle class="zw-skin" cx="15" cy="68" r="11.5"/>
+          <path class="zw-hair" d="M3 66 C3 54 27 54 27 66 C20 59 10 59 3 66 Z"/>
+          <path class="zw-drape" d="M0 60 C0 47 31 47 31 61 C31 74 35 85 31 93 L20 90 C26 78 19 67 14 61 Z"/>
+          <path class="zw-bucket" d="M70 118 L116 118 L110 140 L76 140 Z"/>
+          <path class="zw-bucket-rim" d="M70 118 L116 118"/>
+          <ellipse class="zw-milk" cx="93" cy="119" rx="22" ry="5"/>
+          <path class="zw-pot" d="M146 116 C135 116 130 124 130 131 C130 139 138 144 149 144 C160 144 167 139 167 131 C167 124 162 116 152 116 Z"/>
+          <rect class="zw-potrim" x="137" y="111" width="24" height="7" rx="2"/>
+          <g class="zw-arm-g zw-arm-1">
+            <path class="zw-arm" d="M31 90 C47 94 64 100 78 104"/>
+            <path class="zw-bangle" d="M48 94 l3 6 M54 96 l3 6"/>
+            <circle class="zw-hand" cx="82" cy="105" r="7"/>
+          </g>
+          <g class="zw-arm-g zw-arm-2">
+            <path class="zw-arm" d="M33 96 C51 99 78 102 96 104"/>
+            <path class="zw-bangle" d="M50 99 l2 6 M56 100 l2 6"/>
+            <circle class="zw-hand" cx="100" cy="105" r="7"/>
+          </g>
+        </g>
+      </g>
+
+      <g class="zg zg-a">
+        <path d="M40 340 c5 -16 4 -25 1 -32 M40 340 c-5 -14 -7 -21 -10 -26 M40 340 c10 -14 14 -21 16 -26"/>
+        <path d="M210 340 c5 -15 4 -23 1 -30 M210 340 c-5 -13 -7 -20 -10 -24 M210 340 c10 -13 14 -20 16 -24"/>
+        <path d="M470 340 c5 -16 4 -25 1 -32 M470 340 c-5 -14 -7 -21 -10 -26 M470 340 c10 -14 14 -21 16 -26"/>
+        <path d="M700 340 c5 -15 4 -23 1 -30 M700 340 c-5 -13 -7 -20 -10 -24 M700 340 c10 -13 14 -20 16 -24"/>
+        <path d="M900 340 c5 -16 4 -25 1 -32 M900 340 c-5 -14 -7 -21 -10 -26 M900 340 c10 -14 14 -21 16 -26"/>
+        <path d="M1130 340 c5 -15 4 -23 1 -30 M1130 340 c-5 -13 -7 -20 -10 -24 M1130 340 c10 -13 14 -20 16 -24"/>
+      </g>
+      <g class="zg zg-b">
+        <path d="M120 340 c4 -11 3 -18 1 -23 M120 340 c-4 -10 -5 -15 -8 -19 M120 340 c8 -10 11 -15 13 -19"/>
+        <path d="M340 340 c4 -12 3 -19 1 -24 M340 340 c-4 -10 -5 -16 -8 -20 M340 340 c8 -10 11 -16 13 -20"/>
+        <path d="M590 340 c4 -11 3 -18 1 -23 M590 340 c-4 -10 -5 -15 -8 -19 M590 340 c8 -10 11 -15 13 -19"/>
+        <path d="M810 340 c4 -12 3 -19 1 -24 M810 340 c-4 -10 -5 -16 -8 -20 M810 340 c8 -10 11 -16 13 -20"/>
+        <path d="M1020 340 c4 -11 3 -18 1 -23 M1020 340 c-4 -10 -5 -15 -8 -19 M1020 340 c8 -10 11 -15 13 -19"/>
+      </g>
+    </svg>
+  </div>
+</section>
+
+<section class="stats" aria-label="Ziventa Gaushala at a glance">
+  <div class="stats-grid">
+    <div class="stat" data-count="250">
+      <span class="stat-value"><span class="counter">0</span></span>
+      <span class="stat-label">Founding Members Only</span>
+    </div>
+    <div class="stat" data-count="100" data-suffix="%">
+      <span class="stat-value"><span class="counter">0</span><span class="stat-suffix">%</span></span>
+      <span class="stat-label">A2 Gir Cow Milk</span>
+    </div>
+    <div class="stat stat-word">
+      <span class="stat-value">Bilona</span>
+      <span class="stat-label">Hand-Churned, No Machines</span>
+    </div>
+    <div class="stat stat-word">
+      <span class="stat-value">Zero</span>
+      <span class="stat-label">Fake Waiting Lists</span>
+    </div>
+  </div>
+</section>
+
+<section class="story" id="story">
+  <div class="story-inner">
+    <div class="story-text reveal">
+      <p class="section-kicker">Why a membership, not a store</p>
+      <h2>Please don't join just for the ghee.</h2>
+      <p>If that's all you're after, we'd rather you didn't. This isn't a bottle you buy once — it's a long-term commitment to our cows, our land, and the people who tend them every day.</p>
+      <p>When a family joins, we take it as trust. It's what pushes us to keep delivering the finest A2 Gir cow ghee and Panchgavya, batch after batch, season after season, without cutting a single corner.</p>
+      <a href="#membership" class="text-link">See what membership includes <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14" key="1ays0h"/><path d="m12 5 7 7-7 7" key="xquz4c"/></svg></a>
+    </div>
+    <blockquote class="story-quote reveal">
+      <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 3a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2 1 1 0 0 1 1 1v1a2 2 0 0 1-2 2 1 1 0 0 0-1 1v2a1 1 0 0 0 1 1 6 6 0 0 0 6-6V5a2 2 0 0 0-2-2z" key="rib7q0"/><path d="M5 3a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2 1 1 0 0 1 1 1v1a2 2 0 0 1-2 2 1 1 0 0 0-1 1v2a1 1 0 0 0 1 1 6 6 0 0 0 6-6V5a2 2 0 0 0-2-2z" key="1ymkrd"/></svg>
+      <p>We keep our herd small so every member receives ghee that is genuinely pure and genuinely elite — never stretched, never rushed.</p>
+      <cite>— Ziventa Gaushala</cite>
+    </blockquote>
+  </div>
+</section>
+
+<section class="benefits" id="membership">
+  <div class="section-head reveal">
+    <p class="section-kicker">Membership benefits</p>
+    <h2>The Ziventa Gir Gold Club</h2>
+    <p class="section-sub">A closed circle of 250 families, built on transparency with the gaushala and consistency in every batch. Tap any card to read more.</p>
+  </div>
+  <figure class="membership-banner reveal">
+    <img src="assets/ziventa-02.jpg" alt="A Gir cow and her calf at Ziventa Gaushala" loading="lazy">
+    <figcaption>Cow and calf — the bond your membership protects.</figcaption>
+  </figure>
+  <div class="benefit-grid">
+    <button type="button" class="benefit-card reveal" data-index="01" aria-expanded="false">
+      <span class="benefit-top"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 10c0 4.993-5.539 10.193-7.399 11.799a1 1 0 0 1-1.202 0C9.539 20.193 4 14.993 4 10a8 8 0 0 1 16 0" key="1r0f0z"/><circle cx="12" cy="10" r="3" key="ilqhr7"/></svg><span class="benefit-num">01</span></span>
+      <span class="benefit-title">Gaushala Access</span>
+      <span class="benefit-desc"><span class="benefit-desc-in">Physical access to the Ziventa gaushala, reserved exclusively for members — see where your ghee truly comes from.</span></span>
+    </button>
+    <button type="button" class="benefit-card reveal" data-index="02" aria-expanded="false">
+      <span class="benefit-top"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 2v2" key="1539x4"/><path d="M5 2v2" key="1yf1q8"/><path d="M5 3H4a2 2 0 0 0-2 2v4a6 6 0 0 0 12 0V5a2 2 0 0 0-2-2h-1" key="rb5t3r"/><path d="M8 15a6 6 0 0 0 12 0v-3" key="x18d4x"/><circle cx="20" cy="10" r="2" key="ts1r5v"/></svg><span class="benefit-num">02</span></span>
+      <span class="benefit-title">Regular Medical Reports</span>
+      <span class="benefit-desc"><span class="benefit-desc-in">Members receive regular veterinary reports for every cow — full transparency on animal welfare.</span></span>
+    </button>
+    <button type="button" class="benefit-card reveal" data-index="03" aria-expanded="false">
+      <span class="benefit-top"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 21.73a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73z" key="1a0edw"/><path d="M12 22V12" key="d0xqtd"/><polyline points="3.29 7 12 12 20.71 7" key="ousv84"/><path d="m7.5 4.27 9 5.15" key="1c824w"/></svg><span class="benefit-num">03</span></span>
+      <span class="benefit-title">Premium Packaging</span>
+      <span class="benefit-desc"><span class="benefit-desc-in">Every jar is packed with the same care as the ghee inside — sealed, labelled, and gift-ready.</span></span>
+    </button>
+    <button type="button" class="benefit-card reveal" data-index="04" aria-expanded="false">
+      <span class="benefit-top"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 2v4" key="1cmpym"/><path d="M16 2v4" key="4m81vk"/><rect width="18" height="18" x="3" y="4" rx="2" key="1hopcy"/><path d="M3 10h18" key="8toen8"/><path d="m9 16 2 2 4-4" key="19s6y9"/></svg><span class="benefit-num">04</span></span>
+      <span class="benefit-title">Year-Round Supply</span>
+      <span class="benefit-desc"><span class="benefit-desc-in">Pure, elite ghee delivered consistently through the year — not just during a seasonal rush.</span></span>
+    </button>
+    <button type="button" class="benefit-card reveal" data-index="05" aria-expanded="false">
+      <span class="benefit-top"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z" key="oel41y"/><path d="m9 12 2 2 4-4" key="dzmm74"/></svg><span class="benefit-num">05</span></span>
+      <span class="benefit-title">Minimal Human Touch</span>
+      <span class="benefit-desc"><span class="benefit-desc-in">Reduced hand contact during preparation, keeping the process as hygienic and natural as possible.</span></span>
+    </button>
+    <button type="button" class="benefit-card reveal" data-index="06" aria-expanded="false">
+      <span class="benefit-top"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 11V6a2 2 0 0 0-2-2a2 2 0 0 0-2 2" key="1fvzgz"/><path d="M14 10V4a2 2 0 0 0-2-2a2 2 0 0 0-2 2v2" key="1kc0my"/><path d="M10 10.5V6a2 2 0 0 0-2-2a2 2 0 0 0-2 2v8" key="10h0bg"/><path d="M18 8a2 2 0 1 1 4 0v6a8 8 0 0 1-8 8h-2c-2.8 0-4.5-.86-5.99-2.34l-3.6-3.6a2 2 0 0 1 2.83-2.82L7 15" key="1s1gnw"/></svg><span class="benefit-num">06</span></span>
+      <span class="benefit-title">Traditional Bilona Method</span>
+      <span class="benefit-desc"><span class="benefit-desc-in">Age-old hand-churning passed down through generations — no shortcuts, no machines.</span></span>
+    </button>
+    <button type="button" class="benefit-card reveal" data-index="07" aria-expanded="false">
+      <span class="benefit-top"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" key="1yyitq"/><circle cx="9" cy="7" r="4" key="nufk8"/><path d="M22 21v-2a4 4 0 0 0-3-3.87" key="kshegd"/><path d="M16 3.13a4 4 0 0 1 0 7.75" key="1da9ce"/></svg><span class="benefit-num">07</span></span>
+      <span class="benefit-title">Only 250 Members</span>
+      <span class="benefit-desc"><span class="benefit-desc-in">We deliberately cap membership so every family gets a fair, consistent share of what our herd can honestly provide.</span></span>
+    </button>
+    <button type="button" class="benefit-card reveal" data-index="08" aria-expanded="false">
+      <span class="benefit-top"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 18V6a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2v11a1 1 0 0 0 1 1h2" key="wrbu53"/><path d="M15 18H9" key="1lyqi6"/><path d="M19 18h2a1 1 0 0 0 1-1v-3.65a1 1 0 0 0-.22-.624l-3.48-4.35A1 1 0 0 0 17.52 8H14" key="lysw3i"/><circle cx="17" cy="18" r="2" key="332jqn"/><circle cx="7" cy="18" r="2" key="19iecd"/></svg><span class="benefit-num">08</span></span>
+      <span class="benefit-title">Priority Delivery</span>
+      <span class="benefit-desc"><span class="benefit-desc-in">Members are served first — small batches move fast, straight to your doorstep.</span></span>
+    </button>
+    <button type="button" class="benefit-card reveal" data-index="09" aria-expanded="false">
+      <span class="benefit-top"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z" key="hh9hay"/><path d="m3.3 7 8.7 5 8.7-5" key="g66t2b"/><path d="M12 22V12" key="d0xqtd"/></svg><span class="benefit-num">09</span></span>
+      <span class="benefit-title">Small Batches</span>
+      <span class="benefit-desc"><span class="benefit-desc-in">Crafted mindfully in limited quantities by dedicated hands — because your family deserves the best, not the fastest.</span></span>
+    </button>
+  </div>
+</section>
+
+<section class="herd" id="herd">
+  <div class="section-head reveal">
+    <p class="section-kicker">Meet the herd</p>
+    <h2>Our Gir cows, by name</h2>
+    <p class="section-sub">Every member's ghee traces back to a small herd of well-cared-for Gir cows — each one known, named, and looked after individually. Illustrated portraits shown here — ready to be replaced with real photographs of your herd.</p>
+  </div>
+  <div class="herd-grid">
+    <div class="herd-card reveal">
+      <div class="herd-avatar"><span class="cell cell-tl"><img src="assets/ziventa-05.jpg" alt="Kamdhenu, a Gir cow at Ziventa Gaushala" loading="lazy"></span></div>
+      <h3>Kamdhenu</h3>
+      <p>Eldest of the herd, gentle and unhurried.</p>
+    </div>
+    <div class="herd-card reveal">
+      <div class="herd-avatar"><span class="cell cell-tr"><img src="assets/ziventa-05.jpg" alt="Radha, a Gir cow at Ziventa Gaushala" loading="lazy"></span></div>
+      <h3>Radha</h3>
+      <p>Calm-eyed, favourite of the caretakers.</p>
+    </div>
+    <div class="herd-card reveal">
+      <div class="herd-avatar"><span class="cell cell-bl"><img src="assets/ziventa-05.jpg" alt="Ganga, a Gir cow at Ziventa Gaushala" loading="lazy"></span></div>
+      <h3>Ganga</h3>
+      <p>Youngest, full of energy in the mornings.</p>
+    </div>
+    <div class="herd-card reveal">
+      <div class="herd-avatar"><span class="cell cell-br"><img src="assets/ziventa-05.jpg" alt="Nandini, a Gir cow at Ziventa Gaushala" loading="lazy"></span></div>
+      <h3>Nandini</h3>
+      <p>Steady producer, mother of two calves.</p>
+    </div>
+  </div>
+</section>
+
+<section class="gallery" id="gallery">
+  <div class="section-head reveal">
+    <p class="section-kicker">Life at the Gaushala</p>
+    <h2>A Day in Our Gaushala</h2>
+    <p class="section-sub">Real moments from the gaushala — where your ghee actually begins.</p>
+  </div>
+  <div class="gallery-grid">
+    <figure class="gallery-item reveal">
+      <img src="assets/ziventa-03.jpg" alt="Clean, well-maintained cow shelter at Ziventa Gaushala" loading="lazy">
+      <figcaption>Shelter — clean, well-maintained sheds</figcaption>
+    </figure>
+    <figure class="gallery-item reveal">
+      <img src="assets/ziventa-06.jpg" alt="Fresh fodder being provided to the cows" loading="lazy">
+      <figcaption>Feeding — fresh fodder, every day</figcaption>
+    </figure>
+    <figure class="gallery-item reveal">
+      <img src="assets/ziventa-01.jpg" alt="Volunteers caring for the cows at the gaushala" loading="lazy">
+      <figcaption>Care — hands-on, every single day</figcaption>
+    </figure>
+    <figure class="gallery-item reveal">
+      <img src="assets/ziventa-04.jpg" alt="Ziventa Gaushala cows grazing in open green pasture" loading="lazy">
+      <figcaption>Open pasture — grazing freely, every morning</figcaption>
+    </figure>
+  </div>
+</section>
+
+<section class="process" id="process">
+  <div class="process-bg" aria-hidden="true">
+    <span class="pbg-blob pbg-b1"></span>
+    <span class="pbg-blob pbg-b2"></span>
+    <span class="pbg-blob pbg-b3"></span>
+    <svg class="pbg-svg" viewBox="0 0 1200 800" preserveAspectRatio="xMidYMid slice">
+      <g class="pbg-vortex">
+        <circle class="pbg-swirl pbg-s1" cx="600" cy="380" r="120"/>
+        <circle class="pbg-swirl pbg-s2" cx="600" cy="380" r="190"/>
+        <circle class="pbg-swirl pbg-s3" cx="600" cy="380" r="268"/>
+        <circle class="pbg-swirl pbg-s4" cx="600" cy="380" r="350"/>
+      </g>
+      <g class="pbg-churner">
+        <path class="pbg-pot" d="M-92 0 C-92 -52 -60 -80 0 -80 C60 -80 92 -52 92 0 C92 62 56 100 0 100 C-56 100 -92 62 -92 0 Z"/>
+        <rect class="pbg-potrim" x="-104" y="-96" width="208" height="22" rx="11"/>
+        <g class="pbg-staff">
+          <rect class="pbg-rod" x="-9" y="-300" width="18" height="336" rx="9"/>
+          <ellipse class="pbg-blade" cx="0" cy="34" rx="48" ry="31"/>
+          <rect class="pbg-grip" x="-52" y="-308" width="104" height="18" rx="9"/>
+        </g>
+        <path class="pbg-rope pbg-rope-l" d="M-96 -190 C-40 -166 -14 -150 0 -132"/>
+        <path class="pbg-rope pbg-rope-r" d="M96 -190 C40 -166 14 -150 0 -132"/>
+      </g>
+    </svg>
+
+    <span class="pbg-wisp pbg-w1"></span>
+    <span class="pbg-wisp pbg-w2"></span>
+    <span class="pbg-wisp pbg-w3"></span>
+    <span class="pbg-wisp pbg-w4"></span>
+
+    <span class="pbg-gran pbg-g1"></span>
+    <span class="pbg-gran pbg-g2"></span>
+    <span class="pbg-gran pbg-g3"></span>
+    <span class="pbg-gran pbg-g4"></span>
+    <span class="pbg-gran pbg-g5"></span>
+    <span class="pbg-gran pbg-g6"></span>
+
+    <span class="pbg-drop pbg-d1"></span>
+    <span class="pbg-drop pbg-d2"></span>
+    <span class="pbg-drop pbg-d3"></span>
+  </div>
+  <div class="section-head reveal">
+    <p class="section-kicker">Crafted the old way</p>
+    <h2>Our Bilona ritual</h2>
+    <p class="section-sub">Five unhurried steps, carried out largely by hand, the way it has been done for generations. Scroll to follow the ritual.</p>
+  </div>
+  <div class="ritual" id="ritual">
+    <div class="ritual-line" aria-hidden="true"><span class="ritual-line-fill" id="ritualFill"></span></div>
+    <ol class="ritual-steps">
+      <li class="ritual-step" data-step="1">
+        <span class="ritual-icon"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 2h8" key="1ssgc1"/><path d="M9 2v2.789a4 4 0 0 1-.672 2.219l-.656.984A4 4 0 0 0 7 10.212V20a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2v-9.789a4 4 0 0 0-.672-2.219l-.656-.984A4 4 0 0 1 15 4.788V2" key="qtp12x"/><path d="M7 15a6.472 6.472 0 0 1 5 0 6.47 6.47 0 0 0 5 0" key="ygeh44"/></svg></span>
+        <span class="ritual-tag">01 · Milk</span>
+        <h3>Fresh Gir A2 milk</h3>
+        <p>Milked daily from our own well-cared-for Gir cows at the gaushala.</p>
+      </li>
+      <li class="ritual-step" data-step="2">
+        <span class="ritual-icon"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22a7 7 0 0 0 7-7c0-2-1-3.9-3-5.5s-3.5-4-4-6.5c-.5 2.5-2 4.9-4 6.5C6 11.1 5 13 5 15a7 7 0 0 0 7 7z" key="c7niix"/></svg></span>
+        <span class="ritual-tag">02 · Curd</span>
+        <h3>Set into curd</h3>
+        <p>Naturally fermented overnight using traditional methods — no shortcuts.</p>
+      </li>
+      <li class="ritual-step ritual-step-churn" data-step="3">
+        <span class="ritual-icon"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 11V6a2 2 0 0 0-2-2a2 2 0 0 0-2 2" key="1fvzgz"/><path d="M14 10V4a2 2 0 0 0-2-2a2 2 0 0 0-2 2v2" key="1kc0my"/><path d="M10 10.5V6a2 2 0 0 0-2-2a2 2 0 0 0-2 2v8" key="10h0bg"/><path d="M18 8a2 2 0 1 1 4 0v6a8 8 0 0 1-8 8h-2c-2.8 0-4.5-.86-5.99-2.34l-3.6-3.6a2 2 0 0 1 2.83-2.82L7 15" key="1s1gnw"/></svg></span>
+        <span class="ritual-tag">03 · Bilona</span>
+        <h3>Hand-churned Bilona</h3>
+        <p>Curd is churned by hand with a wooden bilona to separate pure makkhan.</p>
+        <div class="churn" id="churn" role="img" aria-label="Illustration of a wooden bilona churning curd by hand">
+          <svg class="bl-svg" viewBox="0 0 420 200" xmlns="http://www.w3.org/2000/svg">
+            <ellipse class="bl-ground" cx="210" cy="181" rx="196" ry="15"/>
+
+            <g class="bl-unit bl-unit-a" transform="translate(14,0)">
+              <path class="bl-dup-back" d="M10 170 C-2 142 2 104 20 86 C29 76 43 71 55 74 C46 91 41 121 46 170 Z"/>
+              <path class="bl-skirt" d="M16 170 C16 129 32 104 54 104 C76 104 92 129 92 170 Z"/>
+              <path class="bl-fold" d="M36 169 C36 141 42 119 52 108 M68 169 C68 143 64 121 58 108"/>
+              <path class="bl-blouse" d="M36 107 C36 86 44 76 56 76 C68 76 76 86 76 107 Z"/>
+              <path class="bl-arm bl-arm-far" d="M70 90 C92 94 110 102 124 111"/>
+              <circle class="bl-skin" cx="58" cy="60" r="15"/>
+              <path class="bl-hair" d="M44 58 C44 43 72 43 72 58 C64 51 52 51 44 58 Z"/>
+              <path class="bl-dup" d="M42 56 C42 37 74 37 74 56 C74 73 80 90 71 99 L57 95 C66 82 60 65 54 58 Z"/>
+              <circle class="bl-eye" cx="68" cy="62" r="1.9"/>
+              <path class="bl-bangle" d="M96 100 l6 3 M104 104 l6 3"/>
+
+              <path class="bl-pot" d="M124 128 C110 128 103 139 103 150 C103 163 116 172 133 172 C150 172 163 163 163 150 C163 139 156 128 142 128 Z"/>
+              <rect class="bl-potrim" x="115" y="121" width="36" height="9" rx="4"/>
+              <path class="bl-potband" d="M105 147 H161"/>
+              <rect class="bl-wood" x="172" y="78" width="8" height="94" rx="3"/>
+              <rect class="bl-wood" x="150" y="78" width="32" height="7" rx="3"/>
+              <g class="bl-rod">
+                <rect class="bl-wood" x="130" y="84" width="6" height="52" rx="3"/>
+                <ellipse class="bl-blade" cx="133" cy="140" rx="14" ry="8"/>
+              </g>
+              <path class="bl-rope" d="M136 100 C150 105 162 103 172 96"/>
+              <path class="bl-arm bl-arm-near" d="M72 98 C94 103 112 111 126 120"/>
+              <circle class="bl-hand" cx="128" cy="121" r="6"/>
+              <path class="bl-bowl" d="M186 158 C186 168 194 174 204 174 C214 174 222 168 222 158 Z"/>
+              <ellipse class="bl-milk" cx="204" cy="158" rx="18" ry="4.5"/>
+            </g>
+
+            <g class="bl-unit bl-unit-b" transform="translate(406,0) scale(-1,1)">
+              <path class="bl-dup-back" d="M10 170 C-2 142 2 104 20 86 C29 76 43 71 55 74 C46 91 41 121 46 170 Z"/>
+              <path class="bl-skirt bl-skirt-alt" d="M16 170 C16 129 32 104 54 104 C76 104 92 129 92 170 Z"/>
+              <path class="bl-fold" d="M36 169 C36 141 42 119 52 108 M68 169 C68 143 64 121 58 108"/>
+              <path class="bl-blouse bl-blouse-alt" d="M36 107 C36 86 44 76 56 76 C68 76 76 86 76 107 Z"/>
+              <path class="bl-arm bl-arm-far" d="M70 90 C92 94 110 102 124 111"/>
+              <circle class="bl-skin" cx="58" cy="60" r="15"/>
+              <path class="bl-hair" d="M44 58 C44 43 72 43 72 58 C64 51 52 51 44 58 Z"/>
+              <path class="bl-dup bl-dup-alt" d="M42 56 C42 37 74 37 74 56 C74 73 80 90 71 99 L57 95 C66 82 60 65 54 58 Z"/>
+              <circle class="bl-eye" cx="68" cy="62" r="1.9"/>
+              <path class="bl-bangle" d="M96 100 l6 3 M104 104 l6 3"/>
+
+              <path class="bl-pot" d="M124 128 C110 128 103 139 103 150 C103 163 116 172 133 172 C150 172 163 163 163 150 C163 139 156 128 142 128 Z"/>
+              <rect class="bl-potrim" x="115" y="121" width="36" height="9" rx="4"/>
+              <path class="bl-potband" d="M105 147 H161"/>
+              <rect class="bl-wood" x="172" y="78" width="8" height="94" rx="3"/>
+              <rect class="bl-wood" x="150" y="78" width="32" height="7" rx="3"/>
+              <g class="bl-rod bl-rod-b">
+                <rect class="bl-wood" x="130" y="84" width="6" height="52" rx="3"/>
+                <ellipse class="bl-blade" cx="133" cy="140" rx="14" ry="8"/>
+              </g>
+              <path class="bl-rope" d="M136 100 C150 105 162 103 172 96"/>
+              <path class="bl-arm bl-arm-near bl-arm-near-b" d="M72 98 C94 103 112 111 126 120"/>
+              <circle class="bl-hand" cx="128" cy="121" r="6"/>
+            </g>
+          </svg>
+        </div>
+      </li>
+      <li class="ritual-step" data-step="4">
+        <span class="ritual-icon"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z" key="96xj49"/></svg></span>
+        <span class="ritual-tag">04 · Cooking</span>
+        <h3>Slow-cooked</h3>
+        <p>Makkhan is simmered on a gentle flame until it turns golden and fragrant.</p>
+      </li>
+      <li class="ritual-step" data-step="5">
+        <span class="ritual-icon"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 21.73a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73z" key="1a0edw"/><path d="M12 22V12" key="d0xqtd"/><polyline points="3.29 7 12 12 20.71 7" key="ousv84"/><path d="m7.5 4.27 9 5.15" key="1c824w"/></svg></span>
+        <span class="ritual-tag">05 · Sealed</span>
+        <h3>Sealed for members</h3>
+        <p>Packed fresh in premium jars and reserved for our Gir Gold Club families.</p>
+      </li>
+    </ol>
+  </div>
+</section>
+
+<section class="shop" id="shop">
+  <div class="section-head reveal">
+    <p class="section-kicker">For members</p>
+    <h2>Ghee &amp; Panchgavya, by weight</h2>
+    <p class="section-sub">A small, honest range — every product made in-house at the gaushala, priced at the member rate.</p>
+  </div>
+  <div class="shop-grid">
+    <div class="shop-card reveal" data-id="ghee-250">
+      <div class="shop-media"><span class="cell cell-tl"><img src="assets/ziventa-07.jpg" alt="Ziventa A2 Bilona cow ghee pack" loading="lazy"></span></div>
+      <h3>Bilona Ghee — 250g</h3>
+      <p>Small-batch, hand-churned A2 Gir ghee for everyday cooking.</p>
+      <span class="price">₹800 <em>member rate</em></span>
+      <div class="shop-actions">
+        <button class="btn-add" data-id="ghee-250" data-name="Bilona Ghee — 250g" data-price="800"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14" key="1ays0h"/><path d="M12 5v14" key="s699le"/></svg> <span>Add to Cart</span></button>
+        <button class="btn-buy" data-id="ghee-250" data-name="Bilona Ghee — 250g" data-price="800">Buy Now</button>
+      </div>
+    </div>
+    <div class="shop-card shop-card-featured reveal" data-id="ghee-500">
+      <span class="shop-badge">Most Loved</span>
+      <div class="shop-media"><span class="cell cell-tr"><img src="assets/ziventa-07.jpg" alt="Ziventa A2 Bilona cow ghee pack" loading="lazy"></span></div>
+      <h3>Bilona Ghee — 500g</h3>
+      <p>Our most-loved size, made for the whole family.</p>
+      <span class="price">₹1,600 <em>member rate</em></span>
+      <div class="shop-actions">
+        <button class="btn-add" data-id="ghee-500" data-name="Bilona Ghee — 500g" data-price="1600"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14" key="1ays0h"/><path d="M12 5v14" key="s699le"/></svg> <span>Add to Cart</span></button>
+        <button class="btn-buy" data-id="ghee-500" data-name="Bilona Ghee — 500g" data-price="1600">Buy Now</button>
+      </div>
+    </div>
+    <div class="shop-card reveal" data-id="ghee-1kg">
+      <div class="shop-media"><span class="cell cell-br"><img src="assets/ziventa-07.jpg" alt="Ziventa A2 Bilona cow ghee pack" loading="lazy"></span></div>
+      <h3>Bilona Ghee — 1kg</h3>
+      <p>Our signature jar — best value for founding members.</p>
+      <span class="price">₹3,150 <em>member rate</em></span>
+      <div class="shop-actions">
+        <button class="btn-add" data-id="ghee-1kg" data-name="Bilona Ghee — 1kg" data-price="3150"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14" key="1ays0h"/><path d="M12 5v14" key="s699le"/></svg> <span>Add to Cart</span></button>
+        <button class="btn-buy" data-id="ghee-1kg" data-name="Bilona Ghee — 1kg" data-price="3150">Buy Now</button>
+      </div>
+    </div>
+    <div class="shop-card reveal" data-id="dhoop">
+      <div class="shop-media shop-media-icon"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z" key="96xj49"/></svg></div>
+      <h3>Panchgavya Dhoop</h3>
+      <p>Traditional havan dhoop made with gaushala by-products.</p>
+      <span class="price">₹250 <em>member rate</em></span>
+      <div class="shop-actions">
+        <button class="btn-add" data-id="dhoop" data-name="Panchgavya Dhoop" data-price="250"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14" key="1ays0h"/><path d="M12 5v14" key="s699le"/></svg> <span>Add to Cart</span></button>
+        <button class="btn-buy" data-id="dhoop" data-name="Panchgavya Dhoop" data-price="250">Buy Now</button>
+      </div>
+    </div>
+    <div class="shop-card reveal" data-id="ark">
+      <div class="shop-media shop-media-icon"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22a7 7 0 0 0 7-7c0-2-1-3.9-3-5.5s-3.5-4-4-6.5c-.5 2.5-2 4.9-4 6.5C6 11.1 5 13 5 15a7 7 0 0 0 7 7z" key="c7niix"/></svg></div>
+      <h3>Gau Mutra Ark</h3>
+      <p>Distilled Panchgavya ark, prepared the traditional way.</p>
+      <span class="price">₹350 <em>member rate</em></span>
+      <div class="shop-actions">
+        <button class="btn-add" data-id="ark" data-name="Gau Mutra Ark" data-price="350"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14" key="1ays0h"/><path d="M12 5v14" key="s699le"/></svg> <span>Add to Cart</span></button>
+        <button class="btn-buy" data-id="ark" data-name="Gau Mutra Ark" data-price="350">Buy Now</button>
+      </div>
+    </div>
+    <div class="shop-card reveal" data-id="gift">
+      <div class="shop-media"><span class="cell cell-bl"><img src="assets/ziventa-07.jpg" alt="Ziventa A2 Bilona cow ghee festive pack" loading="lazy"></span></div>
+      <h3>Festive Gift Box</h3>
+      <p>Ghee, dhoop &amp; ark together — gifted the Ziventa way.</p>
+      <span class="price">₹4,200 <em>member rate</em></span>
+      <div class="shop-actions">
+        <button class="btn-add" data-id="gift" data-name="Festive Gift Box" data-price="4200"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14" key="1ays0h"/><path d="M12 5v14" key="s699le"/></svg> <span>Add to Cart</span></button>
+        <button class="btn-buy" data-id="gift" data-name="Festive Gift Box" data-price="4200">Buy Now</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="reviews" id="reviews">
+  <div class="section-head reveal">
+    <p class="section-kicker">What members say</p>
+    <h2>Trusted by founding families</h2>
+    <p class="section-sub">Sample member reflections — to be replaced with real reviews as the Gir Gold Club grows.</p>
+  </div>
+  <div class="carousel" id="carousel">
+    <div class="carousel-track" id="carouselTrack">
+      <blockquote class="review-card">
+        <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 3a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2 1 1 0 0 1 1 1v1a2 2 0 0 1-2 2 1 1 0 0 0-1 1v2a1 1 0 0 0 1 1 6 6 0 0 0 6-6V5a2 2 0 0 0-2-2z" key="rib7q0"/><path d="M5 3a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2 1 1 0 0 1 1 1v1a2 2 0 0 1-2 2 1 1 0 0 0-1 1v2a1 1 0 0 0 1 1 6 6 0 0 0 6-6V5a2 2 0 0 0-2-2z" key="1ymkrd"/></svg>
+        <p>"What sold me wasn't the ghee — it was seeing the medical reports of the cows. That's a level of honesty I haven't found anywhere else."</p>
+        <footer><span class="avatar">A</span> <span><strong>Anjali Mehta</strong><br>Ahmedabad</span></footer>
+      </blockquote>
+      <blockquote class="review-card">
+        <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 3a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2 1 1 0 0 1 1 1v1a2 2 0 0 1-2 2 1 1 0 0 0-1 1v2a1 1 0 0 0 1 1 6 6 0 0 0 6-6V5a2 2 0 0 0-2-2z" key="rib7q0"/><path d="M5 3a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2 1 1 0 0 1 1 1v1a2 2 0 0 1-2 2 1 1 0 0 0-1 1v2a1 1 0 0 0 1 1 6 6 0 0 0 6-6V5a2 2 0 0 0-2-2z" key="1ymkrd"/></svg>
+        <p>"I was skeptical of a 'membership' for ghee. After visiting the gaushala, I understood — this is patronage, not a purchase."</p>
+        <footer><span class="avatar">R</span> <span><strong>Rohit Sharma</strong><br>Rajkot</span></footer>
+      </blockquote>
+      <blockquote class="review-card">
+        <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 3a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2 1 1 0 0 1 1 1v1a2 2 0 0 1-2 2 1 1 0 0 0-1 1v2a1 1 0 0 0 1 1 6 6 0 0 0 6-6V5a2 2 0 0 0-2-2z" key="rib7q0"/><path d="M5 3a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2 1 1 0 0 1 1 1v1a2 2 0 0 1-2 2 1 1 0 0 0-1 1v2a1 1 0 0 0 1 1 6 6 0 0 0 6-6V5a2 2 0 0 0-2-2z" key="1ymkrd"/></svg>
+        <p>"The 20% member rate is generous, but honestly the refundable deposit is what made it a no-brainer. Zero risk, real trust."</p>
+        <footer><span class="avatar">P</span> <span><strong>Priya Nair</strong><br>Vadodara</span></footer>
+      </blockquote>
+    </div>
+    <div class="carousel-controls">
+      <button class="carousel-btn" id="prevReview" aria-label="Previous review"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6" key="1wnfg3"/></svg></button>
+      <div class="carousel-dots" id="carouselDots"></div>
+      <button class="carousel-btn" id="nextReview" aria-label="Next review"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6" key="mthhwq"/></svg></button>
+    </div>
+  </div>
+</section>
+
+<section class="pricing" id="pricing">
+  <div class="pricing-inner">
+    <div class="pricing-text reveal">
+      <p class="section-kicker">Membership terms</p>
+      <h2>Simple, honest, refundable.</h2>
+      <p>A refundable deposit secures your place in the Club and unlocks a discounted, consistent member ghee rate — nothing hidden, nothing inflated.</p>
+      <blockquote class="mini-quote">"We don't create false hype or say 'waiting for ghee.' If a seat is open, it's open. If it isn't, we'll tell you honestly."</blockquote>
+    </div>
+    <div class="pricing-card reveal">
+      <div class="pricing-card-head">
+        <span>Ziventa Gir Gold Membership</span>
+        <div class="rate-toggle" role="group" aria-label="Toggle pricing view">
+          <button class="rate-btn active" data-rate="member">Member</button>
+          <button class="rate-btn" data-rate="regular">Regular</button>
+        </div>
+      </div>
+      <div class="pricing-row">
+        <span>Refundable Deposit</span>
+        <strong>₹5,000</strong>
+      </div>
+      <div class="pricing-row">
+        <span>Ghee Rate <span class="rate-view rate-view-member">(member)</span><span class="rate-view rate-view-regular" hidden>(regular)</span></span>
+        <strong><span class="rate-value rate-value-member">₹3,150–3,200/kg</span><span class="rate-value rate-value-regular" hidden>₹4,000/kg</span></strong>
+      </div>
+      <div class="pricing-row savings-row">
+        <span>You Save as a Member</span>
+        <strong class="savings-highlight">20% off</strong>
+      </div>
+      <p class="pricing-fine">Deposit is fully refundable and simply reserves your seat. Rates reflect small-batch, traditional Bilona-made A2 Gir cow ghee.</p>
+      <a href="#join" class="btn btn-primary btn-block">Reserve My Seat <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14" key="1ays0h"/><path d="m12 5 7 7-7 7" key="xquz4c"/></svg></a>
+      <p class="pricing-cap"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" key="1yyitq"/><circle cx="9" cy="7" r="4" key="nufk8"/><path d="M22 21v-2a4 4 0 0 0-3-3.87" key="kshegd"/><path d="M16 3.13a4 4 0 0 1 0 7.75" key="1da9ce"/></svg> Founding circle — capped at 250 members</p>
+    </div>
+  </div>
+</section>
+
+<section class="instagram" aria-label="Instagram">
+  <div class="section-head reveal">
+    <p class="section-kicker">The journey</p>
+    <h2>Follow along on Instagram</h2>
+    <p class="section-sub">Daily glimpses of the gaushala, the herd, and the Bilona ritual in motion.</p>
+  </div>
+  <div class="insta-grid reveal">
+    <div class="insta-tile" style="--c1:#F3D9A0;--c2:#D9A94E;"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22a7 7 0 0 0 7-7c0-2-1-3.9-3-5.5s-3.5-4-4-6.5c-.5 2.5-2 4.9-4 6.5C6 11.1 5 13 5 15a7 7 0 0 0 7 7z" key="c7niix"/></svg><span>214</span></div>
+    <div class="insta-tile" style="--c1:#BFD6C4;--c2:#8FAE93;"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 2h8" key="1ssgc1"/><path d="M9 2v2.789a4 4 0 0 1-.672 2.219l-.656.984A4 4 0 0 0 7 10.212V20a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2v-9.789a4 4 0 0 0-.672-2.219l-.656-.984A4 4 0 0 1 15 4.788V2" key="qtp12x"/><path d="M7 15a6.472 6.472 0 0 1 5 0 6.47 6.47 0 0 0 5 0" key="ygeh44"/></svg><span>178</span></div>
+    <div class="insta-tile" style="--c1:#DCE2C4;--c2:#B3BE94;"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 11V6a2 2 0 0 0-2-2a2 2 0 0 0-2 2" key="1fvzgz"/><path d="M14 10V4a2 2 0 0 0-2-2a2 2 0 0 0-2 2v2" key="1kc0my"/><path d="M10 10.5V6a2 2 0 0 0-2-2a2 2 0 0 0-2 2v8" key="10h0bg"/><path d="M18 8a2 2 0 1 1 4 0v6a8 8 0 0 1-8 8h-2c-2.8 0-4.5-.86-5.99-2.34l-3.6-3.6a2 2 0 0 1 2.83-2.82L7 15" key="1s1gnw"/></svg><span>302</span></div>
+    <div class="insta-tile" style="--c1:#F6C89F;--c2:#E0985C;"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z" key="96xj49"/></svg><span>256</span></div>
+    <div class="insta-tile" style="--c1:#C8DCC9;--c2:#8FAE93;"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10Z" key="nnexq3"/><path d="M2 21c0-3 1.85-5.36 5.08-6C9.5 14.52 12 13 13 12" key="mt58a7"/></svg><span>189</span></div>
+    <div class="insta-tile" style="--c1:#F0D9A6;--c2:#D2A94E;"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 21.73a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73z" key="1a0edw"/><path d="M12 22V12" key="d0xqtd"/><polyline points="3.29 7 12 12 20.71 7" key="ousv84"/><path d="m7.5 4.27 9 5.15" key="1c824w"/></svg><span>241</span></div>
+  </div>
+  <a class="btn btn-ghost" href="https://instagram.com/ziventagaushala" target="_blank" rel="noopener noreferrer"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="20" x="2" y="2" rx="5" ry="5" key="2e1cvw"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z" key="9exkf1"/><line x1="17.5" x2="17.51" y1="6.5" y2="6.5" key="r4j83e"/></svg> @ziventagaushala</a>
+</section>
+
+<section class="join" id="join">
+  <div class="join-inner">
+    <div class="join-text reveal">
+      <p class="section-kicker">Founding membership</p>
+      <h2>Pre-register for the Gir Gold Club</h2>
+      <p>Leave your details and we'll personally reach out when membership opens for your area. No spam, no countdowns, no pressure — just an honest note from Ziventa Gaushala.</p>
+      <ul class="join-list">
+        <li><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5" key="1gmf2c"/></svg> No payment required to pre-register</li>
+        <li><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5" key="1gmf2c"/></svg> We contact you directly, not a mailing list</li>
+        <li><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5" key="1gmf2c"/></svg> Founding circle capped at 250 families</li>
+      </ul>
+    </div>
+    <form class="join-form reveal" id="joinForm" novalidate>
+      <div class="form-row">
+        <label for="fname">Full name</label>
+        <input type="text" id="fname" name="fname" required autocomplete="name" placeholder="Your name">
+        <span class="form-error" data-for="fname">Please enter your name.</span>
+      </div>
+      <div class="form-row">
+        <label for="femail">Email</label>
+        <input type="email" id="femail" name="femail" required autocomplete="email" placeholder="you@email.com">
+        <span class="form-error" data-for="femail">Please enter a valid email.</span>
+      </div>
+      <div class="form-row">
+        <label for="fphone">Phone</label>
+        <input type="tel" id="fphone" name="fphone" required autocomplete="tel" placeholder="+91 00000 00000">
+        <span class="form-error" data-for="fphone">Please enter a phone number.</span>
+      </div>
+      <div class="form-row">
+        <label for="fcity">City</label>
+        <input type="text" id="fcity" name="fcity" required autocomplete="address-level2" placeholder="Your city">
+        <span class="form-error" data-for="fcity">Please enter your city.</span>
+      </div>
+      <button type="submit" class="btn btn-primary btn-block" id="joinSubmit"><span id="joinSubmitText">Notify Me</span></button>
+      <p class="form-alert" id="joinError" role="alert" hidden></p>
+    </form>
+    <div class="join-done" id="joinDone" role="status" hidden>
+      <div class="done-mark"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5" key="1gmf2c"/></svg></div>
+      <h4>Registration successful</h4>
+      <p>Your pre-registration for the Gir Gold Club is confirmed. <strong>We will contact you soon.</strong></p>
+      <p class="join-done-sub" id="joinDoneSub"></p>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<footer class="site-footer">
+  <div class="footer-inner">
+    <div class="footer-brand">
+      <a href="#top" class="brand" aria-label="Ziventa Gaushala home">
+        <span class="brand-mark" aria-hidden="true"><svg class="brand-leaf" viewBox="252.85 -31.71 94 94" xmlns="http://www.w3.org/2000/svg"><path d="M271.46 17.91 C270.77 15.52 270.77 12.99 271.45 10.6 C271.67 9.84 272.3 9.2 273.18 8.98 C275.73 8.34 278.43 8.34 280.98 8.98 C283.44 9.6 285.77 10.82 287.7 12.63 L287.71 12.64 C289.65 14.45 290.95 16.64 291.61 18.95 C292.29 21.33 292.29 23.86 291.61 26.25 C291.4 27.02 290.76 27.66 289.88 27.87 C287.33 28.51 284.64 28.51 282.09 27.87 C279.62 27.25 277.29 26.04 275.36 24.22 L275.35 24.21 C273.42 22.4 272.12 20.22 271.46 17.91 M275.88 13.13 C275.73 14.33 275.83 15.56 276.16 16.73 C276.61 18.29 277.49 19.77 278.79 21 C280.1 22.22 281.68 23.04 283.34 23.46 C284.59 23.78 285.9 23.86 287.18 23.72 C287.33 22.52 287.24 21.3 286.9 20.12 C286.46 18.56 285.58 17.08 284.27 15.86 C282.96 14.63 281.39 13.81 279.72 13.39 C278.47 13.08 277.16 12.99 275.88 13.13"/><path d="M323.25 12.85 C322.43 15.71 320.83 18.41 318.44 20.65 L318.43 20.66 C316.05 22.9 313.17 24.4 310.12 25.17 C307.42 25.84 304.59 25.94 301.86 25.47 C301.35 22.91 301.46 20.25 302.18 17.73 C303 14.87 304.6 12.17 306.99 9.92 C309.38 7.68 312.27 6.18 315.32 5.41 C318.01 4.74 320.84 4.63 323.57 5.11 C324.08 7.67 323.97 10.32 323.25 12.85 M327.96 2.62 C327.75 1.86 327.11 1.22 326.24 1 C322.25 0 318.04 0 314.06 1 C310.21 1.97 306.58 3.87 303.56 6.7 L303.55 6.7 C300.53 9.54 298.5 12.94 297.47 16.55 C296.41 20.28 296.41 24.22 297.47 27.95 C297.68 28.72 298.32 29.36 299.19 29.58 C303.18 30.58 307.39 30.58 311.37 29.58 C314.46 28.8 317.41 27.41 320.02 25.43 C320.03 25.42 320.04 25.42 320.05 25.42 C320.39 25.23 321.16 24.53 321.74 24 C321.78 23.96 321.82 23.93 321.87 23.89 C321.85 23.9 321.84 23.91 321.83 23.92 C321.84 23.91 321.85 23.9 321.86 23.89 L321.87 23.89 L321.87 23.88 L321.88 23.88 L321.88 23.87 C321.93 23.82 321.98 23.77 322.03 23.72 C322.26 23.5 322.43 23.34 322.43 23.34 L322.42 23.33 C325.14 20.6 326.99 17.4 327.96 14.03 C329.02 10.3 329.02 6.36 327.96 2.62"/></svg></span>
+        <span class="brand-text">Ziventa<em>Gaushala</em></span>
+      </a>
+      <p>A small, dedicated gaushala raising Gir cows and preparing A2 ghee and Panchgavya products the traditional way — for a limited circle of families who value trust over transactions.</p>
+    </div>
+    <div class="footer-col">
+      <h4>Explore</h4>
+      <a href="#story">Our Story</a>
+      <a href="#membership">The Gir Gold Club</a>
+      <a href="#process">Bilona Process</a>
+      <a href="#pricing">Membership</a>
+    </div>
+    <div class="footer-col">
+      <h4>Connect</h4>
+      <a href="#join">Pre-Registration</a>
+      <a href="https://instagram.com/ziventagaushala" target="_blank" rel="noopener noreferrer"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="20" x="2" y="2" rx="5" ry="5" key="2e1cvw"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z" key="9exkf1"/><line x1="17.5" x2="17.51" y1="6.5" y2="6.5" key="r4j83e"/></svg> Instagram</a>
+      <a href="mailto:hello@ziventagaushala.com"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="16" x="2" y="4" rx="2" key="18n3k1"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7" key="1ocrg3"/></svg> Contact Us</a>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <p>© 2026 Ziventa Gaushala. All rights reserved.</p>
+  </div>
+</footer>
+
+<div class="scrim" id="scrim" hidden></div>
+
+<aside class="cart" id="cart" aria-label="Shopping cart" aria-hidden="true">
+  <div class="cart-head">
+    <h3><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z" key="hou9p0"/><path d="M3 6h18" key="d0wm0j"/><path d="M16 10a4 4 0 0 1-8 0" key="1ltviw"/></svg> Your Cart</h3>
+    <button class="icon-btn" id="cartClose" aria-label="Close cart"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18" key="1bl5f8"/><path d="m6 6 12 12" key="d8bk6v"/></svg></button>
+  </div>
+  <div class="cart-body" id="cartBody"></div>
+  <div class="cart-foot" id="cartFoot">
+    <div class="cart-row"><span>Subtotal</span><strong id="cartSubtotal">₹0</strong></div>
+    <div class="cart-row"><span>Delivery</span><strong id="cartDelivery">—</strong></div>
+    <div class="cart-row cart-total"><span>Total</span><strong id="cartTotal">₹0</strong></div>
+    <p class="cart-note" id="cartFreeNote"></p>
+    <button class="btn btn-primary btn-block" id="toCheckout">Buy Now <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14" key="1ays0h"/><path d="m12 5 7 7-7 7" key="xquz4c"/></svg></button>
+  </div>
+</aside>
+
+<div class="co-page" id="checkout" role="region" aria-labelledby="coTitle" hidden>
+  <div class="co-topbar">
+    <button type="button" class="co-brand" id="coHome" aria-label="Back to Ziventa Gaushala">Ziventa<em>Gaushala</em></button>
+    <button class="btn btn-ghost btn-sm" id="coClose">Back to shop</button>
+  </div>
+  <div class="co-shell">
+    <h3 id="coTitle">Secure Checkout</h3>
+
+    <ol class="steps" id="coSteps">
+      <li class="step active" data-step="1"><span>1</span> Delivery</li>
+      <li class="step" data-step="2"><span>2</span> Payment</li>
+      <li class="step" data-step="3"><span>3</span> Done</li>
+    </ol>
+
+    <div class="modal-body">
+      <section class="co-pane" id="pane1">
+        <div class="form-row">
+          <label for="coName">Full name</label>
+          <input type="text" id="coName" autocomplete="name" placeholder="Your name">
+          <span class="form-error">Please enter your name.</span>
+        </div>
+        <div class="form-row">
+          <label for="coPhone">Phone</label>
+          <input type="tel" id="coPhone" autocomplete="tel" placeholder="+91 00000 00000">
+          <span class="form-error">Please enter a valid phone number.</span>
+        </div>
+        <div class="form-row">
+          <label for="coEmail">Email</label>
+          <input type="email" id="coEmail" autocomplete="email" placeholder="you@email.com">
+          <span class="form-error">Please enter a valid email.</span>
+        </div>
+        <div class="form-row">
+          <label for="coAddr">Delivery address</label>
+          <textarea id="coAddr" rows="2" autocomplete="street-address" placeholder="House / street / area"></textarea>
+          <span class="form-error">Please enter your address.</span>
+        </div>
+        <div class="form-grid">
+          <div class="form-row">
+            <label for="coCity">City</label>
+            <input type="text" id="coCity" autocomplete="address-level2" placeholder="City">
+            <span class="form-error">Enter city.</span>
+          </div>
+          <div class="form-row">
+            <label for="coPin">PIN code</label>
+            <input type="text" id="coPin" inputmode="numeric" autocomplete="postal-code" placeholder="6 digits">
+            <span class="form-error">Enter a 6-digit PIN.</span>
+          </div>
+        </div>
+      </section>
+
+      <section class="co-pane" id="pane2" hidden>
+        <p class="demo-note"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10" key="1mglay"/><path d="M12 16v-4" key="1dtifu"/><path d="M12 8h.01" key="e9boi3"/></svg> <span><strong>Demo checkout.</strong> No payment is taken and no card details are collected. Connect a payment gateway to accept real orders.</span></p>
+        <div class="pay-list" id="payList">
+          <label class="pay"><input type="radio" name="pay" value="UPI" checked><span class="pay-ic"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="14" height="20" x="5" y="2" rx="2" ry="2" key="1yt0o3"/><path d="M12 18h.01" key="mhygvu"/></svg></span><span class="pay-txt"><strong>UPI</strong><em>GPay, PhonePe, Paytm</em></span></label>
+          <label class="pay"><input type="radio" name="pay" value="Card"><span class="pay-ic"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="14" x="2" y="5" rx="2" key="ynyp8z"/><line x1="2" x2="22" y1="10" y2="10" key="1b3vmo"/></svg></span><span class="pay-txt"><strong>Credit / Debit Card</strong><em>Secure fields provided by your gateway</em></span></label>
+          <label class="pay"><input type="radio" name="pay" value="Net Banking"><span class="pay-ic"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" x2="21" y1="22" y2="22" key="j8o0r"/><line x1="6" x2="6" y1="18" y2="11" key="10tf0k"/><line x1="10" x2="10" y1="18" y2="11" key="54lgf6"/><line x1="14" x2="14" y1="18" y2="11" key="380y"/><line x1="18" x2="18" y1="18" y2="11" key="1kevvc"/><polygon points="12 2 20 7 4 7" key="jkujk7"/></svg></span><span class="pay-txt"><strong>Net Banking</strong><em>All major Indian banks</em></span></label>
+          <label class="pay"><input type="radio" name="pay" value="Cash on Delivery"><span class="pay-ic"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="12" x="2" y="6" rx="2" key="9lu3g6"/><circle cx="12" cy="12" r="2" key="1c9p78"/><path d="M6 12h.01M18 12h.01" key="113zkx"/></svg></span><span class="pay-txt"><strong>Cash on Delivery</strong><em>Pay when the jar arrives</em></span></label>
+        </div>
+        <div class="co-summary" id="coSummary"></div>
+      </section>
+
+      <section class="co-pane co-done" id="pane3" hidden>
+        <div class="done-mark"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5" key="1gmf2c"/></svg></div>
+        <h4>Order placed</h4>
+        <p id="doneMsg">Thank you — we'll call you to confirm your delivery slot.</p>
+        <div class="co-summary" id="doneSummary"></div>
+        <p class="demo-note"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10" key="1mglay"/><path d="M12 16v-4" key="1dtifu"/><path d="M12 8h.01" key="e9boi3"/></svg> <span>This is a demonstration order. Nothing was charged.</span></p>
+      </section>
+    </div>
+
+    <div class="modal-foot">
+      <button class="btn btn-ghost" id="coBack" hidden>Back</button>
+      <button class="btn btn-primary" id="coNext">Continue to Payment <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14" key="1ays0h"/><path d="m12 5 7 7-7 7" key="xquz4c"/></svg></button>
+    </div>
+  </div>
+</div>
+
+<button class="back-to-top" id="backToTop" aria-label="Back to top"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12 7-7 7 7" key="hav0vg"/><path d="M12 19V5" key="x0mq9r"/></svg></button>
+
+<style>
+:root{
+  --cream:#FBF6EC;
+  --cream-alt:#F6EFDF;
+  --ink:#2F4A3D;
+  --ink-soft:#6E5F4E;
+  --gold:#BF8F3A;
+  --gold-deep:#8F6A1E;
+  --green:#3F6B52;
+  --green-deep:#24382D;
+  --green-tint:#F6EFDF;
+  --card-bg:#FFFDF8;
+  --maroon:#5C201D;
+  --border:rgba(59,45,30,0.12);
+  --shadow:0 10px 28px rgba(59,45,30,0.08);
+  --radius:20px;
+  --font-display:Georgia,'Iowan Old Style','Palatino Linotype','Book Antiqua',serif;
+  --font-body:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;
+}
+*{box-sizing:border-box;}
+[hidden]{display:none !important;}
+html{scroll-behavior:smooth;overflow-x:clip;}
+body{
+  margin:0;
+  background:var(--cream);
+  color:var(--ink);
+  font-family:var(--font-body);
+  line-height:1.6;
+  -webkit-font-smoothing:antialiased;
+}
+img{max-width:100%;display:block;}
+h1,h2,h3{font-family:var(--font-display);color:var(--ink);line-height:1.15;margin:0 0 .5em;}
+p{margin:0 0 1em;color:var(--ink-soft);}
+a{color:inherit;}
+.skip-link{position:absolute;left:-999px;top:0;background:var(--gold);color:#fff;padding:.75em 1em;border-radius:0 0 8px 0;z-index:200;}
+.skip-link:focus{left:0;}
+
+/* scroll progress */
+.scroll-progress{position:fixed;top:0;left:0;right:0;height:3px;z-index:300;background:transparent;pointer-events:none;}
+.scroll-progress span{
+  display:block;height:100%;width:0%;
+  background:linear-gradient(90deg, var(--gold-deep), var(--gold));
+  box-shadow:0 0 10px rgba(191,143,58,.5);
+}
+
+/* blur-up image loading */
+img[data-blur]{filter:blur(14px);transform:scale(1.03);transition:filter .7s ease, transform .7s ease;}
+img[data-blur="loaded"]{filter:blur(0);transform:scale(1);}
+
+.section-kicker{
+  text-transform:uppercase;letter-spacing:.12em;font-size:.78rem;font-weight:600;
+  color:var(--gold-deep);margin:0 0 .6em;
+}
+.section-head{max-width:640px;margin:0 auto 1.5rem;text-align:center;padding:0 1.5rem;}
+.section-sub{max-width:560px;margin:0 auto;}
+
+.js .reveal{opacity:0;transform:translateY(24px);}
+.js .reveal.in-view{animation:revealIn .7s ease forwards;}
+@keyframes revealIn{from{opacity:0;transform:translateY(24px);}to{opacity:1;transform:translateY(0);}}
+
+.btn{
+  display:inline-flex;align-items:center;gap:.5em;
+  padding:.9em 1.6em;border-radius:999px;font-weight:600;font-size:.98rem;
+  text-decoration:none;border:1px solid transparent;cursor:pointer;
+  transition:transform .18s ease, box-shadow .18s ease, background .18s ease;
+  font-family:var(--font-body);
+}
+.btn i{width:18px;height:18px;}
+.btn-primary{background:var(--gold);color:#fff;box-shadow:0 8px 20px rgba(191,143,58,.28);}
+.btn-primary:hover{transform:translateY(-2px);box-shadow:0 12px 24px rgba(191,143,58,.35);}
+.btn-ghost{background:transparent;border-color:var(--border);color:var(--ink);}
+.btn-ghost:hover{border-color:var(--gold);color:var(--gold-deep);}
+.btn-block{width:100%;justify-content:center;}
+.text-link{display:inline-flex;align-items:center;gap:.4em;color:var(--gold-deep);font-weight:600;text-decoration:none;}
+.text-link i{width:16px;height:16px;}
+.text-link:hover{text-decoration:underline;}
+
+/* header */
+.site-header{
+  position:sticky;top:0;z-index:100;
+  background:color-mix(in srgb, var(--cream) 88%, transparent);
+  backdrop-filter:blur(10px);
+  border-bottom:1px solid var(--border);
+  transition:box-shadow .2s ease;
+}
+.site-header.scrolled{box-shadow:0 8px 24px rgba(0,0,0,.08);}
+.header-inner{
+  max-width:1060px;margin:0 auto;padding:.9rem 1.5rem;
+  display:flex;align-items:center;justify-content:space-between;
+}
+.brand{display:flex;align-items:center;gap:.55em;text-decoration:none;}
+/* Brand mark: the gold sprout from the Ziventa logo on a deep green disc.
+   Vectors are the same two leaf paths used in the hero lockup, re-framed to
+   their own bounding box so they sit centred in the circle. */
+.brand-mark{
+  width:34px;height:34px;border-radius:50%;background:#1E4A35;
+  display:flex;align-items:center;justify-content:center;flex-shrink:0;
+}
+.brand-leaf{width:100%;height:100%;display:block;fill:#D9A92B;}
+.brand-text{font-family:var(--font-display);font-size:1.15rem;color:var(--ink);}
+.brand-text em{font-style:normal;color:var(--gold-deep);display:block;font-size:.62em;letter-spacing:.15em;text-transform:uppercase;margin-top:-.2em;}
+.main-nav{display:flex;align-items:center;gap:1.6rem;}
+.nav-link{
+  position:relative;text-decoration:none;color:var(--ink-soft);font-weight:500;font-size:.94rem;
+  padding:.3em 0;
+}
+.nav-link::after{
+  content:"";position:absolute;left:0;right:100%;bottom:-2px;height:2px;background:var(--gold);
+  transition:right .25s ease;
+}
+.nav-link:hover,.nav-link.active{color:var(--ink);}
+.nav-link.active::after,.nav-link:hover::after{right:0;}
+.nav-cta{
+  background:var(--gold);color:#fff;padding:.6em 1.3em;border-radius:999px;text-decoration:none;
+  font-weight:600;font-size:.9rem;transition:background .2s ease;
+}
+.nav-cta:hover{background:var(--gold-deep);}
+.nav-toggle{
+  display:none;background:none;border:1px solid var(--border);border-radius:10px;
+  width:42px;height:42px;align-items:center;justify-content:center;cursor:pointer;color:var(--ink);position:relative;
+}
+.nav-toggle i{width:20px;height:20px;position:absolute;transition:opacity .15s ease,transform .15s ease;}
+.nav-toggle .icon-close{opacity:0;transform:scale(.7);}
+.nav-toggle[aria-expanded="true"] .icon-open{opacity:0;transform:scale(.7);}
+.nav-toggle[aria-expanded="true"] .icon-close{opacity:1;transform:scale(1);}
+
+/* trust strip */
+.trust-strip{background:var(--maroon);overflow:hidden;padding:.7rem 0;}
+.trust-track{display:flex;width:max-content;gap:2.5rem;padding:0 1.25rem;animation:trustScroll 28s linear infinite;white-space:nowrap;}
+.trust-track span{color:var(--cream);font-size:.8rem;font-weight:600;letter-spacing:.04em;text-transform:uppercase;}
+.trust-track .dot{color:var(--gold);font-weight:700;margin:0 .1em;}
+@keyframes trustScroll{from{transform:translateX(0);}to{transform:translateX(-50%);}}
+
+/* hero */
+.hero{
+  padding:2.75rem 1.5rem clamp(165px,21vw,255px);text-align:center;position:relative;overflow:hidden;
+  min-height:min(76vh,680px);display:flex;align-items:center;justify-content:center;
+}
+
+/* Ziventa logo lockup */
+.hero-logo{
+  display:flex;flex-direction:column;align-items:center;
+  margin:0 auto 1.1rem;line-height:1;
+}
+.hero-logo-mark{
+  width:clamp(190px,27vw,290px);height:auto;display:block;
+}
+.hero-logo-tag{
+  display:flex;align-items:center;gap:.7em;
+  margin-top:.55em;
+  font-size:clamp(.62rem,1.1vw,.78rem);
+  text-transform:uppercase;letter-spacing:.3em;
+  color:#164a00;font-weight:600;
+}
+.hero-logo-tag i{display:block;width:clamp(14px,2.4vw,26px);height:1.5px;background:#164a00;opacity:.75;}
+
+/* Hero entrance choreography.
+   Sequenced rather than a single banner pop: the lockup settles, the tagline
+   breathes outward, then each line rises 16px in turn. Nothing is opacity:0 in
+   the base rules, so the hero still reads if animations never run. */
+.hero-inner > *{animation:zhRise .72s cubic-bezier(.22,.85,.3,1) both;}
+.hero-logo{animation:zhStamp .85s cubic-bezier(.22,.9,.28,1) both;}
+.hero-logo-tag{animation:zhSpread 1.15s cubic-bezier(.3,.85,.3,1) both .34s;}
+.hero-inner .eyebrow{animation-delay:.32s;}
+.hero-inner h1{animation-delay:.42s;}
+.hero-lede{animation-delay:.52s;}
+.hero-actions{animation-delay:.62s;}
+.hero-note{animation-delay:.72s;}
+@keyframes zhRise{from{opacity:0;transform:translateY(16px);}to{opacity:1;transform:none;}}
+@keyframes zhStamp{from{opacity:0;transform:scale(.955);}to{opacity:1;transform:none;}}
+@keyframes zhSpread{from{opacity:0;letter-spacing:.14em;}to{opacity:1;letter-spacing:.3em;}}
+
+/* Dawn wash over the pasture. Scale runs 1.035 -> 1 and never below 1, so the
+   scene cannot uncover the page edges the way a letterboxed fit would. */
+.hero-scene{animation:zhDawn 1.9s cubic-bezier(.25,.7,.3,1) both;}
+@keyframes zhDawn{from{opacity:0;transform:scale(1.035);}to{opacity:1;transform:none;}}
+
+/* A directional nudge on the primary CTA arrow instead of a vertical bob. */
+.hero-actions .btn-primary svg,.hero-actions .btn-primary i{animation:zhNudge 2.8s ease-in-out infinite;}
+@keyframes zhNudge{0%,72%,100%{transform:translateX(0);}42%{transform:translateX(3px);}}
+
+
+/* illustrated pasture scene */
+.hero-scene{
+  position:absolute;inset:0;z-index:1;pointer-events:none;
+}
+.hero-scene svg{width:100%;height:100%;display:block;}
+.zf-sky{fill:url(#zgSky);}
+.zf-sun{fill:url(#zgSun);animation:zSunBreathe 11s ease-in-out infinite;}
+.zf-sundisc{fill:#FBEBC0;opacity:.62;}
+.zf-cloud ellipse{fill:#FFFCF4;opacity:.72;}
+.zf-cloud-1{animation:zCloud 86s linear infinite;}
+.zf-cloud-2{animation:zCloud 112s linear infinite;animation-delay:-40s;}
+.zf-cloud-3{animation:zCloud 138s linear infinite;animation-delay:-88s;}
+.zf-bird{fill:none;stroke:#7A7355;stroke-width:2.4;stroke-linecap:round;opacity:.42;}
+.zf-birds-fly{animation:zBirdsFly 54s linear infinite;}
+@keyframes zCloud{from{transform:translateX(-190px);}to{transform:translateX(1390px);}}
+@keyframes zBirdsFly{from{transform:translate(-130px,26px);}to{transform:translate(1330px,-30px);}}
+.zf-h1{fill:url(#zgH1);}
+.zf-h2{fill:url(#zgH2);}
+.zf-haze{fill:#F6EBD2;opacity:.42;}
+.zf-mid{fill:url(#zgMid);}
+.zf-near{fill:url(#zgNear);}
+.zf-fore{fill:url(#zgFore);}
+@keyframes zSunBreathe{0%,100%{opacity:.75;}50%{opacity:1;}}
+.zb-w{fill:none;stroke:#7A8A4A;stroke-width:2;stroke-linecap:round;opacity:.5;}
+.zb-fly{animation:zBird 36s linear infinite;}
+
+.zs-thatch{fill:url(#zgThatch);}
+.zs-thatch2{fill:#B08D53;}
+.zs-post{fill:#A9743E;}
+.zs-rail{fill:none;stroke:#B98650;stroke-width:7;stroke-linecap:round;}
+
+.zc-shadow{fill:#3E4A2E;opacity:.22;}
+.zc-body{fill:url(#zgCow);stroke:#D8D2BE;stroke-width:1.6;}
+.zc-shade{fill:#EAE4D2;opacity:.85;}
+.zc-neck,.zc-face{fill:url(#zgCow);stroke:#D8D2BE;stroke-width:1.6;}
+.zc-muzzle{fill:#F2C3CC;}
+.zc-ear{fill:#F3B9C4;stroke:#E0A2AE;stroke-width:1.5;}
+.zc-horn{fill:#3E332A;}
+.zc-eye{fill:#3E332A;}
+.zc-leg{fill:#F7F3E7;stroke:#D8D2BE;stroke-width:1.6;}
+.zc-leg-far{fill:#E3DDCB;}
+.zc-hoof{fill:#4A3D31;}
+.zc-tailline{fill:none;stroke:#E8E2D0;stroke-width:6;stroke-linecap:round;}
+.zc-tuft{fill:#4A3D31;}
+.zc-udder{fill:#F3B9C4;stroke:#E09FAD;stroke-width:1.5;}
+.zc-teat{fill:none;stroke:#EFAAB8;stroke-width:6;stroke-linecap:round;}
+
+.zc-tail{transform-box:fill-box;transform-origin:22% 0%;animation:zTail 3.8s ease-in-out infinite;}
+.zc-tail-b{animation-duration:4.6s;animation-delay:-1.4s;}
+.zc-tail-c{animation-duration:3.2s;animation-delay:-2.3s;}
+.zc-tail-a{animation-duration:5.2s;animation-delay:-.7s;}
+.zc-head{transform-box:fill-box;transform-origin:6% 40%;}
+.zc-head-a{animation:zLook 9s ease-in-out infinite;}
+.zc-head-b{animation:zGraze 6s ease-in-out infinite;}
+.zc-head-c{animation:zGraze 7.2s ease-in-out infinite;animation-delay:-2.6s;}
+.zc-head-d{animation:zLook 11s ease-in-out infinite;animation-delay:-4s;}
+
+.zw-stool{fill:#A9743E;}
+.zw-saree{fill:url(#zgSkirt);}
+.zw-dupback{fill:#E0447A;opacity:.92;}
+.zw-fold{fill:none;stroke:#D9A82B;stroke-width:2;stroke-linecap:round;}
+.zw-bangle{fill:none;stroke:#D98F2E;stroke-width:2.4;stroke-linecap:round;}
+.zw-border{fill:none;stroke:#D9932B;stroke-width:5;stroke-linecap:round;}
+.zw-blouse{fill:#3B7EA8;}
+.zw-skin{fill:#C98A5A;}
+.zw-hair{fill:#241A14;}
+.zw-drape{fill:url(#zgDup);}
+.zw-arm{fill:none;stroke:#C98A5A;stroke-width:9;stroke-linecap:round;}
+.zw-hand{fill:#C98A5A;}
+.zw-arm-g{transform-box:fill-box;transform-origin:0% 0%;}
+.zw-arm-1{animation:zArm1 1.7s ease-in-out infinite;}
+.zw-arm-2{animation:zArm2 1.7s ease-in-out infinite;}
+.zw-bucket{fill:#2E9E8F;stroke:#238577;stroke-width:2;}
+.zw-bucket-rim{fill:none;stroke:#1F7368;stroke-width:4;stroke-linecap:round;}
+.zw-milk{fill:#FFFDF8;}
+.zw-squirt{fill:none;stroke:#FFFDF8;stroke-width:3.4;stroke-linecap:round;opacity:.95;animation:zSquirt 1.7s ease-in-out infinite;}
+.zw-squirt-2{animation-delay:-.85s;}
+.zw-pot{fill:#A9603A;}
+.zw-potrim{fill:#8E4C2C;}
+
+.zg path{fill:none;stroke:#4E663E;stroke-width:2.6;stroke-linecap:round;opacity:.75;}
+.zg{transform-box:fill-box;transform-origin:50% 100%;}
+.zg-a{animation:zGrass 6.4s ease-in-out infinite;}
+.zg-b{animation:zGrass 8.2s ease-in-out infinite;animation-delay:-2.6s;stroke-opacity:.8;}
+
+@keyframes zBird{from{transform:translate(-90px,14px);}to{transform:translate(1290px,-12px);}}
+@keyframes zTail{0%,100%{transform:rotate(-7deg);}50%{transform:rotate(7deg);}}
+@keyframes zGraze{0%,100%{transform:rotate(0deg);}45%{transform:rotate(4deg);}}
+@keyframes zLook{0%,72%,100%{transform:rotate(0deg);}84%{transform:rotate(-3.5deg);}}
+@keyframes zArm1{0%,100%{transform:rotate(-3deg);}50%{transform:rotate(4deg);}}
+@keyframes zArm2{0%,100%{transform:rotate(4deg);}50%{transform:rotate(-3deg);}}
+@keyframes zSquirt{0%{opacity:0;}20%{opacity:.95;}70%{opacity:.35;}100%{opacity:0;}}
+@keyframes zGrass{0%,100%{transform:skewX(-4deg);}50%{transform:skewX(4deg);}}
+
+/* membership banner */
+.membership-banner{
+  max-width:980px;margin:0 auto 1.7rem;position:relative;overflow:hidden;
+  border-radius:var(--radius);box-shadow:var(--shadow);border:1px solid var(--border);background:var(--cream-alt);
+}
+.membership-banner img{
+  width:100%;height:clamp(150px,18vw,205px);object-fit:cover;display:block;
+  transition:transform .8s cubic-bezier(.2,.7,.3,1);
+}
+.membership-banner:hover img{transform:scale(1.05);}
+.membership-banner figcaption{
+  position:absolute;left:0;right:0;bottom:0;padding:2.2rem 1.5rem 1.1rem;
+  background:linear-gradient(180deg,transparent,rgba(36,56,45,.88));
+  color:var(--cream);font-size:.92rem;font-weight:600;text-align:left;
+}
+.hero::before,.hero::after{
+  content:"";position:absolute;width:60vmax;height:60vmax;border-radius:50%;
+  filter:blur(70px);opacity:.16;z-index:0;pointer-events:none;
+}
+.hero::before{background:var(--gold);top:-25%;left:-15%;animation:heroDrift1 20s ease-in-out infinite alternate;z-index:0;}
+.hero::after{background:var(--green);bottom:-30%;right:-15%;animation:heroDrift2 24s ease-in-out infinite alternate;}
+@keyframes heroDrift1{from{transform:translate(0,0) scale(1);}to{transform:translate(5%,6%) scale(1.08);}}
+@keyframes heroDrift2{from{transform:translate(0,0) scale(1);}to{transform:translate(-6%,-5%) scale(1.05);}}
+.hero-inner{max-width:760px;margin:0 auto;position:relative;z-index:3;}
+.eyebrow{
+  display:inline-flex;align-items:center;gap:.5em;
+  background:var(--card-bg);border:1px solid var(--border);color:var(--gold-deep);
+  padding:.5em 1.1em;border-radius:999px;font-size:.82rem;font-weight:700;letter-spacing:.03em;
+  box-shadow:var(--shadow);margin-bottom:1.6rem;
+}
+.eyebrow i{width:15px;height:15px;}
+.hero h1{font-size:clamp(2.1rem,4.9vw,3.3rem);margin-bottom:.42em;}
+.hero-lede{font-size:1.08rem;max-width:600px;margin:0 auto 1.5rem;}
+.hero-actions{display:flex;gap:1rem;justify-content:center;flex-wrap:wrap;margin-bottom:1.2rem;}
+.hero-note{font-size:.85rem;color:var(--ink-soft);opacity:.8;}
+
+/* stats */
+.stats{padding:0 1.5rem 2.4rem;}
+.stats-grid{
+  max-width:1000px;margin:0 auto;display:grid;grid-template-columns:repeat(2,1fr);gap:1rem;
+}
+.stat{
+  background:var(--card-bg);border:1px solid var(--border);border-radius:var(--radius);
+  padding:1.8rem 1rem;text-align:center;box-shadow:var(--shadow);
+}
+.stat-value{display:block;font-family:var(--font-display);font-size:2.4rem;color:var(--green);}
+.stat-word .stat-value{color:var(--gold-deep);}
+.stat-label{display:block;margin-top:.3em;font-size:.82rem;text-transform:uppercase;letter-spacing:.08em;color:var(--ink-soft);font-weight:600;}
+
+/* story */
+.story{padding:2.7rem 1.5rem;background:var(--card-bg);border-top:1px solid var(--border);}
+.story-inner{max-width:980px;margin:0 auto;display:grid;grid-template-columns:1.1fr .9fr;gap:3rem;align-items:center;}
+.story-text h2{font-size:2rem;}
+.story-quote{
+  background:var(--card-bg);color:var(--ink);border-radius:var(--radius);padding:2.4rem;position:relative;
+  border:1px solid var(--border);border-left:3px solid var(--gold);box-shadow:var(--shadow);
+}
+.story-quote .quote-mark{width:32px;height:32px;color:var(--gold);opacity:.9;margin-bottom:.6rem;}
+.story-quote p{color:var(--ink);font-family:var(--font-display);font-size:1.25rem;font-style:italic;margin-bottom:1rem;}
+.story-quote cite{color:var(--green-deep);font-style:normal;font-size:.9rem;}
+
+/* benefits */
+.benefits{padding:2.7rem 1.5rem;background:var(--cream-alt);}
+.benefit-grid{
+  max-width:1060px;margin:0 auto;display:grid;grid-template-columns:repeat(3,1fr);gap:.85rem;
+  align-items:start;
+}
+.benefit-card{
+  text-align:left;background:var(--card-bg);border:1px solid var(--border);border-radius:var(--radius);
+  padding:1.15rem;cursor:pointer;font-family:var(--font-body);color:var(--ink);
+  display:flex;flex-direction:column;gap:.45rem;transition:box-shadow .2s ease, transform .2s ease, border-color .2s ease;
+}
+.benefit-card:hover{box-shadow:var(--shadow);transform:translateY(-3px);border-color:color-mix(in srgb, var(--gold) 40%, var(--border));}
+.benefit-top{display:flex;align-items:center;justify-content:space-between;color:var(--gold-deep);}
+.benefit-top i{width:24px;height:24px;}
+.benefit-num{font-family:var(--font-display);font-size:.85rem;color:var(--ink-soft);}
+.benefit-title{font-weight:600;font-size:1.02rem;position:relative;padding-right:1.4em;}
+.benefit-title::after{
+  content:"";position:absolute;right:.2em;top:.36em;width:.4em;height:.4em;
+  border-right:2px solid var(--gold-deep);border-bottom:2px solid var(--gold-deep);
+  transform:rotate(45deg);transition:transform .25s ease;
+}
+.benefit-card[aria-expanded="true"] .benefit-title::after{transform:rotate(-135deg);top:.5em;}
+
+/* The description text must sit inside an element child. A bare text node lands
+   in an implicit grid row that grid-template-rows:0fr cannot collapse - that is
+   why the original expand never worked and every card stayed open. */
+.benefit-desc{display:grid;grid-template-rows:0fr;transition:grid-template-rows .3s ease;}
+.benefit-desc-in{overflow:hidden;font-size:.92rem;line-height:1.5;color:var(--ink-soft);}
+.benefit-card[aria-expanded="true"] .benefit-desc{grid-template-rows:1fr;}
+.benefit-card[aria-expanded="true"] .benefit-desc-in{padding-top:.45rem;}
+
+/* herd */
+.herd{padding:2.7rem 1.5rem;background:var(--green-tint);border-top:1px solid var(--border);}
+.herd-grid{max-width:980px;margin:0 auto;display:grid;grid-template-columns:repeat(4,1fr);gap:1.5rem;text-align:center;}
+/* 2x2 grid quadrant cropping */
+.cell{display:block;position:absolute;overflow:hidden;}
+.cell img{position:absolute;width:204%;height:204%;object-fit:fill;max-width:none;}
+.cell-tl img{left:0;top:0;transform-origin:25% 25%;}
+.cell-tr img{left:-104%;top:0;transform-origin:75% 25%;}
+.cell-bl img{left:0;top:-104%;transform-origin:25% 75%;}
+.cell-br img{left:-104%;top:-104%;transform-origin:75% 75%;}
+
+.herd-card{transition:transform .25s ease;}
+.herd-card:hover{transform:translateY(-4px);}
+.herd-avatar{
+  width:94px;aspect-ratio:1;border-radius:50%;margin:0 auto .7rem;
+  position:relative;overflow:hidden;background:var(--cream-alt);
+  box-shadow:0 10px 20px rgba(58,52,44,.12);
+  transition:transform .3s ease, box-shadow .3s ease;
+}
+.herd-avatar .cell{left:50%;top:50%;transform:translate(-50%,-50%);width:100%;aspect-ratio:3/4;}
+.herd-card:hover .herd-avatar{transform:scale(1.08);box-shadow:0 14px 26px rgba(58,52,44,.2);}
+.herd-card h3{margin-bottom:.2em;font-size:1.1rem;}
+.herd-card p{font-size:.9rem;}
+
+/* gallery */
+.gallery{padding:2.7rem 1.5rem;background:var(--card-bg);border-top:1px solid var(--border);}
+.gallery-grid{
+  max-width:980px;margin:0 auto;display:grid;grid-template-columns:repeat(2,1fr);gap:1.2rem;
+}
+.gallery-item{
+  margin:0;position:relative;overflow:hidden;border-radius:var(--radius);
+  box-shadow:var(--shadow);border:1px solid var(--border);background:var(--cream-alt);
+}
+.gallery-item.reveal{opacity:1;transform:none;clip-path:inset(0 100% 0 0);}
+.gallery-item.reveal.in-view{animation:galleryWipe .9s cubic-bezier(.65,0,.35,1) forwards;}
+.gallery-grid .gallery-item:nth-child(2){animation-delay:.08s;}
+.gallery-grid .gallery-item:nth-child(3){animation-delay:.16s;}
+.gallery-grid .gallery-item:nth-child(4){animation-delay:.24s;}
+@keyframes galleryWipe{from{clip-path:inset(0 100% 0 0);}to{clip-path:inset(0 0 0 0);}}
+.gallery-item img{
+  width:100%;height:185px;object-fit:cover;display:block;
+  transition:transform .6s cubic-bezier(.2,.7,.3,1);
+}
+.gallery-item:hover img{transform:scale(1.07);}
+.gallery-item figcaption{
+  position:absolute;left:0;right:0;bottom:0;padding:1.6rem 1.2rem .95rem;
+  background:linear-gradient(180deg, transparent, rgba(36,56,45,.88));
+  color:var(--cream);font-size:.88rem;font-weight:600;letter-spacing:.01em;text-align:left;
+  transform:translateY(6px);opacity:.94;transition:transform .35s ease, opacity .35s ease;
+}
+.gallery-item:hover figcaption{transform:translateY(0);opacity:1;}
+
+/* process */
+.process{padding:2.7rem 1.5rem;background:var(--card-bg);position:relative;overflow:hidden;}
+.process > .section-head,.process > .ritual{position:relative;z-index:1;}
+
+/* ambient process background */
+.process-bg{position:absolute;inset:0;z-index:0;pointer-events:none;overflow:hidden;}
+.pbg-blob{position:absolute;border-radius:50%;filter:blur(58px);}
+.pbg-b1{
+  width:44vmax;height:44vmax;background:var(--gold);opacity:.25;
+  top:-16%;left:-14%;animation:pbgDrift1 26s ease-in-out infinite alternate;
+}
+.pbg-b2{
+  width:36vmax;height:36vmax;background:var(--green);opacity:.20;
+  bottom:-20%;right:-12%;animation:pbgDrift2 33s ease-in-out infinite alternate;
+}
+.pbg-b3{
+  width:26vmax;height:26vmax;background:#E9BE55;opacity:.26;
+  top:34%;left:54%;animation:pbgDrift3 21s ease-in-out infinite alternate;
+}
+/* churning vortex */
+.pbg-svg{position:absolute;inset:0;width:100%;height:100%;display:block;}
+.pbg-swirl{
+  fill:none;stroke:var(--gold);stroke-linecap:round;
+  transform-box:fill-box;transform-origin:50% 50%;
+}
+.pbg-s1{stroke-width:2.6;stroke-dasharray:210 340;opacity:.30;animation:pbgChurnA 6.5s ease-in-out infinite;}
+.pbg-s2{stroke-width:2.2;stroke-dasharray:300 560;opacity:.24;animation:pbgChurnB 8s ease-in-out infinite;}
+.pbg-s3{stroke-width:2;stroke-dasharray:380 900;opacity:.19;animation:pbgChurnA 10s ease-in-out infinite;animation-delay:-2.5s;}
+.pbg-s4{stroke-width:1.6;stroke-dasharray:460 1300;opacity:.14;animation:pbgChurnB 12.5s ease-in-out infinite;animation-delay:-4s;}
+
+/* wooden churner silhouette */
+.pbg-churner{transform:translate(1010px,430px);}
+.pbg-pot{fill:#B2703A;opacity:.14;}
+.pbg-potrim{fill:#C98544;opacity:.17;}
+.pbg-rod,.pbg-grip{fill:#A9793F;opacity:.18;}
+.pbg-blade{fill:#C08A4A;opacity:.17;}
+.pbg-rope{fill:none;stroke:#8A5527;stroke-width:4;stroke-linecap:round;opacity:.14;}
+.pbg-staff{transform-box:fill-box;transform-origin:50% 6%;animation:pbgStaff 3.4s ease-in-out infinite;}
+.pbg-rope-l{transform-box:fill-box;transform-origin:0% 0%;animation:pbgRopeL 3.4s ease-in-out infinite;}
+.pbg-rope-r{transform-box:fill-box;transform-origin:100% 0%;animation:pbgRopeR 3.4s ease-in-out infinite;}
+
+/* makkhan granules rising */
+.pbg-gran{
+  position:absolute;border-radius:50%;background:#FFF4D6;
+  box-shadow:0 0 12px rgba(255,235,180,.95);opacity:0;
+  animation:pbgFloat linear infinite;
+}
+.pbg-g1{width:10px;height:10px;left:18%;bottom:16%;animation-duration:13s;animation-delay:-1s;}
+.pbg-g2{width:7px;height:7px;left:31%;bottom:9%;animation-duration:17s;animation-delay:-6s;}
+.pbg-g3{width:12px;height:12px;left:47%;bottom:20%;animation-duration:15s;animation-delay:-10s;}
+.pbg-g4{width:8px;height:8px;left:62%;bottom:12%;animation-duration:19s;animation-delay:-3s;}
+.pbg-g5{width:11px;height:11px;left:76%;bottom:22%;animation-duration:14s;animation-delay:-8s;}
+.pbg-g6{width:6px;height:6px;left:88%;bottom:14%;animation-duration:21s;animation-delay:-13s;}
+
+/* milk droplets falling */
+.pbg-drop{
+  position:absolute;width:9px;height:14px;
+  border-radius:52% 52% 60% 60%;background:rgba(255,253,248,.95);
+  box-shadow:0 0 10px rgba(255,255,255,.8);opacity:0;
+  animation:pbgDrop linear infinite;
+}
+.pbg-d1{left:24%;top:6%;animation-duration:6.5s;animation-delay:-1.5s;}
+.pbg-d2{left:55%;top:3%;animation-duration:8s;animation-delay:-4.5s;}
+.pbg-d3{left:81%;top:8%;animation-duration:7.2s;animation-delay:-6.5s;}
+.pbg-wisp{
+  position:absolute;bottom:-14%;border-radius:50%;
+  width:clamp(56px,8vw,120px);height:54%;
+  background:linear-gradient(180deg, rgba(255,244,214,0), rgba(255,228,168,.92));
+  filter:blur(24px);opacity:0;
+  animation:pbgRise linear infinite;
+}
+.pbg-w1{left:12%;animation-duration:17s;animation-delay:-2s;}
+.pbg-w2{left:34%;animation-duration:22s;animation-delay:-9s;width:clamp(40px,6vw,88px);}
+.pbg-w3{left:63%;animation-duration:19s;animation-delay:-14s;}
+.pbg-w4{left:83%;animation-duration:25s;animation-delay:-5s;width:clamp(36px,5vw,76px);}
+
+@media (max-width:720px){
+  .pbg-b3,.pbg-w2,.pbg-w4,.pbg-g4,.pbg-g6,.pbg-d3{display:none;}
+  .pbg-churner{display:none;}
+  .pbg-s4{display:none;}
+  .pbg-blob{filter:blur(46px);}
+  .pbg-wisp{filter:blur(20px);}
+}
+
+@keyframes pbgDrift1{from{transform:translate(0,0) scale(1);}to{transform:translate(7%,6%) scale(1.1);}}
+@keyframes pbgDrift2{from{transform:translate(0,0) scale(1);}to{transform:translate(-6%,-7%) scale(1.08);}}
+@keyframes pbgDrift3{from{transform:translate(0,0) scale(1);}to{transform:translate(-9%,7%) scale(1.14);}}
+@keyframes pbgChurnA{0%,100%{transform:rotate(-22deg);}50%{transform:rotate(22deg);}}
+@keyframes pbgChurnB{0%,100%{transform:rotate(19deg);}50%{transform:rotate(-19deg);}}
+@keyframes pbgStaff{0%,100%{transform:rotate(-12deg);}50%{transform:rotate(12deg);}}
+@keyframes pbgRopeL{0%,100%{transform:translateY(-5px);}50%{transform:translateY(5px);}}
+@keyframes pbgRopeR{0%,100%{transform:translateY(5px);}50%{transform:translateY(-5px);}}
+@keyframes pbgFloat{
+  0%{opacity:0;transform:translate(0,0) scale(.6);}
+  14%{opacity:.62;}
+  70%{opacity:.38;}
+  100%{opacity:0;transform:translate(30px,-190px) scale(1);}
+}
+@keyframes pbgDrop{
+  0%{opacity:0;transform:translateY(-10px) scaleY(.8);}
+  16%{opacity:.68;}
+  80%{opacity:.44;}
+  100%{opacity:0;transform:translateY(230px) scaleY(1.35);}
+}
+@keyframes pbgRise{
+  0%{opacity:0;transform:translateY(0) scaleX(1);}
+  14%{opacity:.54;}
+  68%{opacity:.3;}
+  100%{opacity:0;transform:translateY(-118%) scaleX(1.45);}
+}
+.ritual{max-width:640px;margin:0 auto;position:relative;padding-left:2.6rem;}
+.ritual-line{
+  position:absolute;left:20px;top:8px;bottom:8px;width:2px;background:var(--border);
+}
+.ritual-line-fill{
+  position:absolute;left:0;top:0;width:100%;height:0%;background:var(--gold);
+  transition:height .1s linear;
+}
+.ritual-steps{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:1.85rem;}
+.ritual-step{position:relative;}
+.ritual-icon{
+  position:absolute;left:-2.6rem;top:0;width:42px;height:42px;border-radius:50%;
+  background:var(--card-bg);border:2px solid var(--border);display:flex;align-items:center;justify-content:center;
+  color:var(--ink-soft);transition:all .3s ease;
+}
+.ritual-icon i{width:20px;height:20px;}
+.ritual-step.active .ritual-icon{border-color:var(--gold);color:var(--gold-deep);background:color-mix(in srgb, var(--gold) 12%, var(--card-bg));box-shadow:0 6px 16px rgba(191,143,58,.2);}
+.ritual-tag{display:block;font-size:.78rem;text-transform:uppercase;letter-spacing:.1em;color:var(--gold-deep);font-weight:700;margin-bottom:.3em;}
+.ritual-step h3{font-size:1.3rem;margin-bottom:.3em;}
+.ritual-step p{margin:0;}
+
+/* bilona churn illustration */
+.churn{
+  --churn-milk:#FCF3DC;
+  margin-top:.9rem;max-width:330px;
+  opacity:0;transform:translateY(10px);transition:opacity .6s ease, transform .6s ease;
+}
+.churn svg{width:100%;height:auto;display:block;overflow:visible;}
+
+/* two women churning */
+.bl-svg{width:100%;height:auto;display:block;}
+.bl-ground{fill:#B9D08A;opacity:.55;}
+.bl-skirt{fill:#F3C63F;}
+.bl-skirt-alt{fill:#EBAF3C;}
+.bl-fold{fill:none;stroke:#D9A82B;stroke-width:2;stroke-linecap:round;}
+.bl-blouse{fill:#3B7EA8;}
+.bl-blouse-alt{fill:#2E6B57;}
+.bl-dup,.bl-dup-back{fill:#E0447A;}
+.bl-dup-alt{fill:#C7386B;}
+.bl-dup-back{opacity:.85;}
+.bl-skin,.bl-hand{fill:#E8B98E;}
+.bl-hair{fill:#2B1D14;}
+.bl-eye{fill:#2B1D14;}
+.bl-arm{fill:none;stroke:#E8B98E;stroke-width:9;stroke-linecap:round;}
+.bl-bangle{fill:none;stroke:#D98F2E;stroke-width:2.6;stroke-linecap:round;}
+.bl-pot{fill:#B5713E;}
+.bl-potrim{fill:#C98544;}
+.bl-potband{fill:none;stroke:#8E5228;stroke-width:3;opacity:.7;}
+.bl-wood{fill:#A9793F;}
+.bl-blade{fill:#C08A4A;}
+.bl-rope{fill:none;stroke:#8A5527;stroke-width:2.6;stroke-linecap:round;opacity:.85;}
+.bl-bowl{fill:#EFE3CC;stroke:#D6C6A6;stroke-width:2;}
+.bl-milk{fill:#FFFDF8;}
+
+.bl-rod{transform-box:fill-box;transform-origin:50% 4%;animation:blChurn 2.1s ease-in-out infinite;}
+.bl-rod-b{animation-duration:2.5s;animation-delay:-.8s;}
+.bl-arm-near{transform-box:fill-box;transform-origin:0% 0%;animation:blPullA 2.1s ease-in-out infinite;}
+.bl-arm-far{transform-box:fill-box;transform-origin:0% 0%;animation:blPullB 2.1s ease-in-out infinite;}
+.bl-arm-near-b{animation-duration:2.5s;animation-delay:-.8s;}
+.bl-unit-b .bl-arm-far{animation-duration:2.5s;animation-delay:-.8s;}
+
+@keyframes blChurn{0%,100%{transform:rotate(-11deg);}50%{transform:rotate(11deg);}}
+@keyframes blPullA{0%,100%{transform:translate(0,0);}50%{transform:translate(-4px,3px);}}
+@keyframes blPullB{0%,100%{transform:translate(-4px,3px);}50%{transform:translate(0,0);}}
+.ritual-step-churn.active .churn{opacity:1;transform:translateY(0);}
+.churn-shadow{fill:rgba(59,45,30,.14);}
+.churn-pot{fill:#B2703A;stroke:#8A5527;stroke-width:2.5;}
+.churn-rim{fill:#C98544;stroke:#8A5527;stroke-width:2;}
+.churn-rod{fill:#A9793F;}
+.churn-grip{fill:#8A5527;}
+.churn-blade{fill:#C08A4A;stroke:#8A5527;stroke-width:2;}
+.churn-wave{fill:var(--gold);opacity:.55;}
+.churn-wave-2{opacity:.35;}
+.churn-rope path{fill:none;stroke:#8A5527;stroke-width:2.5;stroke-linecap:round;opacity:.7;}
+.churn-stick{transform-origin:110px 100px;}
+.churn-fist{fill:#E7BC93;stroke:#B5835B;stroke-width:2;stroke-linejoin:round;}
+.churn-knuckle,.churn-thumb{fill:none;stroke:#B5835B;stroke-width:1.8;stroke-linecap:round;}
+.churn-cuff{fill:#DCCEB0;stroke:#AE9C7C;stroke-width:2;}
+
+.ritual-step-churn.active .churn-stick{animation:churnTwist 1.9s ease-in-out infinite;}
+.ritual-step-churn.active .churn-wave-1{animation:churnSlosh 1.9s ease-in-out infinite;}
+.ritual-step-churn.active .churn-wave-2{animation:churnSlosh 1.9s ease-in-out infinite reverse;}
+.ritual-step-churn.active .churn-rope-l{animation:churnRopeL 1.9s ease-in-out infinite;}
+.ritual-step-churn.active .churn-rope-r{animation:churnRopeR 1.9s ease-in-out infinite;}
+.ritual-step-churn.active .churn-hand-l{animation:churnHandL 1.9s ease-in-out infinite;}
+.ritual-step-churn.active .churn-hand-r{animation:churnHandR 1.9s ease-in-out infinite;}
+
+@keyframes churnTwist{
+  0%,100%{transform:rotate(-13deg);}
+  50%{transform:rotate(13deg);}
+}
+@keyframes churnSlosh{
+  0%,100%{transform:translateX(-9px);}
+  50%{transform:translateX(9px);}
+}
+@keyframes churnRopeL{
+  0%,100%{d:path("M74 40 q34 12 36 22");}
+  50%{d:path("M74 40 q30 20 36 22");}
+}
+@keyframes churnRopeR{
+  0%,100%{d:path("M146 40 q-30 20 -36 22");}
+  50%{d:path("M146 40 q-34 12 -36 22");}
+}
+@keyframes churnHandL{
+  0%,100%{transform:translateY(-6px);}
+  50%{transform:translateY(6px);}
+}
+@keyframes churnHandR{
+  0%,100%{transform:translateY(6px);}
+  50%{transform:translateY(-6px);}
+}
+
+/* shop */
+.shop{padding:2.7rem 1.5rem;background:var(--card-bg);border-top:1px solid var(--border);}
+.shop-grid{max-width:1060px;margin:0 auto;display:grid;grid-template-columns:repeat(3,1fr);gap:1.2rem;}
+.shop-card{
+  background:var(--card-bg);border:1px solid var(--border);border-radius:var(--radius);padding:1.2rem;
+  position:relative;box-shadow:var(--shadow);transition:transform .25s ease, box-shadow .25s ease;
+}
+.shop-card:hover{transform:translateY(-4px);box-shadow:0 16px 32px rgba(59,45,30,.14);}
+.shop-card-featured{border-color:var(--gold);}
+.shop-badge{
+  position:absolute;top:-11px;right:1.2rem;background:var(--gold);color:#fff;font-size:.72rem;font-weight:700;
+  padding:.3em .8em;border-radius:999px;letter-spacing:.03em;
+}
+.shop-media{
+  position:relative;width:100%;aspect-ratio:3/2;overflow:hidden;
+  border-radius:14px;margin-bottom:.85rem;background:var(--cream-alt);
+}
+.shop-media .cell{inset:0;width:100%;height:100%;}
+.shop-media img{transition:transform .6s cubic-bezier(.2,.7,.3,1);}
+.shop-card:hover .shop-media img{transform:scale(1.07);}
+.shop-media-icon{display:flex;align-items:center;justify-content:center;background:linear-gradient(150deg,#F3E4C4,#E0C68F);}
+.shop-media-icon i{width:46px;height:46px;color:var(--gold-deep);}
+.shop-card h3{font-size:1.08rem;margin-bottom:.3em;}
+.shop-card p{font-size:.9rem;margin-bottom:1rem;}
+.price{font-family:var(--font-display);font-size:1.3rem;color:var(--green);}
+.price em{display:block;font-style:normal;font-size:.68rem;text-transform:uppercase;letter-spacing:.08em;color:var(--ink-soft);margin-top:.15em;}
+
+/* reviews */
+.reviews{padding:2.7rem 1.5rem;background:var(--cream-alt);}
+.carousel{max-width:680px;margin:0 auto;}
+.carousel-track{position:relative;min-height:220px;}
+.review-card{
+  margin:0;background:var(--card-bg);border:1px solid var(--border);border-radius:var(--radius);
+  padding:2.2rem;box-shadow:var(--shadow);
+  position:absolute;inset:0;opacity:0;pointer-events:none;transform:translateY(8px);
+  transition:opacity .3s ease, transform .3s ease;
+}
+.review-card.active{opacity:1;pointer-events:auto;transform:translateY(0);position:relative;}
+.review-card .quote-mark{width:26px;height:26px;color:var(--gold);margin-bottom:.6rem;}
+.review-card p{font-family:var(--font-display);font-style:italic;font-size:1.1rem;color:var(--ink);}
+.review-card footer{display:flex;align-items:center;gap:.7em;font-size:.88rem;color:var(--ink-soft);}
+.avatar{
+  width:38px;height:38px;border-radius:50%;background:var(--green);color:#fff;display:flex;
+  align-items:center;justify-content:center;font-weight:700;flex-shrink:0;
+}
+.carousel-controls{display:flex;align-items:center;justify-content:center;gap:1rem;margin-top:1.4rem;}
+.carousel-btn{
+  width:40px;height:40px;border-radius:50%;border:1px solid var(--border);background:var(--card-bg);
+  display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--ink);
+}
+.carousel-btn:hover{border-color:var(--gold);color:var(--gold-deep);}
+.carousel-btn i{width:18px;height:18px;}
+.carousel-dots{display:flex;gap:.5em;}
+.carousel-dots button{
+  width:8px;height:8px;border-radius:50%;background:var(--border);border:none;cursor:pointer;padding:0;
+}
+.carousel-dots button.active{background:var(--gold);width:22px;border-radius:4px;transition:width .2s ease;}
+
+/* pricing */
+.pricing{padding:2.7rem 1.5rem;background:var(--maroon);color:var(--cream);border-top:none;}
+.pricing-inner{max-width:980px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr;gap:3rem;align-items:center;}
+.pricing-text h2{color:var(--cream);font-size:2rem;}
+.pricing-text p{color:rgba(251,246,236,.78);}
+.pricing-text .section-kicker{color:var(--gold);}
+.mini-quote{
+  border-left:3px solid var(--gold);padding-left:1rem;margin:1.5rem 0 0;
+  font-family:var(--font-display);font-style:italic;color:var(--cream);
+}
+.pricing-card{
+  background:var(--card-bg);color:var(--ink);border-radius:var(--radius);padding:2rem;border:1px solid var(--border);box-shadow:var(--shadow);
+}
+.pricing-card-head{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:.8rem;margin-bottom:1.2rem;font-weight:600;}
+.rate-toggle{display:flex;background:rgba(43,38,32,0.06);border-radius:999px;padding:3px;gap:2px;}
+.rate-btn{
+  border:none;background:transparent;padding:.4em 1em;border-radius:999px;font-size:.82rem;font-weight:700;
+  cursor:pointer;color:var(--ink-soft);
+}
+.rate-btn.active{background:var(--gold);color:#fff;}
+.pricing-row{display:flex;justify-content:space-between;align-items:center;padding:.85rem 0;border-bottom:1px solid var(--border);font-size:.98rem;}
+.pricing-row strong{font-family:var(--font-display);font-size:1.15rem;}
+.savings-row .savings-highlight{color:var(--gold-deep);}
+.pricing-fine{font-size:.82rem;margin:1rem 0 1.2rem;}
+.pricing-cap{display:flex;align-items:center;gap:.5em;justify-content:center;font-size:.85rem;color:var(--ink-soft);margin:1rem 0 0;}
+.pricing-cap i{width:16px;height:16px;}
+
+/* instagram */
+.instagram{padding:2.7rem 1.5rem;text-align:center;background:var(--card-bg);}
+.insta-grid{max-width:620px;margin:0 auto 1.4rem;display:grid;grid-template-columns:repeat(6,1fr);gap:.5rem;}
+.insta-tile{
+  aspect-ratio:1;border-radius:11px;background:linear-gradient(150deg,var(--c1),var(--c2));
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:.4rem;color:var(--ink);
+  transition:transform .2s ease;
+}
+.insta-tile:hover{transform:scale(1.03);}
+.insta-tile i{width:26px;height:26px;}
+.insta-tile span{font-size:.82rem;font-weight:700;}
+
+/* join */
+.join{padding:2.7rem 1.5rem;background:var(--cream-alt);border-top:1px solid var(--border);}
+.join-inner{max-width:980px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr;gap:3rem;align-items:start;}
+.join-text h2{font-size:2rem;}
+.join-list{list-style:none;margin:1.5rem 0 0;padding:0;display:flex;flex-direction:column;gap:.8rem;}
+.join-list li{display:flex;align-items:center;gap:.6em;font-weight:500;color:var(--ink);}
+.join-list i{width:18px;height:18px;color:var(--green);flex-shrink:0;}
+.form-alert{
+  display:block;margin:.9rem 0 0;padding:.8em 1em;
+  background:rgba(192,57,43,.08);border:1px solid rgba(192,57,43,.3);
+  border-radius:10px;color:#8f2d22;font-size:.86rem;font-weight:500;line-height:1.5;
+}
+.join-done{
+  background:var(--card-bg);border:1px solid var(--border);border-radius:var(--radius);
+  padding:2.6rem 2rem;box-shadow:var(--shadow);text-align:center;
+}
+.join-done h4{font-size:1.35rem;margin:0 0 .55em;}
+.join-done p{margin:0 0 .55em;}
+.join-done-sub{font-size:.85rem;color:var(--ink-soft);word-break:break-word;}
+.btn[disabled]{opacity:.6;cursor:not-allowed;transform:none !important;box-shadow:none;}
+.join-form{
+  background:var(--card-bg);border:1px solid var(--border);border-radius:var(--radius);padding:2rem;box-shadow:var(--shadow);
+}
+.form-row{margin-bottom:1.1rem;display:flex;flex-direction:column;gap:.4rem;}
+.form-row label{font-size:.85rem;font-weight:700;color:var(--ink);}
+.form-row input{
+  padding:.8em 1em;border-radius:10px;border:1px solid var(--border);background:rgba(43,38,32,0.03);color:var(--ink);
+  font-size:.95rem;font-family:var(--font-body);
+}
+.form-row input:focus{outline:2px solid var(--gold);outline-offset:1px;}
+.form-row.invalid input{border-color:#c0392b;}
+.form-error{display:none;font-size:.78rem;color:#c0392b;}
+.form-row.invalid .form-error{display:block;}
+.form-success{
+  display:flex;align-items:center;gap:.5em;margin:1rem 0 0;padding:.9em 1em;background:rgba(63,107,82,0.08);
+  color:var(--green-deep);border-radius:10px;font-size:.9rem;font-weight:600;
+}
+.form-success i{width:18px;height:18px;flex-shrink:0;}
+
+/* footer */
+.site-footer{background:var(--maroon);color:rgba(251,246,236,.75);padding:4rem 1.5rem 1.5rem;border-top:1px solid rgba(255,255,255,.1);}
+.footer-inner{max-width:1060px;margin:0 auto;display:grid;grid-template-columns:1.5fr 1fr 1fr;gap:2.5rem;}
+/* The footer sits on maroon, where the deep-green disc scores 1.24:1 and all
+   but disappears. Use the light variant of the badge here instead. */
+.site-footer .brand-mark{background:var(--cream);box-shadow:inset 0 0 0 1.5px #1E4A35;}
+.site-footer .brand-text{color:var(--cream);}
+.site-footer .brand-text em{color:var(--gold);}
+.footer-brand p{color:rgba(251,246,236,.65);font-size:.9rem;margin-top:1rem;max-width:320px;}
+.footer-col h4{font-family:var(--font-body);font-size:.82rem;text-transform:uppercase;letter-spacing:.08em;color:var(--gold);margin-bottom:1rem;}
+.footer-col a{display:flex;align-items:center;gap:.5em;text-decoration:none;color:rgba(251,246,236,.78);font-size:.92rem;margin-bottom:.7em;}
+.footer-col a:hover{color:var(--cream);}
+.footer-col a i{width:15px;height:15px;}
+.footer-bottom{max-width:1060px;margin:2.5rem auto 0;padding-top:1.5rem;border-top:1px solid rgba(255,255,255,.12);font-size:.82rem;color:rgba(251,246,236,.55);}
+
+/* back to top */
+/* ===== cart + checkout ===== */
+.cart-btn{
+  position:relative;background:none;border:1px solid var(--border);border-radius:12px;
+  width:44px;height:44px;display:flex;align-items:center;justify-content:center;
+  cursor:pointer;color:var(--ink);margin-left:.6rem;flex-shrink:0;transition:border-color .2s ease,color .2s ease;
+}
+.cart-btn:hover{border-color:var(--gold);color:var(--gold-deep);}
+.cart-btn i{width:20px;height:20px;}
+.cart-count{
+  position:absolute;top:-7px;right:-7px;min-width:21px;height:21px;padding:0 5px;
+  background:var(--gold);color:#fff;border-radius:999px;
+  font-size:.72rem;font-weight:700;display:flex;align-items:center;justify-content:center;
+  border:2px solid var(--cream);
+}
+
+.shop-actions{display:flex;gap:.5rem;margin-top:1rem;}
+.shop-actions .btn-add{margin-top:0;flex:1;width:auto;}
+.shop-actions .btn-buy{flex:1;}
+.btn-buy{
+  display:inline-flex;align-items:center;justify-content:center;gap:.4em;
+  padding:.72em 1em;border-radius:999px;cursor:pointer;
+  background:var(--gold);border:1.5px solid var(--gold);color:#fff;
+  font-family:var(--font-body);font-weight:600;font-size:.92rem;
+  transition:background .18s ease,border-color .18s ease,transform .18s ease;
+}
+.btn-buy:hover{background:var(--gold-deep);border-color:var(--gold-deep);transform:translateY(-1px);}
+.btn-sm{padding:.55em 1.1em;font-size:.86rem;}
+.btn-add{
+  margin-top:1rem;width:100%;display:inline-flex;align-items:center;justify-content:center;gap:.45em;
+  padding:.72em 1em;border-radius:999px;cursor:pointer;
+  background:transparent;border:1.5px solid var(--gold);color:var(--gold-deep);
+  font-family:var(--font-body);font-weight:600;font-size:.92rem;
+  transition:background .18s ease,color .18s ease,transform .18s ease;
+}
+.btn-add i{width:16px;height:16px;}
+.btn-add:hover{background:var(--gold);color:#fff;transform:translateY(-1px);}
+.btn-add.added{background:var(--green);border-color:var(--green);color:#fff;}
+
+.scrim{position:fixed;inset:0;background:rgba(26,34,28,.5);z-index:190;backdrop-filter:blur(2px);}
+
+.cart{
+  position:fixed;top:0;right:0;bottom:0;width:min(420px,92vw);z-index:200;
+  background:var(--cream);border-left:1px solid var(--border);
+  display:flex;flex-direction:column;
+  transform:translateX(101%);transition:transform .3s cubic-bezier(.3,.8,.35,1);
+  box-shadow:-14px 0 40px rgba(40,32,20,.18);visibility:hidden;
+}
+.cart.open{transform:translateX(0);visibility:visible;}
+.cart-head{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:1.15rem 1.25rem;border-bottom:1px solid var(--border);
+}
+.cart-head h3{margin:0;font-size:1.12rem;display:flex;align-items:center;gap:.5em;}
+.cart-head h3 i{width:19px;height:19px;color:var(--gold-deep);}
+.icon-btn{
+  background:none;border:none;cursor:pointer;color:var(--ink-soft);
+  width:36px;height:36px;border-radius:9px;display:flex;align-items:center;justify-content:center;
+}
+.icon-btn:hover{background:rgba(43,38,32,.07);color:var(--ink);}
+.icon-btn i{width:19px;height:19px;}
+.cart-body{flex:1;overflow-y:auto;padding:1rem 1.25rem;}
+.cart-line{display:flex;gap:.85rem;padding:.9rem 0;border-bottom:1px solid var(--border);}
+.cart-line:last-child{border-bottom:none;}
+.cart-thumb{width:64px;height:52px;border-radius:10px;overflow:hidden;position:relative;flex-shrink:0;background:var(--cream-alt);}
+.cart-thumb .cell{inset:0;width:100%;height:100%;}
+.cart-thumb.shop-media-icon{display:flex;align-items:center;justify-content:center;}
+.cart-thumb.shop-media-icon i{width:24px;height:24px;}
+.cart-info{flex:1;min-width:0;}
+.cart-name{font-weight:600;font-size:.93rem;display:block;margin-bottom:.15em;}
+.cart-unit{font-size:.8rem;color:var(--ink-soft);}
+.qty{display:inline-flex;align-items:center;gap:.1rem;margin-top:.5rem;border:1px solid var(--border);border-radius:999px;overflow:hidden;}
+.qty button{
+  background:none;border:none;cursor:pointer;width:28px;height:28px;
+  display:flex;align-items:center;justify-content:center;color:var(--ink);
+}
+.qty button:hover{background:rgba(43,38,32,.07);}
+.qty button i{width:14px;height:14px;}
+.qty span{min-width:24px;text-align:center;font-weight:600;font-size:.88rem;}
+.cart-right{text-align:right;display:flex;flex-direction:column;justify-content:space-between;align-items:flex-end;}
+.cart-lineprice{font-family:var(--font-display);font-size:1.02rem;color:var(--green);}
+.cart-remove{background:none;border:none;cursor:pointer;color:var(--ink-soft);font-size:.76rem;text-decoration:underline;padding:0;}
+.cart-remove:hover{color:#b3402f;}
+.cart-empty{text-align:center;padding:3rem 1rem;color:var(--ink-soft);}
+.cart-empty i{width:42px;height:42px;color:var(--border);margin-bottom:.8rem;}
+.cart-foot{padding:1.1rem 1.25rem 1.3rem;border-top:1px solid var(--border);background:var(--card-bg);}
+.cart-row{display:flex;justify-content:space-between;align-items:center;padding:.3rem 0;font-size:.93rem;color:var(--ink-soft);}
+.cart-row strong{color:var(--ink);font-weight:600;}
+.cart-total{border-top:1px solid var(--border);margin-top:.5rem;padding-top:.7rem;font-size:1.02rem;}
+.cart-total strong{font-family:var(--font-display);font-size:1.28rem;color:var(--green);}
+.cart-note{font-size:.78rem;color:var(--gold-deep);margin:.5rem 0 .9rem;}
+
+.co-page{
+  position:fixed;inset:0;z-index:300;background:var(--cream);
+  overflow-y:auto;display:flex;flex-direction:column;
+}
+.co-topbar{
+  position:sticky;top:0;z-index:2;
+  display:flex;align-items:center;justify-content:space-between;gap:1rem;
+  padding:.95rem 1.5rem;background:var(--card-bg);border-bottom:1px solid var(--border);
+}
+.co-brand{
+  font-family:var(--font-display);font-size:1.05rem;line-height:1.05;color:var(--ink);
+  background:none;border:none;padding:0;cursor:pointer;text-align:left;
+  transition:color .18s ease;
+}
+.co-brand:hover{color:var(--gold-deep);}
+.co-brand em{
+  font-style:normal;display:block;color:var(--gold-deep);
+  font-size:.58em;letter-spacing:.15em;text-transform:uppercase;margin-top:.1em;
+}
+.co-shell{width:min(620px,100%);margin:0 auto;padding:2.2rem 1.5rem 3rem;flex:1;}
+.co-shell > h3{font-size:1.65rem;margin:0 0 1.4rem;text-align:center;}
+.steps{list-style:none;display:flex;gap:.4rem;margin:0;padding:0 0 1.5rem;}
+.step{display:flex;align-items:center;gap:.4em;font-size:.8rem;color:var(--ink-soft);flex:1;font-weight:600;}
+.step span{
+  width:23px;height:23px;border-radius:50%;background:var(--border);color:var(--ink-soft);
+  display:flex;align-items:center;justify-content:center;font-size:.74rem;flex-shrink:0;
+}
+.step.active{color:var(--ink);}
+.step.active span{background:var(--gold);color:#fff;}
+.step.done span{background:var(--green);color:#fff;}
+.modal-body{padding:0;}
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:.9rem;}
+.form-row textarea{
+  padding:.8em 1em;border-radius:10px;border:1px solid var(--border);
+  background:rgba(43,38,32,.03);color:var(--ink);font-size:.95rem;font-family:var(--font-body);resize:vertical;
+}
+.form-row textarea:focus{outline:2px solid var(--gold);outline-offset:1px;}
+.form-row.invalid textarea{border-color:#c0392b;}
+
+.demo-note{
+  display:flex;gap:.6em;align-items:flex-start;
+  background:rgba(191,143,58,.12);border:1px solid rgba(191,143,58,.3);
+  border-radius:12px;padding:.8em 1em;font-size:.84rem;color:var(--ink);margin:0 0 1.1rem;
+}
+.demo-note i{width:17px;height:17px;color:var(--gold-deep);flex-shrink:0;margin-top:.1em;}
+
+.pay-list{display:flex;flex-direction:column;gap:.6rem;}
+.pay{
+  display:flex;align-items:center;gap:.8rem;cursor:pointer;
+  border:1.5px solid var(--border);border-radius:14px;padding:.85rem 1rem;
+  background:var(--card-bg);transition:border-color .18s ease,background .18s ease;
+}
+.pay:hover{border-color:color-mix(in srgb,var(--gold) 55%,var(--border));}
+.pay input{accent-color:var(--gold);width:17px;height:17px;flex-shrink:0;}
+.pay:has(input:checked){border-color:var(--gold);background:rgba(191,143,58,.08);}
+.pay-ic{width:38px;height:38px;border-radius:10px;background:var(--cream-alt);display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.pay-ic i{width:19px;height:19px;color:var(--gold-deep);}
+.pay-txt{display:flex;flex-direction:column;gap:.1em;}
+.pay-txt strong{font-size:.94rem;}
+.pay-txt em{font-style:normal;font-size:.78rem;color:var(--ink-soft);}
+
+.co-summary{margin-top:1.2rem;border-top:1px solid var(--border);padding-top:.9rem;}
+.co-summary .cart-row{font-size:.88rem;}
+.co-done{text-align:center;padding:1rem 0;}
+.done-mark{
+  width:62px;height:62px;border-radius:50%;background:var(--green);color:#fff;
+  display:flex;align-items:center;justify-content:center;margin:0 auto 1rem;
+}
+.done-mark i{width:30px;height:30px;}
+.co-done h4{font-size:1.3rem;margin:0 0 .4em;}
+.modal-foot{
+  display:flex;gap:.7rem;justify-content:flex-end;
+  padding:1.4rem 0 0;margin-top:1.6rem;border-top:1px solid var(--border);
+}
+
+@media (max-width:560px){
+  .form-grid{grid-template-columns:1fr;}
+  .co-shell{padding:1.6rem 1.15rem 2.4rem;}
+  .co-shell > h3{font-size:1.4rem;}
+  .modal-foot .btn{flex:1;justify-content:center;}
+  .step{font-size:.72rem;}
+  .shop-actions{flex-direction:column;}
+}
+
+/* ===== even numerals =====
+   Georgia ships old-style figures (3,5,7,9 drop below the baseline; 6,8 rise),
+   so numbers looked misaligned. Use lining + tabular figures for all numeric text. */
+.price,.stat-value,.pricing-row strong,.cart-lineprice,.cart-total strong,.benefit-num,.savings-highlight{
+  font-family:var(--font-body);
+  font-variant-numeric:lining-nums tabular-nums;
+  font-feature-settings:"lnum" 1,"tnum" 1;
+  font-weight:600;
+  letter-spacing:-.012em;
+}
+.stat-value{font-weight:700;letter-spacing:-.02em;}
+.cart-total strong,.pricing-row strong{font-weight:700;}
+.cart-row,.pricing-row,.co-summary,.qty span,.ritual-tag,.insta-tile span,.cart-unit{
+  font-variant-numeric:tabular-nums;
+  font-feature-settings:"tnum" 1;
+}
+
+.back-to-top{
+  position:fixed;right:1.4rem;bottom:1.4rem;width:46px;height:46px;border-radius:50%;
+  background:var(--gold);color:#fff;border:none;display:flex;align-items:center;justify-content:center;
+  cursor:pointer;box-shadow:0 10px 24px rgba(191,143,58,.3);opacity:0;pointer-events:none;
+  transform:translateY(10px);transition:opacity .25s ease, transform .25s ease;z-index:90;
+}
+.back-to-top.visible{opacity:1;pointer-events:auto;transform:translateY(0);}
+.back-to-top i{width:20px;height:20px;}
+
+/* responsive */
+@media (max-width:900px){
+  .story-inner,.pricing-inner,.join-inner{grid-template-columns:1fr;}
+  .benefit-grid{grid-template-columns:repeat(2,1fr);}
+  .herd-grid{grid-template-columns:repeat(2,1fr);}
+  .shop-grid{grid-template-columns:repeat(2,1fr);}
+  .stats-grid{grid-template-columns:repeat(2,1fr);}
+}
+@media (max-width:720px){
+  .main-nav{
+    position:fixed;inset:0 0 0 auto;top:64px;width:min(320px,85vw);height:calc(100vh - 64px);
+    background:var(--cream);border-left:1px solid var(--border);flex-direction:column;align-items:flex-start;
+    padding:2rem 1.6rem;gap:1.4rem;transform:translateX(100%);
+    transition:transform .25s ease, visibility .25s ease;
+    visibility:hidden;
+    box-shadow:-10px 0 30px rgba(0,0,0,.12);
+  }
+  .main-nav.open{transform:translateX(0);visibility:visible;}
+  .nav-cta{width:100%;justify-content:center;}
+  .nav-toggle{display:flex;}
+  .benefit-grid{grid-template-columns:repeat(2,1fr);gap:.6rem;}
+  .benefit-card{padding:.85rem;}
+  .benefit-title{font-size:.9rem;}
+  .herd-grid{grid-template-columns:repeat(2,1fr);}
+  .shop-grid{grid-template-columns:repeat(2,1fr);gap:.7rem;}
+  .shop-card{padding:.8rem;}
+  .shop-card h3{font-size:.94rem;}
+  .shop-card p{font-size:.78rem;margin-bottom:.6rem;}
+  .price{font-size:1.05rem;}
+  .btn-add,.btn-buy{font-size:.78rem;padding:.6em .5em;}
+  .gallery-grid{grid-template-columns:repeat(2,1fr);gap:.7rem;}
+  .gallery-item img{height:132px;}
+  .gallery-item figcaption{font-size:.74rem;padding:1.2rem .7rem .6rem;}
+  .insta-grid{grid-template-columns:repeat(3,1fr);}
+  .footer-inner{grid-template-columns:1fr;}
+
+  .hero{min-height:auto;padding:2.25rem 1.25rem clamp(210px,55vw,300px);}
+  /* On phones keep the scene as a bottom band: filling a tall narrow screen
+     would crop most of the width and cut the figures out of frame. */
+  .hero-scene{top:auto;height:clamp(175px,46vw,265px);}
+  .hero-logo{margin-bottom:1.4rem;}
+}
+
+@media (prefers-reduced-motion: reduce){
+  .hero::before,.hero::after{animation:none;}
+  .hero-scene *{animation:none !important;}
+  .hero-inner > *,.hero-logo,.hero-logo-tag,.hero-scene{animation:none !important;}
+  .hero-actions .btn-primary svg,.hero-actions .btn-primary i{animation:none !important;}
+  .process-bg{display:none;}
+  .membership-banner img{transition:none;}
+  .gallery-item img{transition:none;}
+  .trust-track{animation:none;}
+  .reveal{animation:none !important;opacity:1;transform:none;}
+  .gallery-item.reveal{clip-path:none;}
+  .churn{opacity:1;transform:none;}
+  .ritual-step-churn.active .churn-stick,
+  .ritual-step-churn.active .churn-wave-1,
+  .ritual-step-churn.active .churn-wave-2,
+  .ritual-step-churn.active .churn-rope-l,
+  .ritual-step-churn.active .churn-rope-r,
+  .ritual-step-churn.active .churn-hand-l,
+  .ritual-step-churn.active .churn-hand-r{animation:none;}
+  .bl-rod,.bl-arm-near,.bl-arm-far{animation:none;}
+  img[data-blur]{filter:none;transform:none;transition:none;}
+  html{scroll-behavior:auto;}
+}
+</style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function(){
+  if(window.lucide){ lucide.createIcons(); }
+
+  /* header shrink + back to top */
+  var header=document.getElementById('siteHeader');
+  var backToTop=document.getElementById('backToTop');
+  window.addEventListener('scroll',function(){
+    var y=window.scrollY||document.documentElement.scrollTop;
+    if(header){ header.classList.toggle('scrolled', y>10); }
+    if(backToTop){ backToTop.classList.toggle('visible', y>600); }
+  },{passive:true});
+  if(backToTop){
+    backToTop.addEventListener('click',function(){ window.scrollTo({top:0,behavior:'smooth'}); });
+  }
+
+  /* mobile nav */
+  var navToggle=document.getElementById('navToggle');
+  var mainNav=document.getElementById('mainNav');
+  if(navToggle && mainNav){
+    navToggle.addEventListener('click',function(){
+      var open=mainNav.classList.toggle('open');
+      navToggle.setAttribute('aria-expanded', open ? 'true':'false');
+      navToggle.setAttribute('aria-label', open ? 'Close menu':'Open menu');
+    });
+    mainNav.querySelectorAll('a').forEach(function(link){
+      link.addEventListener('click',function(){
+        mainNav.classList.remove('open');
+        navToggle.setAttribute('aria-expanded','false');
+        navToggle.setAttribute('aria-label','Open menu');
+      });
+    });
+  }
+
+  /* scroll-spy nav */
+  var navLinks=Array.prototype.slice.call(document.querySelectorAll('.nav-link'));
+  var sections=navLinks.map(function(l){ return document.querySelector(l.getAttribute('href')); }).filter(Boolean);
+  if(sections.length){
+    var spyObserver=new IntersectionObserver(function(entries){
+      entries.forEach(function(entry){
+        var id='#'+entry.target.id;
+        var link=navLinks.find(function(l){ return l.getAttribute('href')===id; });
+        if(!link) return;
+        if(entry.isIntersecting){
+          navLinks.forEach(function(l){ l.classList.remove('active'); });
+          link.classList.add('active');
+        }
+      });
+    },{rootMargin:'-40% 0px -50% 0px', threshold:0});
+    sections.forEach(function(s){ spyObserver.observe(s); });
+  }
+
+  /* count-up stats */
+  var counters=document.querySelectorAll('.stat[data-count]');
+  var countObserver=new IntersectionObserver(function(entries,obs){
+    entries.forEach(function(entry){
+      if(!entry.isIntersecting) return;
+      var el=entry.target;
+      var target=parseInt(el.getAttribute('data-count'),10);
+      var counterEl=el.querySelector('.counter');
+      var start=null; var duration=1200;
+      function step(ts){
+        if(!start) start=ts;
+        var progress=Math.min((ts-start)/duration,1);
+        var eased=1-Math.pow(1-progress,3);
+        counterEl.textContent=Math.round(eased*target);
+        if(progress<1){ requestAnimationFrame(step); }
+      }
+      requestAnimationFrame(step);
+      obs.unobserve(el);
+    });
+  },{threshold:0.5});
+  counters.forEach(function(el){ countObserver.observe(el); });
+
+  /* benefit cards expand */
+  document.querySelectorAll('.benefit-card').forEach(function(card){
+    card.setAttribute('aria-expanded','false');
+    card.addEventListener('click',function(){
+      var isOpen=card.getAttribute('aria-expanded')==='true';
+      card.setAttribute('aria-expanded', isOpen? 'false':'true');
+    });
+  });
+
+  /* bilona ritual scroll progress */
+  var ritual=document.getElementById('ritual');
+  var ritualFill=document.getElementById('ritualFill');
+  var steps=Array.prototype.slice.call(document.querySelectorAll('.ritual-step'));
+  function updateRitual(){
+    if(!ritual) return;
+    var rect=ritual.getBoundingClientRect();
+    var vh=window.innerHeight;
+    var total=rect.height;
+    var start=vh*0.75;
+    var scrolled=start-rect.top;
+    var progress=Math.max(0,Math.min(1, scrolled/(total- vh*0.25 || total)));
+    ritualFill.style.height=(progress*100)+'%';
+    var activeCount=Math.round(progress*steps.length);
+    steps.forEach(function(step,i){
+      step.classList.toggle('active', i<activeCount);
+    });
+  }
+  window.addEventListener('scroll',updateRitual,{passive:true});
+  window.addEventListener('resize',updateRitual);
+  updateRitual();
+
+  /* testimonial carousel */
+  var track=document.getElementById('carouselTrack');
+  var cards=track?Array.prototype.slice.call(track.querySelectorAll('.review-card')):[];
+  var dotsWrap=document.getElementById('carouselDots');
+  var current=0; var timer=null;
+  cards.forEach(function(_,i){
+    var dot=document.createElement('button');
+    dot.setAttribute('aria-label','Go to review '+(i+1));
+    dot.addEventListener('click',function(){ goTo(i); resetTimer(); });
+    dotsWrap.appendChild(dot);
+  });
+  var dots=dotsWrap?Array.prototype.slice.call(dotsWrap.children):[];
+  function goTo(i){
+    current=(i+cards.length)%cards.length;
+    cards.forEach(function(c,idx){ c.classList.toggle('active', idx===current); });
+    dots.forEach(function(d,idx){ d.classList.toggle('active', idx===current); });
+  }
+  function resetTimer(){
+    if(timer) clearInterval(timer);
+    timer=setInterval(function(){ goTo(current+1); }, 6000);
+  }
+  var prevBtn=document.getElementById('prevReview');
+  var nextBtn=document.getElementById('nextReview');
+  if(prevBtn) prevBtn.addEventListener('click',function(){ goTo(current-1); resetTimer(); });
+  if(nextBtn) nextBtn.addEventListener('click',function(){ goTo(current+1); resetTimer(); });
+  if(cards.length){ goTo(0); resetTimer(); }
+  var carouselEl=document.getElementById('carousel');
+  if(carouselEl){
+    carouselEl.addEventListener('mouseenter',function(){ if(timer) clearInterval(timer); });
+    carouselEl.addEventListener('mouseleave',resetTimer);
+  }
+
+  /* pricing rate toggle with animated price ticker */
+  var rateBtns=document.querySelectorAll('.rate-btn');
+  var reduceMotion=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var RATES={member:{low:3150, high:3200}, regular:{low:4000, high:4000}};
+  var currentRate='member';
+  var priceTickerFrame=null;
+
+  function formatRate(low, high){
+    var fmt=function(n){ return Math.round(n).toLocaleString('en-IN'); };
+    return Math.round(low)===Math.round(high)
+      ? '₹'+fmt(low)+'/kg'
+      : '₹'+fmt(low)+'–'+fmt(high)+'/kg';
+  }
+
+  function tickPrice(fromRate, toRate){
+    var target=document.querySelector('.rate-value-member');
+    if(!target) return;
+    var a=RATES[fromRate], b=RATES[toRate];
+    if(priceTickerFrame) cancelAnimationFrame(priceTickerFrame);
+    if(reduceMotion){ target.textContent=formatRate(b.low,b.high); return; }
+    var start=null, duration=650;
+    function step(ts){
+      if(!start) start=ts;
+      var p=Math.min((ts-start)/duration,1);
+      var eased=1-Math.pow(1-p,3);
+      target.textContent=formatRate(
+        a.low+(b.low-a.low)*eased,
+        a.high+(b.high-a.high)*eased
+      );
+      if(p<1){ priceTickerFrame=requestAnimationFrame(step); }
+    }
+    priceTickerFrame=requestAnimationFrame(step);
+  }
+
+  rateBtns.forEach(function(btn){
+    btn.addEventListener('click',function(){
+      var rate=btn.getAttribute('data-rate');
+      if(rate===currentRate) return;
+      rateBtns.forEach(function(b){ b.classList.remove('active'); });
+      btn.classList.add('active');
+      document.querySelectorAll('.rate-view').forEach(function(el){ el.hidden=true; });
+      document.querySelectorAll('.rate-view-'+rate).forEach(function(el){ el.hidden=false; });
+      document.querySelectorAll('.rate-value-regular').forEach(function(el){ el.hidden=true; });
+      document.querySelectorAll('.rate-value-member').forEach(function(el){ el.hidden=false; });
+      tickPrice(currentRate, rate);
+      currentRate=rate;
+    });
+  });
+
+  /* ===== membership pre-registration =====
+     To send real email, paste a Web3Forms access key below (free, no account:
+     get one at web3forms.com by entering your email). Leave blank for demo mode. */
+  var MEMBERSHIP_WEB3FORMS_KEY='';
+  var MEMBERSHIP_ENDPOINT='';
+
+  var form=document.getElementById('joinForm');
+  var joinDone=document.getElementById('joinDone');
+  var joinErr=document.getElementById('joinError');
+  var joinBtn=document.getElementById('joinSubmit');
+  var joinBtnText=document.getElementById('joinSubmitText');
+
+  function validEmail(v){
+    v=String(v||'').trim();
+    if(v.indexOf(' ')!==-1) return false;
+    var at=v.indexOf('@');
+    if(at<1) return false;
+    var dom=v.slice(at+1);
+    if(dom.indexOf('@')!==-1) return false;
+    var dot=dom.lastIndexOf('.');
+    return dot>0 && (dom.length-dot)>2;
+  }
+
+  function sendLead(data){
+    if(MEMBERSHIP_WEB3FORMS_KEY){
+      return fetch('https://api.web3forms.com/submit',{
+        method:'POST',
+        headers:{'Content-Type':'application/json','Accept':'application/json'},
+        body:JSON.stringify({
+          access_key:MEMBERSHIP_WEB3FORMS_KEY,
+          subject:'New Gir Gold Club pre-registration',
+          from_name:'Ziventa Gaushala',
+          name:data.name, email:data.email, phone:data.phone, city:data.city,
+          replyto:data.email
+        })
+      }).then(function(r){ return r.json(); }).then(function(j){
+        if(!j.success) throw new Error(j.message||'Submission failed');
+        return j;
+      });
+    }
+    if(MEMBERSHIP_ENDPOINT){
+      return fetch(MEMBERSHIP_ENDPOINT,{
+        method:'POST',
+        headers:{'Content-Type':'application/json','Accept':'application/json'},
+        body:JSON.stringify(data)
+      }).then(function(r){ if(!r.ok) throw new Error('Submission failed'); return r; });
+    }
+    return new Promise(function(resolve){ setTimeout(resolve,800); });
+  }
+
+  if(form){
+    form.addEventListener('submit',function(e){
+      e.preventDefault();
+      var valid=true;
+      var fields=[
+        {id:'fname', test:function(v){ return v.trim().length>1; }},
+        {id:'femail', test:validEmail},
+        {id:'fphone', test:function(v){ return v.replace(/[^0-9]/g,'').length>=10; }},
+        {id:'fcity', test:function(v){ return v.trim().length>1; }}
+      ];
+      fields.forEach(function(f){
+        var input=document.getElementById(f.id);
+        var row=input.closest('.form-row');
+        var ok=f.test(input.value||'');
+        row.classList.toggle('invalid',!ok);
+        if(!ok) valid=false;
+      });
+      joinErr.hidden=true;
+      if(!valid) return;
+
+      var data={
+        name:document.getElementById('fname').value.trim(),
+        email:document.getElementById('femail').value.trim(),
+        phone:document.getElementById('fphone').value.trim(),
+        city:document.getElementById('fcity').value.trim()
+      };
+
+      joinBtn.disabled=true;
+      joinBtnText.textContent='Sending...';
+
+      sendLead(data).then(function(){
+        form.hidden=true;
+        joinDone.hidden=false;
+        var sub=document.getElementById('joinDoneSub');
+        if(sub) sub.textContent=MEMBERSHIP_WEB3FORMS_KEY||MEMBERSHIP_ENDPOINT
+          ? ('A confirmation has been sent to '+data.email+'.')
+          : ('Registered as '+data.email+'.');
+        if(window.lucide){ try{ lucide.createIcons(); }catch(err){} }
+      })['catch'](function(){
+        joinErr.hidden=false;
+        joinErr.textContent='Sorry, we could not submit that just now. Please try again, or write to hello@ziventagaushala.com';
+      }).then(function(){
+        joinBtn.disabled=false;
+        joinBtnText.textContent='Notify Me';
+      });
+    });
+  }
+
+  /* scroll reveal (gallery items handled separately below) */
+  var revealEls=Array.prototype.slice.call(document.querySelectorAll('.reveal')).filter(function(el){
+    return !el.classList.contains('gallery-item');
+  });
+  revealEls.forEach(function(el){
+    var parent=el.parentElement;
+    var siblings=Array.prototype.filter.call(parent.children, function(c){ return c.classList.contains('reveal'); });
+    var idx=siblings.indexOf(el);
+    el.style.animationDelay=Math.min(idx*70,420)+'ms';
+  });
+  var revealObserver=new IntersectionObserver(function(entries,obs){
+    entries.forEach(function(entry){
+      if(entry.isIntersecting){
+        entry.target.classList.add('in-view');
+        obs.unobserve(entry.target);
+      }
+    });
+  },{threshold:0.15, rootMargin:'0px 0px -60px 0px'});
+  revealEls.forEach(function(el){ revealObserver.observe(el); });
+
+  setTimeout(function(){
+    revealEls.forEach(function(el){
+      if(!el.classList.contains('in-view') && el.getBoundingClientRect().top < window.innerHeight){
+        el.classList.add('in-view');
+      }
+    });
+  },2500);
+
+  /* gallery: start loading early, wipe in only once the photo is ready */
+  var galleryItems=Array.prototype.slice.call(document.querySelectorAll('.gallery-item'));
+  if(galleryItems.length){
+    var galleryObserver=new IntersectionObserver(function(entries,obs){
+      entries.forEach(function(entry){
+        if(!entry.isIntersecting) return;
+        var fig=entry.target;
+        var img=fig.querySelector('img');
+        obs.unobserve(fig);
+        var show=function(){
+          fig.classList.add('in-view');
+          setTimeout(function(){ fig.style.clipPath='inset(0 0 0 0)'; },1300);
+        };
+        if(!img || (img.complete && img.naturalWidth>0)){ show(); return; }
+        img.loading='eager';
+        var safety=setTimeout(show,1500);
+        var done=function(){ clearTimeout(safety); show(); };
+        img.addEventListener('load',done,{once:true});
+        img.addEventListener('error',done,{once:true});
+      });
+    },{threshold:0.05, rootMargin:'0px 0px 300px 0px'});
+    galleryItems.forEach(function(fig){ galleryObserver.observe(fig); });
+
+    setTimeout(function(){
+      galleryItems.forEach(function(fig){
+        fig.classList.add('in-view');
+        fig.style.clipPath='inset(0 0 0 0)';
+      });
+    },6000);
+  }
+
+  /* scroll progress bar */
+  var progressBar=document.getElementById('scrollProgressBar');
+  function updateProgress(){
+    if(!progressBar) return;
+    var doc=document.documentElement;
+    var scrollable=doc.scrollHeight-window.innerHeight;
+    var pct=scrollable>0 ? (window.scrollY/scrollable)*100 : 0;
+    progressBar.style.width=Math.max(0,Math.min(100,pct))+'%';
+  }
+  window.addEventListener('scroll',updateProgress,{passive:true});
+  window.addEventListener('resize',updateProgress);
+  updateProgress();
+
+  /* blur-up image loading */
+  document.querySelectorAll('img').forEach(function(img){
+    if(img.classList.contains('hero-media')) return;
+    if(img.complete && img.naturalWidth>0) return;
+    img.setAttribute('data-blur','');
+    var done=function(){ img.setAttribute('data-blur','loaded'); };
+    img.addEventListener('load',done,{once:true});
+    img.addEventListener('error',done,{once:true});
+  });
+});
+</script>
+
+<script>
+(function(){
+  function boot(){
+    var KEY='ziventa_cart_v1', FREE_OVER=1500, FEE=79;
+    var cart={};
+    try{ cart=JSON.parse(localStorage.getItem(KEY))||{}; }catch(e){ cart={}; }
+
+    var els={
+      btn:document.getElementById('cartBtn'), count:document.getElementById('cartCount'),
+      drawer:document.getElementById('cart'), close:document.getElementById('cartClose'),
+      body:document.getElementById('cartBody'), foot:document.getElementById('cartFoot'),
+      sub:document.getElementById('cartSubtotal'), del:document.getElementById('cartDelivery'),
+      tot:document.getElementById('cartTotal'), free:document.getElementById('cartFreeNote'),
+      scrim:document.getElementById('scrim'), toCheckout:document.getElementById('toCheckout'),
+      modal:document.getElementById('checkout'), coClose:document.getElementById('coClose'),
+      coBack:document.getElementById('coBack'), coNext:document.getElementById('coNext'),
+      summary:document.getElementById('coSummary'), doneSummary:document.getElementById('doneSummary'),
+      doneMsg:document.getElementById('doneMsg')
+    };
+    if(!els.btn||!els.drawer) return;
+
+    var media={};
+    document.querySelectorAll('.shop-card[data-id]').forEach(function(card){
+      var m=card.querySelector('.shop-media');
+      if(m) media[card.getAttribute('data-id')]=m;
+    });
+
+    function save(){ try{ localStorage.setItem(KEY,JSON.stringify(cart)); }catch(e){} }
+    function inr(n){ return '₹'+Math.round(n).toLocaleString('en-IN'); }
+    function items(){ return Object.keys(cart); }
+    function count(){ var c=0; items().forEach(function(k){ c+=cart[k].qty; }); return c; }
+    function subtotal(){ var s=0; items().forEach(function(k){ s+=cart[k].qty*cart[k].price; }); return s; }
+    function shipping(){ var s=subtotal(); return (s===0||s>=FREE_OVER)?0:FEE; }
+    function total(){ return subtotal()+shipping(); }
+    function icons(){ if(window.lucide){ try{ lucide.createIcons(); }catch(e){} } }
+
+    function renderCart(){
+      var n=count();
+      els.count.textContent=n;
+      els.count.hidden=n===0;
+      els.body.innerHTML='';
+      if(n===0){
+        var e=document.createElement('div');
+        e.className='cart-empty';
+        e.innerHTML='<p>Your cart is empty.</p><p class="cart-unit">Add a jar from the shop below.</p>';
+        els.body.appendChild(e);
+        els.foot.style.display='none';
+      }else{
+        els.foot.style.display='';
+        items().forEach(function(id){
+          var it=cart[id];
+          var line=document.createElement('div');
+          line.className='cart-line';
+          var thumb=document.createElement('div');
+          thumb.className='cart-thumb';
+          if(media[id]){
+            var clone=media[id].cloneNode(true);
+            if(clone.classList.contains('shop-media-icon')) thumb.classList.add('shop-media-icon');
+            while(clone.firstChild) thumb.appendChild(clone.firstChild);
+          }
+          var info=document.createElement('div');
+          info.className='cart-info';
+          info.innerHTML='<span class="cart-name"></span><span class="cart-unit">'+inr(it.price)+' each</span>'+
+            '<div class="qty"><button data-act="dec" aria-label="Decrease quantity">−</button>'+
+            '<span>'+it.qty+'</span><button data-act="inc" aria-label="Increase quantity">+</button></div>';
+          info.querySelector('.cart-name').textContent=it.name;
+          var right=document.createElement('div');
+          right.className='cart-right';
+          right.innerHTML='<span class="cart-lineprice">'+inr(it.qty*it.price)+'</span>'+
+            '<button class="cart-remove" data-act="rm">Remove</button>';
+          line.appendChild(thumb); line.appendChild(info); line.appendChild(right);
+          line.addEventListener('click',function(ev){
+            var b=ev.target.closest('[data-act]'); if(!b) return;
+            var a=b.getAttribute('data-act');
+            if(a==='inc') cart[id].qty++;
+            else if(a==='dec'){ cart[id].qty--; if(cart[id].qty<=0) delete cart[id]; }
+            else if(a==='rm') delete cart[id];
+            save(); renderCart();
+          });
+          els.body.appendChild(line);
+        });
+      }
+      var s=subtotal(), sh=shipping();
+      els.sub.textContent=inr(s);
+      els.del.textContent=(s===0)?'—':(sh===0?'Free':inr(sh));
+      els.tot.textContent=inr(total());
+      els.free.textContent=(s>0&&FREE_OVER>s)?('Add '+inr(FREE_OVER-s)+' more for free delivery.'):(s>0?'Free delivery applied · member rates':'');
+      icons();
+    }
+
+    function openDrawer(){ els.drawer.classList.add('open'); els.drawer.setAttribute('aria-hidden','false'); els.scrim.hidden=false; document.body.style.overflow='hidden'; }
+    function closeDrawer(){ els.drawer.classList.remove('open'); els.drawer.setAttribute('aria-hidden','true'); if(els.modal.hidden){ els.scrim.hidden=true; document.body.style.overflow=''; } }
+
+    document.querySelectorAll('.btn-add').forEach(function(b){
+      b.addEventListener('click',function(){
+        var id=b.getAttribute('data-id');
+        if(!cart[id]) cart[id]={name:b.getAttribute('data-name'),price:parseFloat(b.getAttribute('data-price')),qty:0};
+        cart[id].qty++;
+        save(); renderCart();
+        var lbl=b.querySelector('span');
+        if(lbl && !b.classList.contains('added')){
+          var old=lbl.textContent;
+          b.classList.add('added'); lbl.textContent='Added';
+          setTimeout(function(){ b.classList.remove('added'); lbl.textContent=old; },1100);
+        }
+      });
+    });
+
+    document.querySelectorAll('.btn-buy').forEach(function(b){
+      b.addEventListener('click',function(){
+        var id=b.getAttribute('data-id');
+        if(!cart[id]) cart[id]={name:b.getAttribute('data-name'),price:parseFloat(b.getAttribute('data-price')),qty:0};
+        cart[id].qty++;
+        save(); renderCart(); openDrawer();
+      });
+    });
+
+    els.btn.addEventListener('click',openDrawer);
+    els.close.addEventListener('click',closeDrawer);
+    els.scrim.addEventListener('click',closeDrawer);
+
+    /* ---- checkout ---- */
+    var step=1;
+    function paneEl(i){ return document.getElementById('pane'+i); }
+    function setStep(i){
+      step=i;
+      [1,2,3].forEach(function(n){ paneEl(n).hidden=(n!==i); });
+      document.querySelectorAll('.step').forEach(function(s){
+        var n=parseInt(s.getAttribute('data-step'),10);
+        s.classList.toggle('active',n===i);
+        s.classList.toggle('done',i>n);
+      });
+      els.coBack.hidden=(i!==2);
+      if(i===1) els.coNext.textContent='Continue to Payment';
+      if(i===2) els.coNext.textContent='Place Order';
+      if(i===3){ els.coNext.textContent='Done'; els.coBack.hidden=true; }
+      icons();
+    }
+    function summaryHtml(){
+      var h='';
+      items().forEach(function(k){
+        h+='<div class="cart-row"><span>'+cart[k].qty+'× '+cart[k].name.replace(/[<]/g,'&lt;')+'</span><strong>'+inr(cart[k].qty*cart[k].price)+'</strong></div>';
+      });
+      h+='<div class="cart-row"><span>Delivery</span><strong>'+(shipping()===0?'Free':inr(shipping()))+'</strong></div>';
+      h+='<div class="cart-row cart-total"><span>Total</span><strong>'+inr(total())+'</strong></div>';
+      return h;
+    }
+    var returnY=0;
+    function baseUrl(){ return location.pathname+location.search; }
+    function showCheckout(){
+      returnY=window.pageYOffset||document.documentElement.scrollTop||0;
+      closeDrawer();
+      els.scrim.hidden=true;
+      els.modal.hidden=false;
+      document.body.style.overflow='hidden';
+      els.modal.scrollTop=0;
+      setStep(1);
+      els.summary.innerHTML=summaryHtml();
+    }
+    function hideCheckout(restoreScroll){
+      els.modal.hidden=true;
+      document.body.style.overflow='';
+      if(restoreScroll) window.scrollTo(0,returnY);
+    }
+    function syncRoute(){
+      var wants=(location.hash==='#checkout');
+      if(wants && count()===0){
+        try{ history.replaceState(null,'',baseUrl()); }catch(e){}
+        hideCheckout(false);
+        return;
+      }
+      if(wants){ if(els.modal.hidden) showCheckout(); }
+      else if(!els.modal.hidden){ hideCheckout(true); }
+    }
+    function leaveCheckout(){
+      hideCheckout(false);
+      try{ history.replaceState(null,'',baseUrl()+'#shop'); }catch(e){}
+      var shop=document.getElementById('shop');
+      if(!shop) return;
+      var header=document.getElementById('siteHeader');
+      var off=(header?header.offsetHeight:0)+8;
+      var y=shop.getBoundingClientRect().top+(window.pageYOffset||document.documentElement.scrollTop||0)-off;
+      if(y<0) y=0;
+      window.scrollTo(0,y);
+    }
+    window.addEventListener('hashchange',syncRoute);
+    els.toCheckout.addEventListener('click',function(){ if(count()===0) return; location.hash='checkout'; });
+    els.coClose.addEventListener('click',leaveCheckout);
+    var coHome=document.getElementById('coHome');
+    if(coHome) coHome.addEventListener('click',leaveCheckout);
+    els.coBack.addEventListener('click',function(){ setStep(1); });
+
+    var checks=[
+      ['coName',function(v){ return v.trim().length>1; }],
+      ['coPhone',function(v){ return v.replace(/\D/g,'').length>=10; }],
+      ['coEmail',function(v){ return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v); }],
+      ['coAddr',function(v){ return v.trim().length>5; }],
+      ['coCity',function(v){ return v.trim().length>1; }],
+      ['coPin',function(v){ return /^\d{6}$/.test(v.trim()); }]
+    ];
+    function validate(){
+      var ok=true;
+      checks.forEach(function(c){
+        var el=document.getElementById(c[0]);
+        var good=c[1](el.value||'');
+        el.closest('.form-row').classList.toggle('invalid',!good);
+        if(!good) ok=false;
+      });
+      return ok;
+    }
+
+    els.coNext.addEventListener('click',function(){
+      if(step===1){
+        if(!validate()) return;
+        els.summary.innerHTML=summaryHtml();
+        setStep(2);
+      }else if(step===2){
+        var m=document.querySelector('input[name="pay"]:checked');
+        var method=m?m.value:'UPI';
+        var id='ZVN-'+Date.now().toString().slice(-6);
+        els.doneSummary.innerHTML=summaryHtml();
+        els.doneMsg.textContent='Order '+id+' · '+method+'. We’ll call '+
+          (document.getElementById('coName').value.trim().split(' ')[0]||'you')+' to confirm the delivery slot.';
+        cart={}; save(); renderCart();
+        setStep(3);
+      }else{
+        leaveCheckout();
+      }
+    });
+
+    document.addEventListener('keydown',function(e){
+      if(e.key!=='Escape') return;
+      if(!els.modal.hidden) leaveCheckout();
+      else if(els.drawer.classList.contains('open')) closeDrawer();
+    });
+
+    renderCart();
+    syncRoute();
+  }
+  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',boot);
+  else boot();
+})();
+</script>
+
+<!-- Ziventa Assistant: AI-guide chat widget -->
+<div class="zv-chat" id="zvChat">
+  <span class="zv-chat-tag" id="zvChatTag" aria-hidden="true" title="Chat with the Ziventa AI Assistant"><span class="zv-chat-tag-dot"></span>AI Assistant</span>
+  <button class="zv-chat-toggle" id="zvChatToggle" type="button" aria-expanded="false" aria-controls="zvChatPanel" aria-label="Chat with the Ziventa Assistant">
+    <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7.9 20A9 9 0 1 0 4 16.1L2 22Z" key="vv11sd"/></svg>
+    <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18" key="1bl5f8"/><path d="m6 6 12 12" key="d8bk6v"/></svg>
+    <span class="zv-chat-ping" aria-hidden="true"></span>
+  </button>
+
+  <div class="zv-chat-panel" id="zvChatPanel" role="dialog" aria-modal="false" aria-label="Ziventa Assistant chat" hidden>
+    <div class="zv-chat-head">
+      <span class="zv-chat-avatar" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22a7 7 0 0 0 7-7c0-2-1-3.9-3-5.5s-3.5-4-4-6.5c-.5 2.5-2 4.9-4 6.5C6 11.1 5 13 5 15a7 7 0 0 0 7 7z" key="c7niix"/></svg></span>
+      <div class="zv-chat-head-text">
+        <strong>Ziventa Assistant</strong>
+        <span>Ask about membership, ghee &amp; the gaushala</span>
+      </div>
+      <button class="zv-chat-close" id="zvChatClose" type="button" aria-label="Close chat"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18" key="1bl5f8"/><path d="m6 6 12 12" key="d8bk6v"/></svg></button>
+    </div>
+
+    <div class="zv-chat-body" id="zvChatBody" role="log" aria-live="polite" aria-atomic="false"></div>
+
+    <div class="zv-chat-suggest" id="zvChatSuggest"></div>
+
+    <form class="zv-chat-form" id="zvChatForm">
+      <input type="text" id="zvChatInput" placeholder="Ask a question…" autocomplete="off" aria-label="Type your question" maxlength="300">
+      <button type="submit" aria-label="Send message"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.536 21.686a.5.5 0 0 0 .937-.024l6.5-19a.496.496 0 0 0-.635-.635l-19 6.5a.5.5 0 0 0-.024.937l7.93 3.18a2 2 0 0 1 1.112 1.11z" key="1ffxy3"/><path d="m21.854 2.147-10.94 10.939" key="12cjpa"/></svg></button>
+    </form>
+    <p class="zv-chat-foot">An automated guide, not a member of staff — for anything else, <a href="mailto:hello@ziventagaushala.com">email us</a>.</p>
+  </div>
+</div>
+
+<style>
+.zv-chat{position:fixed;right:1.4rem;bottom:5.6rem;z-index:400;font-family:var(--font-body);display:flex;align-items:center;gap:.55rem;}
+
+.zv-chat-tag{
+  display:inline-flex;align-items:center;gap:.45rem;
+  padding:.36rem .7rem;border-radius:999px;
+  background:var(--card-bg);border:1px solid var(--border);
+  box-shadow:0 6px 16px rgba(36,56,45,.16);
+  font-size:.74rem;font-weight:600;letter-spacing:.015em;
+  color:var(--ink);white-space:nowrap;cursor:pointer;user-select:none;
+  transition:transform .2s ease,box-shadow .2s ease;
+  animation:zvTagIn .5s ease both .8s;
+}
+.zv-chat-tag:hover{transform:translateY(-2px);box-shadow:0 9px 20px rgba(36,56,45,.22);}
+.zv-chat-tag-dot{width:7px;height:7px;border-radius:50%;background:var(--green);position:relative;flex:none;}
+.zv-chat-tag-dot::after{content:"";position:absolute;inset:0;border-radius:50%;background:var(--green);animation:zvTagPulse 2.2s ease-out infinite;}
+.zv-chat.open .zv-chat-tag{display:none;}
+@keyframes zvTagIn{from{opacity:0;transform:translateX(10px);}to{opacity:1;transform:none;}}
+@keyframes zvTagPulse{0%{transform:scale(1);opacity:.5;}70%{transform:scale(2.4);opacity:0;}100%{transform:scale(2.4);opacity:0;}}
+.zv-chat-toggle{
+  width:58px;height:58px;border-radius:50%;border:none;cursor:pointer;
+  background:var(--green);color:var(--cream);
+  display:flex;align-items:center;justify-content:center;position:relative;
+  box-shadow:0 10px 24px rgba(36,56,45,.35);
+  transition:transform .2s ease,background .2s ease;
+}
+.zv-chat-toggle:hover{transform:translateY(-2px);background:var(--green-deep);}
+.zv-chat-toggle i{width:24px;height:24px;}
+.zv-chat-toggle .zv-ic-close{position:absolute;}
+.zv-chat.open .zv-ic-open{display:none;}
+.zv-chat:not(.open) .zv-ic-close{display:none;}
+.zv-chat-ping{
+  position:absolute;top:-2px;right:-2px;width:14px;height:14px;border-radius:50%;
+  background:var(--gold);border:2px solid var(--cream);
+}
+.zv-chat.opened .zv-chat-ping{display:none;}
+
+.zv-chat-panel{
+  position:absolute;right:0;bottom:calc(100% + .85rem);width:368px;max-width:88vw;
+  height:min(520px,72vh);background:var(--card-bg);border:1px solid var(--border);
+  border-radius:var(--radius);box-shadow:var(--shadow);display:flex;flex-direction:column;
+  overflow:hidden;transform-origin:bottom right;
+  animation:zvPanelIn .22s ease both;
+}
+@keyframes zvPanelIn{from{opacity:0;transform:translateY(12px) scale(.98);}to{opacity:1;transform:none;}}
+
+.zv-chat-head{display:flex;align-items:center;gap:.7rem;padding:.9rem 1rem;background:var(--green-deep);color:var(--cream);}
+.zv-chat-avatar{width:34px;height:34px;border-radius:50%;background:rgba(251,246,236,.14);display:flex;align-items:center;justify-content:center;flex:none;}
+.zv-chat-avatar i{width:18px;height:18px;}
+.zv-chat-head-text{display:flex;flex-direction:column;line-height:1.25;flex:1;min-width:0;}
+.zv-chat-head-text strong{font-family:var(--font-display);font-size:1rem;}
+.zv-chat-head-text span{font-size:.76rem;opacity:.8;}
+.zv-chat-close{background:none;border:none;color:var(--cream);opacity:.85;cursor:pointer;padding:.3rem;line-height:0;flex:none;}
+.zv-chat-close:hover{opacity:1;}
+.zv-chat-close i{width:18px;height:18px;}
+
+.zv-chat-body{flex:1;overflow-y:auto;padding:1rem;display:flex;flex-direction:column;gap:.6rem;background:var(--cream-alt);}
+.zv-msg{max-width:86%;padding:.62rem .85rem;border-radius:14px;font-size:.9rem;line-height:1.45;}
+.zv-msg p{margin:0 0 .5em;}
+.zv-msg p:last-child{margin-bottom:0;}
+.zv-msg ul{margin:.3em 0 .2em;padding-left:1.1em;}
+.zv-msg li{margin-bottom:.2em;}
+.zv-msg-bot{align-self:flex-start;background:var(--card-bg);border:1px solid var(--border);color:var(--ink);border-bottom-left-radius:4px;}
+.zv-msg-user{align-self:flex-end;background:var(--green);color:var(--cream);border-bottom-right-radius:4px;}
+.zv-msg a{color:inherit;font-weight:600;text-decoration:underline;text-underline-offset:2px;}
+.zv-msg-bot a{color:var(--green-deep);}
+.zv-cta{display:inline-flex;align-items:center;gap:.3em;margin-top:.4em;font-size:.83rem;font-weight:600;color:var(--gold-deep);text-decoration:none;}
+.zv-cta i{width:14px;height:14px;}
+.zv-typing{align-self:flex-start;display:flex;gap:4px;padding:.7rem .9rem;background:var(--card-bg);border:1px solid var(--border);border-radius:14px;border-bottom-left-radius:4px;}
+.zv-typing span{width:6px;height:6px;border-radius:50%;background:var(--ink-soft);opacity:.5;animation:zvBlink 1s infinite ease-in-out;}
+.zv-typing span:nth-child(2){animation-delay:.15s;}
+.zv-typing span:nth-child(3){animation-delay:.3s;}
+@keyframes zvBlink{0%,80%,100%{opacity:.3;transform:scale(.85);}40%{opacity:1;transform:scale(1);}}
+
+.zv-chat-suggest{display:flex;flex-wrap:wrap;gap:.4rem;padding:.6rem 1rem;border-top:1px solid var(--border);background:var(--card-bg);}
+.zv-chip{
+  border:1px solid var(--border);background:var(--cream-alt);color:var(--ink);
+  font-family:var(--font-body);font-size:.78rem;padding:.4rem .7rem;border-radius:999px;
+  cursor:pointer;transition:background .15s ease,border-color .15s ease;
+}
+.zv-chip:hover{background:var(--cream);border-color:var(--gold);}
+
+.zv-chat-form{display:flex;gap:.5rem;padding:.75rem;border-top:1px solid var(--border);background:var(--card-bg);}
+.zv-chat-form input{
+  flex:1;border:1px solid var(--border);border-radius:12px;padding:.6rem .8rem;
+  font-family:var(--font-body);font-size:.88rem;color:var(--ink);background:var(--cream-alt);
+}
+.zv-chat-form input:focus{outline:2px solid var(--gold);outline-offset:1px;}
+.zv-chat-form button{
+  width:40px;height:40px;border-radius:10px;border:none;background:var(--gold);color:#fff;
+  display:flex;align-items:center;justify-content:center;cursor:pointer;flex:none;
+}
+.zv-chat-form button:hover{background:var(--gold-deep);}
+.zv-chat-form button i{width:17px;height:17px;}
+
+.zv-chat-foot{margin:0;padding:.5rem 1rem .7rem;font-size:.68rem;color:var(--ink-soft);text-align:center;background:var(--card-bg);}
+.zv-chat-foot a{color:var(--ink-soft);}
+
+@media (max-width:640px){
+  .zv-chat{right:1rem;bottom:4.9rem;gap:.45rem;}
+  .zv-chat-tag{font-size:.7rem;padding:.32rem .6rem;}
+  .zv-chat-panel{
+    position:fixed;right:.6rem;left:.6rem;bottom:4.9rem;width:auto;max-width:none;height:min(70vh,540px);
+  }
+}
+@media (prefers-reduced-motion:reduce){
+  .zv-chat-tag{animation:none;}
+  .zv-chat-tag-dot::after{animation:none;opacity:0;}
+}
+</style>
+
+<script>
+(function(){
+  var tag = document.getElementById('zvChatTag');
+  var btn = document.getElementById('zvChatToggle');
+  if (tag && btn) { tag.addEventListener('click', function(){ btn.click(); }); }
+})();
+</script>
+
+<script>
+(function(){
+  var KB = [
+    {
+      test:/^\s*(hi|hii|hey|hello|namaste|hola|yo)\b/i,
+      reply:'<p>Hello! I\'m the Ziventa Assistant. I can help with the Gir Gold Club membership, our ghee &amp; Panchgavya products, how the Bilona process works, the herd, or how to join. What would you like to know?</p>'
+    },
+    {
+      test:/\b(thanks|thank you|thx|shukriya|dhanyavad)\b/i,
+      reply:'<p>You\'re very welcome. Let me know if there\'s anything else you\'d like to know about the gaushala or the Gir Gold Club.</p>'
+    },
+    {
+      test:/\b(cure|heal(ing)?|treat(ment)?|disease|illness|diabetes|cholesterol|blood pressure|bp|cancer|allerg(y|ic)|infection|medicine|medication|doctor|physician|prescription|dosage|side effects?|symptoms?|healthy|health condition|health issue|health problem|health benefit|is it safe for|good for my health|lower my|reduce my|pregnan(t|cy)|ayurvedic remedy)\b/i,
+      reply:'<p>That\'s a medical question, and I\'m not able to give health advice or make medical claims about our products — our ghee and Panchgavya items are traditional foods, not medicine. For anything related to a health condition, please check with a doctor or qualified health professional.</p><p>I\'m happy to help with prices, ingredients, how something is made, or which product might suit what you\'re looking for.</p>'
+    },
+    {
+      test:/\b(250\s?g(ram)?s?)\b/i,
+      reply:'<p><strong>Bilona Ghee — 250g</strong> is ₹800 at the member rate. A good size for everyday cooking or trying us for the first time.</p><a class="zv-cta" href="#shop" data-zv-nav="1">View in the shop <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14" key="1ays0h"/><path d="m12 5 7 7-7 7" key="xquz4c"/></svg></a>'
+    },
+    {
+      test:/\b(500\s?g(ram)?s?)\b/i,
+      reply:'<p><strong>Bilona Ghee — 500g</strong> is ₹1,600 at the member rate — our most-loved size, made for the whole family.</p><a class="zv-cta" href="#shop" data-zv-nav="1">View in the shop <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14" key="1ays0h"/><path d="m12 5 7 7-7 7" key="xquz4c"/></svg></a>'
+    },
+    {
+      test:/\b(1\s?kg|one kg|1000\s?g(ram)?s?)\b/i,
+      reply:'<p><strong>Bilona Ghee — 1kg</strong> is ₹3,150 at the member rate — our signature jar and the best value for founding members.</p><a class="zv-cta" href="#shop" data-zv-nav="1">View in the shop <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14" key="1ays0h"/><path d="m12 5 7 7-7 7" key="xquz4c"/></svg></a>'
+    },
+    {
+      test:/\bdhoop\b/i,
+      reply:'<p><strong>Panchgavya Dhoop</strong> is ₹250 at the member rate — traditional havan dhoop made with gaushala by-products.</p><a class="zv-cta" href="#shop" data-zv-nav="1">View in the shop <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14" key="1ays0h"/><path d="m12 5 7 7-7 7" key="xquz4c"/></svg></a>'
+    },
+    {
+      test:/\b(gau mutra|gaumutra|cow urine|ark)\b/i,
+      reply:'<p><strong>Gau Mutra Ark</strong> is ₹350 at the member rate — a distilled Panchgavya ark, prepared the traditional way.</p><a class="zv-cta" href="#shop" data-zv-nav="1">View in the shop <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14" key="1ays0h"/><path d="m12 5 7 7-7 7" key="xquz4c"/></svg></a>'
+    },
+    {
+      test:/\b(gift box|festive box|combo|hamper)\b/i,
+      reply:'<p><strong>Festive Gift Box</strong> is ₹4,200 at the member rate — ghee, dhoop &amp; ark together, gifted the Ziventa way.</p><a class="zv-cta" href="#shop" data-zv-nav="1">View in the shop <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14" key="1ays0h"/><path d="m12 5 7 7-7 7" key="xquz4c"/></svg></a>'
+    },
+    {
+      test:/\b(puja|pooja|havan|yagna|yajna|ritual|prayer|temple|worship)\b/i,
+      reply:'<p>For puja or havan, families usually pick <strong>Panchgavya Dhoop</strong> (₹250) and <strong>Gau Mutra Ark</strong> (₹350) — both traditional Panchgavya preparations made at the gaushala.</p><a class="zv-cta" href="#shop" data-zv-nav="1">View in the shop <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14" key="1ays0h"/><path d="m12 5 7 7-7 7" key="xquz4c"/></svg></a>'
+    },
+    {
+      test:/\b(gift(ing)?|present|diwali|festive season|someone special)\b/i,
+      reply:'<p>If it\'s a gift, the <strong>Festive Gift Box</strong> (₹4,200) is made for exactly that — ghee, dhoop and ark together, packed the Ziventa way. For something smaller, the <strong>250g Bilona Ghee</strong> (₹800) also gifts well.</p><a class="zv-cta" href="#shop" data-zv-nav="1">View in the shop <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14" key="1ays0h"/><path d="m12 5 7 7-7 7" key="xquz4c"/></svg></a>'
+    },
+    {
+      test:/\b(first time|trial|try (it|before|us|first)|sample|new customer|never tried|new to (ziventa|this))\b/i,
+      reply:'<p>New to Ziventa? The <strong>Bilona Ghee — 250g</strong> (₹800) is the easiest way to try our hand-churned A2 Gir ghee before committing to a bigger jar.</p><a class="zv-cta" href="#shop" data-zv-nav="1">View in the shop <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14" key="1ays0h"/><path d="m12 5 7 7-7 7" key="xquz4c"/></svg></a>'
+    },
+    {
+      test:/\b(daily|everyday|every day|day to day|regular(ly)? use|daily basis|daily use|for cooking|home cooking|routine use)\b/i,
+      reply:'<p>For everyday cooking, most families go with the <strong>Bilona Ghee — 500g</strong> (₹1,600) — our most-loved size, made to last a household through regular use. If you\'d rather start smaller and see how it goes, the <strong>250g</strong> (₹800) is a good first jar.</p><a class="zv-cta" href="#shop" data-zv-nav="1">View in the shop <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14" key="1ays0h"/><path d="m12 5 7 7-7 7" key="xquz4c"/></svg></a>'
+    },
+    {
+      test:/\b(bulk|big family|large family|value pack|stock up|monthly supply)\b/i,
+      reply:'<p>For a family that goes through ghee regularly, the <strong>Bilona Ghee — 1kg</strong> (₹3,150) is our best value — our signature jar for founding members.</p><a class="zv-cta" href="#shop" data-zv-nav="1">View in the shop <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14" key="1ays0h"/><path d="m12 5 7 7-7 7" key="xquz4c"/></svg></a>'
+    },
+    {
+      test:/\b(budget|cheap(est)?|affordable|less expensive|lowest price|inexpensive)\b/i,
+      reply:'<p>Our most accessible product is <strong>Panchgavya Dhoop</strong> at ₹250. If you\'re after ghee specifically, it starts at ₹800 for the 250g jar — we keep batches small, so pricing reflects genuinely hand-churned work rather than a mass-market rate.</p><a class="zv-cta" href="#shop" data-zv-nav="1">View in the shop <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14" key="1ays0h"/><path d="m12 5 7 7-7 7" key="xquz4c"/></svg></a>'
+    },
+    {
+      test:/\b(recommend|suggest|help me choose|help me pick|what should i (buy|get)|not sure what to (buy|get|choose|pick)|what do you suggest|what do you recommend)\b|which\b.{0,30}\bshould i (buy|get|choose|pick)\b/i,
+      reply:'<p>Happy to help you choose. Are you looking for ghee for everyday cooking, something for puja or a havan, a gift for someone, or just want to try us for the first time?</p>'
+    },
+    {
+      test:/\b(deposit|refund(able)?|₹?\s?5,?000)\b/i,
+      reply:'<p>Joining needs a refundable deposit of <strong>₹5,000</strong>. It simply reserves your seat in the Gir Gold Club and unlocks the member ghee rate of ₹3,150–3,200/kg — about 20% off. Nothing is hidden or inflated.</p><a class="zv-cta" href="#pricing" data-zv-nav="1">See membership terms <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14" key="1ays0h"/><path d="m12 5 7 7-7 7" key="xquz4c"/></svg></a>'
+    },
+    {
+      test:/\b(membership|gir gold club|member(ship)?s?\b|benefit|what do i get|perks)\b/i,
+      reply:'<p>The <strong>Ziventa Gir Gold Club</strong> is a founding circle capped at just <strong>250 families</strong>. Members get physical access to the gaushala, regular veterinary reports for every cow, premium gift-ready packaging, year-round supply, minimal-human-touch preparation, the traditional hand-churned Bilona method, priority delivery, and small hand-crafted batches — all at a 20% member rate.</p><a class="zv-cta" href="#membership" data-zv-nav="1">See all membership benefits <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14" key="1ays0h"/><path d="m12 5 7 7-7 7" key="xquz4c"/></svg></a>'
+    },
+    {
+      test:/\b(process|bilona|how (is|do you make|it'?s made)|hand[- ]?churn(ed)?|made)\b/i,
+      reply:'<p>Every batch follows five unhurried steps: fresh Gir A2 milk drawn daily, naturally set into curd overnight, hand-churned in a wooden bilona to separate the makkhan, slow-cooked over a gentle flame until golden, then sealed fresh in premium jars for Gir Gold Club members. No machines, no shortcuts.</p><a class="zv-cta" href="#process" data-zv-nav="1">See the full ritual <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14" key="1ays0h"/><path d="m12 5 7 7-7 7" key="xquz4c"/></svg></a>'
+    },
+    {
+      test:/\b(pric(e|es|ing)|costs?|how much|rates?|ghee|panchgavya|dhoop|ark|gift box|products?|buy|shop)\b/i,
+      reply:'<p>Our range, at the member rate:</p><ul><li>Bilona Ghee 250g — ₹800</li><li>Bilona Ghee 500g — ₹1,600 (most loved)</li><li>Bilona Ghee 1kg — ₹3,150 (best value)</li><li>Panchgavya Dhoop — ₹250</li><li>Gau Mutra Ark — ₹350</li><li>Festive Gift Box (ghee + dhoop + ark) — ₹4,200</li></ul><p>Everything is made in-house at the gaushala, in small batches.</p><a class="zv-cta" href="#shop" data-zv-nav="1">Open the shop <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14" key="1ays0h"/><path d="m12 5 7 7-7 7" key="xquz4c"/></svg></a>'
+    },
+    {
+      test:/\b(cows?|herd|gir cow|kamdhenu|radha|ganga|nandini|cattle|animal)\b/i,
+      reply:'<p>Every jar traces back to our small, well-cared-for herd of Gir cows — each one named and looked after individually: <strong>Kamdhenu</strong> (the eldest, gentle and unhurried), <strong>Radha</strong> (calm-eyed, a caretaker favourite), <strong>Ganga</strong> (the youngest, full of morning energy) and <strong>Nandini</strong> (a steady producer, mother of two calves).</p><a class="zv-cta" href="#herd" data-zv-nav="1">Meet the herd <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14" key="1ays0h"/><path d="m12 5 7 7-7 7" key="xquz4c"/></svg></a>'
+    },
+    {
+      test:/\b(deliver(y|ies)?|shipping|dispatch|when will i (get|receive))\b/i,
+      reply:'<p>Members are served first — small batches move fast, straight to your doorstep, with a consistent year-round supply rather than a seasonal rush.</p>'
+    },
+    {
+      test:/\b(join|sign up|pre[- ]?register|apply|waiting list|seat|how do i become)\b/i,
+      reply:'<p>To join, you pre-register with your name, email, phone and city — <strong>no payment is required</strong> to pre-register. We reach out directly, not through a mailing list, once a seat is open for your area. The founding circle is honestly capped at 250 families.</p><a class="zv-cta" href="#join" data-zv-nav="1">Pre-register now <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14" key="1ays0h"/><path d="m12 5 7 7-7 7" key="xquz4c"/></svg></a>'
+    },
+    {
+      test:/\b(contact|email|instagram|reach you|phone number|address|visit|location|talk to)\b/i,
+      reply:'<p>You can reach us at <a href="mailto:hello@ziventagaushala.com">hello@ziventagaushala.com</a> or follow <a href="https://instagram.com/ziventagaushala" target="_blank" rel="noopener noreferrer">@ziventagaushala</a> on Instagram for daily glimpses of the gaushala. Physical visits to the gaushala are reserved for Gir Gold Club members.</p>'
+    },
+    {
+      test:/\b(payment|checkout|pay|upi|card|cod|cash on delivery|order|cart)\b/i,
+      reply:'<p>The shop\'s "Add to Cart" / checkout flow on this page is currently a <strong>demo</strong> — no real payment is taken. To actually become part of the Gir Gold Club, the honest path is the pre-registration form; we\'ll reach out directly from there.</p><a class="zv-cta" href="#join" data-zv-nav="1">Go to pre-registration <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14" key="1ays0h"/><path d="m12 5 7 7-7 7" key="xquz4c"/></svg></a>'
+    }
+  ];
+  var FALLBACK = '<p>I can only help with questions about Ziventa Gaushala — the Gir Gold Club membership, our ghee &amp; Panchgavya products, or the gaushala itself — and I don\'t have an answer for that one within what\'s on this site. For anything else, please email <a href="mailto:hello@ziventagaushala.com">hello@ziventagaushala.com</a> or message <a href="https://instagram.com/ziventagaushala" target="_blank" rel="noopener noreferrer">@ziventagaushala</a> on Instagram.</p>';
+
+  var CHIPS = [
+    {label:'Membership & benefits', q:'What does membership include?'},
+    {label:'Ghee & Panchgavya prices', q:'What are your prices?'},
+    {label:'Suggest a product for me', q:'Can you recommend a product for me?'},
+    {label:'How the ghee is made', q:'How is the ghee made?'},
+    {label:'Meet the herd', q:'Tell me about the cows'},
+    {label:'How do I join?', q:'How do I join?'},
+    {label:'Contact us', q:'How can I contact you?'}
+  ];
+
+  function answerFor(q){
+    for(var i=0;i<KB.length;i++){ if(KB[i].test.test(q)) return KB[i].reply; }
+    return FALLBACK;
+  }
+
+  function boot(){
+    var root=document.getElementById('zvChat');
+    if(!root) return;
+    var toggle=document.getElementById('zvChatToggle');
+    var panel=document.getElementById('zvChatPanel');
+    var closeBtn=document.getElementById('zvChatClose');
+    var body=document.getElementById('zvChatBody');
+    var suggest=document.getElementById('zvChatSuggest');
+    var form=document.getElementById('zvChatForm');
+    var input=document.getElementById('zvChatInput');
+    var greeted=false;
+
+    function icons(){ if(window.lucide){ try{ lucide.createIcons(); }catch(e){} } }
+
+    function addMsg(text,who,isHtml){
+      var el=document.createElement('div');
+      el.className='zv-msg '+(who==='user'?'zv-msg-user':'zv-msg-bot');
+      if(isHtml){ el.innerHTML=text; } else { el.textContent=text; }
+      body.appendChild(el);
+      body.scrollTop=body.scrollHeight;
+      icons();
+      return el;
+    }
+
+    function addTyping(){
+      var el=document.createElement('div');
+      el.className='zv-typing';
+      el.innerHTML='<span></span><span></span><span></span>';
+      body.appendChild(el);
+      body.scrollTop=body.scrollHeight;
+      return el;
+    }
+
+    function respond(q){
+      hideChips();
+      addMsg(q,'user',false);
+      var typing=addTyping();
+      var delay=350+Math.random()*300;
+      setTimeout(function(){
+        typing.remove();
+        addMsg(answerFor(q),'bot',true);
+      },delay);
+    }
+
+    /* Once the visitor has asked anything - typed or tapped a chip - drop the
+       starter chips so the thread reads as a clean conversation. Nothing is
+       persisted, so they are back on the next visit. */
+    function hideChips(){
+      if(suggest.hidden) return;
+      suggest.innerHTML='';
+      suggest.hidden=true;
+    }
+
+    function renderChips(){
+      suggest.hidden=false;
+      suggest.innerHTML='';
+      CHIPS.forEach(function(c){
+        var b=document.createElement('button');
+        b.type='button';
+        b.className='zv-chip';
+        b.textContent=c.label;
+        b.addEventListener('click',function(){ respond(c.q); });
+        suggest.appendChild(b);
+      });
+    }
+
+    function openChat(){
+      root.classList.add('open','opened');
+      panel.hidden=false;
+      toggle.setAttribute('aria-expanded','true');
+      if(!greeted){
+        greeted=true;
+        addMsg('<p>Hello! I\'m the Ziventa Assistant — ask me about membership, the ghee &amp; Panchgavya range, the Bilona process, the herd, or how to join.</p>','bot',true);
+        renderChips();
+      }
+      setTimeout(function(){ input.focus(); },50);
+    }
+    function closeChat(){
+      root.classList.remove('open');
+      panel.hidden=true;
+      toggle.setAttribute('aria-expanded','false');
+      toggle.focus();
+    }
+
+    toggle.addEventListener('click',function(){
+      if(panel.hidden) openChat(); else closeChat();
+    });
+    closeBtn.addEventListener('click',closeChat);
+
+    document.addEventListener('keydown',function(e){
+      if(e.key==='Escape' && !panel.hidden) closeChat();
+    });
+
+    body.addEventListener('click',function(e){
+      var link=e.target.closest('[data-zv-nav]');
+      if(!link) return;
+      e.preventDefault();
+      var id=link.getAttribute('href');
+      closeChat();
+      setTimeout(function(){
+        var target=document.querySelector(id);
+        if(target) target.scrollIntoView({behavior:'smooth',block:'start'});
+        else location.hash=id;
+      },120);
+    });
+
+    form.addEventListener('submit',function(e){
+      e.preventDefault();
+      var v=input.value.trim();
+      if(!v) return;
+      input.value='';
+      respond(v);
+    });
+
+    icons();
+  }
+
+  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',boot);
+  else boot();
+})();
+</script>
+</html>
