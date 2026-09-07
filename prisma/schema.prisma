@@ -1,0 +1,282 @@
+// Ziventa Gaushala data model.
+//
+// Division of responsibility with Supabase:
+//   Supabase Auth owns the `auth.users` table and everything to do with
+//   credentials, phone OTP and magic links. Prisma never touches it.
+//   Prisma owns the `public` schema below. The link between them is
+//   Customer.id, which holds the same UUID as auth.users.id.
+//
+// That split matters: it means phone OTP works without us building an SMS
+// pipeline, while our business data stays in normal, migratable tables.
+//
+// The connection URL lives in prisma7.config.ts, not here - Prisma 7 moved it.
+
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+// ---------------------------------------------------------------- accounts
+
+/// One row per signed-in customer. `id` is the Supabase auth.users UUID, so
+/// there is no second identity to keep in sync.
+model Customer {
+  id        String   @id @db.Uuid
+  email     String?  @unique
+  phone     String?  @unique
+  fullName  String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  addresses  Address[]
+  orders     Order[]
+  membership Membership?
+  reviews    Review[]
+
+  @@map("customers")
+}
+
+model Address {
+  id         String   @id @default(uuid()) @db.Uuid
+  customerId String   @db.Uuid
+  customer   Customer @relation(fields: [customerId], references: [id], onDelete: Cascade)
+
+  label     String? // "Home", "Office"
+  line1     String
+  line2     String?
+  city      String
+  state     String
+  postcode  String
+  country   String  @default("IN")
+  isDefault Boolean @default(false)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  orders Order[]
+
+  @@index([customerId])
+  @@map("addresses")
+}
+
+// ---------------------------------------------------------------- catalogue
+
+model Product {
+  id          String  @id @default(uuid()) @db.Uuid
+  /// Matches the data-id already used by the landing page cart: ghee-250, dhoop...
+  slug        String  @unique
+  name        String
+  description String?
+  sizeLabel   String?
+  /// Integer paise. Never store money as a float.
+  pricePaise  Int
+  imagePath   String?
+  isActive    Boolean @default(true)
+  sortOrder   Int     @default(0)
+  /// Null means "not tracked"; a number means decrement on paid order.
+  stockCount  Int?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  orderItems OrderItem[]
+
+  @@index([isActive, sortOrder])
+  @@map("products")
+}
+
+// ---------------------------------------------------------------- membership
+
+enum MembershipStatus {
+  PENDING
+  ACTIVE
+  PAUSED
+  LEFT
+}
+
+enum DepositStatus {
+  UNPAID
+  PAID
+  REFUNDED
+}
+
+/// The Gir Gold Club. The 250-family cap is enforced in the database by the
+/// unique seatNumber plus a CHECK constraint added in a migration - not left
+/// to application code that could be bypassed by a concurrent signup.
+model Membership {
+  id         String   @id @default(uuid()) @db.Uuid
+  customerId String   @unique @db.Uuid
+  customer   Customer @relation(fields: [customerId], references: [id], onDelete: Cascade)
+
+  /// 1..250. Unique, so two families can never hold the same seat.
+  seatNumber Int @unique
+
+  status        MembershipStatus @default(PENDING)
+  depositStatus DepositStatus    @default(UNPAID)
+  /// Refundable founding deposit, default Rs 5,000.
+  depositPaise  Int              @default(500000)
+
+  joinedOn DateTime?
+  leftOn   DateTime?
+  notes    String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([status])
+  @@map("memberships")
+}
+
+/// Pre-registration from the landing page, captured before an account exists.
+model Lead {
+  id        String   @id @default(uuid()) @db.Uuid
+  fullName  String
+  email     String
+  phone     String?
+  city      String?
+  message   String?
+  source    String   @default("website")
+  status    String   @default("new") // new | contacted | converted | declined
+  createdAt DateTime @default(now())
+
+  @@index([email])
+  @@index([createdAt])
+  @@map("leads")
+}
+
+// ---------------------------------------------------------------- the herd
+
+model Cow {
+  id          String    @id @default(uuid()) @db.Uuid
+  name        String    @unique // Kamdhenu, Radha, Ganga, Nandini
+  breed       String    @default("Gir")
+  dateOfBirth DateTime?
+  description String?
+  imagePath   String?
+  isActive    Boolean   @default(true)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  healthReports HealthReport[]
+
+  @@map("cows")
+}
+
+/// The vet reports the membership page promises members. Kept per-cow and
+/// dated so a member can see the history for the herd behind their ghee.
+model HealthReport {
+  id    String @id @default(uuid()) @db.Uuid
+  cowId String @db.Uuid
+  cow   Cow    @relation(fields: [cowId], references: [id], onDelete: Cascade)
+
+  reportedOn DateTime
+  vetName    String?
+  weightKg   Decimal? @db.Decimal(5, 2)
+  summary    String
+  /// Members-only by default; flip to publish one publicly.
+  isPublic   Boolean  @default(false)
+
+  createdAt DateTime @default(now())
+
+  @@index([cowId, reportedOn])
+  @@map("health_reports")
+}
+
+// ---------------------------------------------------------------- commerce
+
+enum OrderStatus {
+  PENDING
+  PAID
+  FAILED
+  CANCELLED
+  SHIPPED
+  DELIVERED
+  REFUNDED
+}
+
+model Order {
+  id          String @id @default(uuid()) @db.Uuid
+  orderNumber String @unique
+
+  /// Null for guest checkout - the landing page allows buying without an account.
+  customerId String?   @db.Uuid
+  customer   Customer? @relation(fields: [customerId], references: [id], onDelete: SetNull)
+
+  addressId String?  @db.Uuid
+  address   Address? @relation(fields: [addressId], references: [id], onDelete: SetNull)
+
+  /// Contact details are snapshotted so an order stays readable even if the
+  /// customer later edits their profile or deletes their account.
+  contactName  String
+  contactEmail String
+  contactPhone String
+
+  shipLine1    String
+  shipLine2    String?
+  shipCity     String
+  shipState    String
+  shipPostcode String
+  shipCountry  String  @default("IN")
+
+  subtotalPaise Int
+  shippingPaise Int @default(0)
+  totalPaise    Int
+
+  status           OrderStatus @default(PENDING)
+  paymentProvider  String?
+  paymentReference String?
+  notes            String?
+
+  placedAt  DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  items OrderItem[]
+
+  @@index([customerId])
+  @@index([status, placedAt])
+  @@map("orders")
+}
+
+model OrderItem {
+  id      String @id @default(uuid()) @db.Uuid
+  orderId String @db.Uuid
+  order   Order  @relation(fields: [orderId], references: [id], onDelete: Cascade)
+
+  /// Restrict, not cascade: deleting a product must never rewrite order history.
+  productId String  @db.Uuid
+  product   Product @relation(fields: [productId], references: [id], onDelete: Restrict)
+
+  /// Name and price snapshotted at purchase time for the same reason.
+  productName    String
+  unitPricePaise Int
+  quantity       Int
+
+  @@unique([orderId, productId])
+  @@index([orderId])
+  @@map("order_items")
+}
+
+// ---------------------------------------------------------------- reviews
+
+model Review {
+  id         String    @id @default(uuid()) @db.Uuid
+  customerId String?   @db.Uuid
+  customer   Customer? @relation(fields: [customerId], references: [id], onDelete: SetNull)
+
+  authorName  String
+  city        String?
+  rating      Int
+  body        String
+  /// Nothing appears on the site until it is explicitly published.
+  isPublished Boolean @default(false)
+
+  createdAt DateTime @default(now())
+
+  @@index([isPublished, createdAt])
+  @@map("reviews")
+}
