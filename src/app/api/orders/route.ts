@@ -4,6 +4,7 @@ import { prisma } from '@/lib/prisma';
 import { CartError, generateOrderNumber, priceCart } from '@/lib/orders';
 import { getCurrentUser } from '@/lib/supabase/server';
 import { syncCustomer } from '@/lib/auth';
+import { businessOrderEmail, customerOrderEmail, sendEmail } from '@/lib/email';
 
 const orderSchema = z.object({
   customer: z.object({
@@ -97,14 +98,50 @@ export async function POST(request: Request) {
       notes: input.notes || null,
       items: { create: cart.items },
     },
-    select: { id: true, orderNumber: true, totalPaise: true },
+    include: { items: true },
   });
+
+  /**
+   * The order is committed before any email is attempted. Email is a
+   * notification, not part of the sale - a mail outage must never cost a
+   * customer their order or show them an error for something that worked.
+   */
+  const emailData = {
+    orderNumber: order.orderNumber,
+    contactName: order.contactName,
+    contactEmail: order.contactEmail,
+    contactPhone: order.contactPhone,
+    shipLine1: order.shipLine1,
+    shipLine2: order.shipLine2,
+    shipCity: order.shipCity,
+    shipState: order.shipState,
+    shipPostcode: order.shipPostcode,
+    subtotalPaise: order.subtotalPaise,
+    shippingPaise: order.shippingPaise,
+    totalPaise: order.totalPaise,
+    notes: order.notes,
+    items: order.items.map((i) => ({
+      productName: i.productName,
+      unitPricePaise: i.unitPricePaise,
+      quantity: i.quantity,
+    })),
+  };
+
+  const [toCustomer, toBusiness] = await Promise.all([
+    sendEmail(customerOrderEmail(emailData)),
+    sendEmail(businessOrderEmail(emailData)),
+  ]);
+
+  if (!toBusiness.delivered) {
+    console.warn(`[order ${order.orderNumber}] alert not sent: ${toBusiness.reason}`);
+  }
 
   return NextResponse.json(
     {
       ok: true,
       orderNumber: order.orderNumber,
       amountPaise: order.totalPaise,
+      confirmationSent: toCustomer.delivered,
       // No payment gateway connected yet, so nothing is charged.
       payment: { provider: 'none' },
     },

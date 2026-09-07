@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { z } from 'zod';
 import { prisma } from '@/lib/prisma';
+import { businessLeadEmail, customerLeadEmail, sendEmail } from '@/lib/email';
 
 /** What the "Reserve Your Membership" form on the landing page sends. */
 const leadSchema = z.object({
@@ -54,13 +55,27 @@ export async function POST(request: Request) {
     },
   });
 
+  /**
+   * The enquiry is already saved. Email is a notification, not part of the
+   * transaction, so a mail failure must never turn a captured lead into an
+   * error for the person who filled the form.
+   */
+  const [toCustomer, toBusiness] = await Promise.all([
+    sendEmail(customerLeadEmail(lead)),
+    sendEmail(businessLeadEmail(lead)),
+  ]);
+
+  if (!toBusiness.delivered) {
+    console.warn(`[lead ${lead.id}] alert not sent: ${toBusiness.reason}`);
+  }
+
   return NextResponse.json(
     {
       ok: true,
       id: lead.id,
-      // The page words its success message from this, so it never claims an
-      // email was sent when none was. Email sending is not wired up yet.
-      confirmationSent: false,
+      // The page words its success message from this, so it never promises a
+      // confirmation email that was not actually sent.
+      confirmationSent: toCustomer.delivered,
     },
     { status: 201 },
   );
