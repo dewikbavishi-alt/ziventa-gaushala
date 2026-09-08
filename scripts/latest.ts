@@ -20,7 +20,9 @@ async function main() {
   const leads = await prisma.lead.findMany({ orderBy: { createdAt: 'desc' }, take: 3 });
   console.log(`\nLeads (${await prisma.lead.count()} total)\n`);
   for (const l of leads) {
-    console.log(`  ${l.fullName} | ${l.email} | ${l.city ?? '-'} | ${l.status}`);
+    console.log(
+      `  ${(l.reference ?? '-').padEnd(16)} ${l.fullName} | ${l.email} | ${l.city ?? '-'} | ${l.status}`,
+    );
   }
 
   const orders = await prisma.order.findMany({

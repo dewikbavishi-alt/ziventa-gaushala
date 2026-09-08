@@ -808,8 +808,8 @@ Color: warm cream ground, deep gaushala-green = trust/tradition, hand-ghee gold 
     </form>
     <div class="join-done" id="joinDone" role="status" hidden>
       <div class="done-mark"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5" key="1gmf2c"/></svg></div>
-      <h4>Registration successful</h4>
-      <p>Your pre-registration for the Gir Gold Club is confirmed. <strong>We will contact you soon.</strong></p>
+      <h4>Membership reserved</h4>
+      <p>Your place in the Gir Gold Club is held. <strong>We will call you to confirm your seat.</strong></p>
       <p class="join-done-sub" id="joinDoneSub"></p>
     </div>
   </div>
@@ -2237,9 +2237,63 @@ document.addEventListener('DOMContentLoaded', function(){
         method:'POST',
         headers:{'Content-Type':'application/json','Accept':'application/json'},
         body:JSON.stringify(data)
-      }).then(function(r){ if(!r.ok) throw new Error('Submission failed'); return r; });
+      }).then(function(r){
+        if(!r.ok) throw new Error('Submission failed');
+        /* Return the parsed body so the caller gets the reservation
+           reference and whether a confirmation email really went out. */
+        return r.json()['catch'](function(){ return {}; });
+      });
     }
-    return new Promise(function(resolve){ setTimeout(resolve,800); });
+    return new Promise(function(resolve){ setTimeout(function(){ resolve({}); },800); });
+  }
+
+  /* Confirmation popup, shown the moment a place is reserved.
+     Built in JS rather than sitting in the markup so it can never flash on
+     page load, and so it can carry the reference the server just issued. */
+  function showReservedPopup(data,res){
+    var old=document.getElementById('zvReserved');
+    if(old && old.parentNode) old.parentNode.removeChild(old);
+
+    var wrap=document.createElement('div');
+    wrap.id='zvReserved';
+    wrap.setAttribute('role','dialog');
+    wrap.setAttribute('aria-modal','true');
+    wrap.setAttribute('aria-labelledby','zvReservedTitle');
+    wrap.style.cssText='position:fixed;inset:0;z-index:900;display:flex;align-items:center;justify-content:center;padding:1.25rem;background:rgba(30,74,53,.55);';
+
+    var mailLine=res.confirmationSent
+      ? ('A confirmation has been emailed to '+data.email+'.')
+      : ('We have your details and will email '+data.email+' shortly.');
+
+    var refBlock=res.reference
+      ? '<p style="margin:0 0 .3rem;font-size:.72rem;letter-spacing:.18em;text-transform:uppercase;color:#2F4A3D;opacity:.6;">Your reference</p>'+
+        '<p style="margin:0 0 1.3rem;font-size:1.45rem;letter-spacing:.08em;color:#1E4A35;font-weight:600;">'+String(res.reference).replace(/[<]/g,'&lt;')+'</p>'
+      : '';
+
+    wrap.innerHTML=
+      '<div style="background:#FBF6EC;max-width:26rem;width:100%;border-radius:1rem;padding:2rem 1.75rem;text-align:center;box-shadow:0 24px 60px rgba(30,74,53,.35);">'+
+        '<div style="width:52px;height:52px;margin:0 auto 1.1rem;border-radius:50%;background:#1E4A35;display:flex;align-items:center;justify-content:center;color:#D9A92B;font-size:1.5rem;">&#10003;</div>'+
+        '<h3 id="zvReservedTitle" style="margin:0 0 .55rem;font-size:1.4rem;color:#1E4A35;">Membership reserved</h3>'+
+        '<p style="margin:0 0 1.3rem;font-size:.95rem;line-height:1.55;color:#2F4A3D;">Your place in the Gir Gold Club is held. '+mailLine+'</p>'+
+        refBlock+
+        '<p style="margin:0 0 1.5rem;font-size:.84rem;line-height:1.5;color:#2F4A3D;opacity:.75;">Founding membership is limited to 250 families. We speak to every family personally before confirming a seat &mdash; there is nothing to pay until then.</p>'+
+        '<button type="button" id="zvReservedClose" style="width:100%;border:none;cursor:pointer;border-radius:.6rem;padding:.75rem;background:#1E4A35;color:#FBF6EC;font-size:1rem;font-family:inherit;">Done</button>'+
+      '</div>';
+
+    document.body.appendChild(wrap);
+    document.body.style.overflow='hidden';
+
+    function close(){
+      if(wrap.parentNode) wrap.parentNode.removeChild(wrap);
+      document.body.style.overflow='';
+      document.removeEventListener('keydown',onKey);
+    }
+    function onKey(e){ if(e.key==='Escape') close(); }
+
+    document.getElementById('zvReservedClose').addEventListener('click',close);
+    wrap.addEventListener('click',function(e){ if(e.target===wrap) close(); });
+    document.addEventListener('keydown',onKey);
+    document.getElementById('zvReservedClose').focus();
   }
 
   if(form){
@@ -2272,13 +2326,15 @@ document.addEventListener('DOMContentLoaded', function(){
       joinBtn.disabled=true;
       joinBtnText.textContent='Sending...';
 
-      sendLead(data).then(function(){
+      sendLead(data).then(function(res){
         form.hidden=true;
         joinDone.hidden=false;
         var sub=document.getElementById('joinDoneSub');
-        if(sub) sub.textContent=MEMBERSHIP_WEB3FORMS_KEY||MEMBERSHIP_ENDPOINT
+        /* Only claim an email was sent if the server actually sent one. */
+        if(sub) sub.textContent=(res&&res.confirmationSent)
           ? ('A confirmation has been sent to '+data.email+'.')
-          : ('Registered as '+data.email+'.');
+          : ('Registered as '+data.email+'. We’ll be in touch shortly.');
+        showReservedPopup(data, res||{});
         if(window.lucide){ try{ lucide.createIcons(); }catch(err){} }
       })['catch'](function(){
         joinErr.hidden=false;

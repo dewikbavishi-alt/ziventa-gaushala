@@ -164,6 +164,7 @@ export function businessOrderEmail(order: OrderEmailData): EmailMessage {
 // ------------------------------------------------------------------- leads
 
 export interface LeadEmailData {
+  reference: string | null;
   fullName: string;
   email: string;
   phone?: string | null;
@@ -171,18 +172,28 @@ export interface LeadEmailData {
   message?: string | null;
 }
 
+/**
+ * "Membership reserved" - sent the moment someone taps Notify Me.
+ *
+ * Careful with the wording: a place is being held, not sold. Nothing has been
+ * paid and no seat is confirmed until you have spoken to them, so the email
+ * says that plainly rather than implying they are already a member.
+ */
 export function customerLeadEmail(lead: LeadEmailData): EmailMessage {
   return {
     to: lead.email,
-    subject: 'Your Gir Gold Club pre-registration',
+    subject: `Membership reserved - Gir Gold Club${lead.reference ? ` (${lead.reference})` : ''}`,
     text: [
       `Dear ${lead.fullName},`,
       '',
-      'Thank you for pre-registering for the Ziventa Gir Gold Club.',
+      'Your place in the Ziventa Gir Gold Club is reserved.',
+      ...(lead.reference ? ['', `Your reference: ${lead.reference}`] : []),
       '',
-      'Founding membership is limited to 250 families, and we speak to every',
-      'family personally before confirming a seat. We will be in touch shortly',
-      'on the number you gave us.',
+      'Founding membership is limited to 250 families. We hold your place while',
+      'we get in touch - we speak to every family personally before a seat is',
+      'confirmed, and there is nothing to pay until then.',
+      '',
+      'We will call you shortly on the number you gave us.',
       '',
       'Ziventa Gaushala',
     ].join('\n'),
@@ -193,14 +204,18 @@ export function businessLeadEmail(lead: LeadEmailData): EmailMessage {
   return {
     to: businessInbox(),
     replyTo: lead.email,
-    subject: `Gir Gold Club enquiry - ${lead.fullName}`,
+    subject: `Membership reserved - ${lead.fullName}${lead.reference ? ` (${lead.reference})` : ''}`,
     text: [
+      `Reference: ${lead.reference ?? '-'}`,
+      '',
       `Name:  ${lead.fullName}`,
       `Email: ${lead.email}`,
       `Phone: ${lead.phone ?? '-'}`,
       `City:  ${lead.city ?? '-'}`,
       '',
       lead.message ?? '(no message)',
+      '',
+      'Call them to confirm the seat.',
     ].join('\n'),
   };
 }

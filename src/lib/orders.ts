@@ -14,16 +14,27 @@ export class CartError extends Error {
   }
 }
 
-/** ZV-260907-K7QM4P. Confusable characters (I, O, 0, 1) left out. */
-export function generateOrderNumber(now = new Date()): string {
-  const alphabet = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+/** Confusable characters (I, O, 0, 1) are left out so codes survive a phone call. */
+const CODE_ALPHABET = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+
+function code(prefix: string, length: number, now: Date): string {
   const stamp =
     String(now.getUTCFullYear()).slice(2) +
     String(now.getUTCMonth() + 1).padStart(2, '0') +
     String(now.getUTCDate()).padStart(2, '0');
   let suffix = '';
-  for (const b of crypto.randomBytes(6)) suffix += alphabet[b % alphabet.length];
-  return `ZV-${stamp}-${suffix}`;
+  for (const b of crypto.randomBytes(length)) suffix += CODE_ALPHABET[b % CODE_ALPHABET.length];
+  return `${prefix}-${stamp}-${suffix}`;
+}
+
+/** ZV-260907-K7QM4P */
+export function generateOrderNumber(now = new Date()): string {
+  return code('ZV', 6, now);
+}
+
+/** ZGC-260908-A7K2 - the Gir Gold Club reservation a customer can quote. */
+export function generateReservationReference(now = new Date()): string {
+  return code('ZGC', 4, now);
 }
 
 export interface CartLine {

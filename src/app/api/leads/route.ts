@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 import { z } from 'zod';
 import { prisma } from '@/lib/prisma';
 import { businessLeadEmail, customerLeadEmail, sendEmail } from '@/lib/email';
+import { generateReservationReference } from '@/lib/orders';
 
 /** What the "Reserve Your Membership" form on the landing page sends. */
 const leadSchema = z.object({
@@ -47,6 +48,7 @@ export async function POST(request: Request) {
 
   const lead = await prisma.lead.create({
     data: {
+      reference: generateReservationReference(),
       fullName: data.name,
       email: data.email.toLowerCase(),
       phone: data.phone || null,
@@ -73,7 +75,10 @@ export async function POST(request: Request) {
     {
       ok: true,
       id: lead.id,
-      // The page words its success message from this, so it never promises a
+      // Shown in the confirmation popup so the customer has something concrete
+      // to quote when we call them.
+      reference: lead.reference,
+      // The page words its message from this, so it never promises a
       // confirmation email that was not actually sent.
       confirmationSent: toCustomer.delivered,
     },
