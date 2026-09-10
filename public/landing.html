@@ -803,6 +803,7 @@ Color: warm cream ground, deep gaushala-green = trust/tradition, hand-ghee gold 
         <input type="text" id="fcity" name="fcity" required autocomplete="address-level2" placeholder="Your city">
         <span class="form-error" data-for="fcity">Please enter your city.</span>
       </div>
+      <div class="signin-strip" id="signinStripJoin" hidden></div>
       <button type="submit" class="btn btn-primary btn-block" id="joinSubmit"><span id="joinSubmitText">Notify Me</span></button>
       <p class="form-alert" id="joinError" role="alert" hidden></p>
     </form>
@@ -893,6 +894,7 @@ Color: warm cream ground, deep gaushala-green = trust/tradition, hand-ghee gold 
           <input type="email" id="coEmail" autocomplete="email" placeholder="you@email.com">
           <span class="form-error">Please enter a valid email.</span>
         </div>
+        <div class="signin-strip" id="signinStripCheckout" hidden></div>
         <div class="form-row">
           <label for="coAddr">Delivery address</label>
           <textarea id="coAddr" rows="2" autocomplete="street-address" placeholder="House / street / area"></textarea>
@@ -1092,6 +1094,22 @@ img[data-blur="loaded"]{filter:blur(0);transform:scale(1);}
 .nav-toggle[aria-expanded="true"] .icon-close{opacity:1;transform:scale(1);}
 
 /* trust strip */
+/* "You're not signed in" strip, above the membership form and in checkout. */
+.signin-strip{
+  display:flex;align-items:center;justify-content:space-between;gap:.75rem;flex-wrap:wrap;
+  margin:0 0 1rem;padding:.7rem .9rem;border-radius:.6rem;
+  background:rgba(191,143,58,.10);border:1px solid rgba(191,143,58,.35);
+  font-size:.88rem;color:var(--ink);
+}
+.signin-strip.is-in{background:rgba(30,74,53,.08);border-color:rgba(30,74,53,.25);}
+.signin-strip a{
+  flex:none;text-decoration:none;font-weight:600;
+  padding:.4rem .9rem;border-radius:.45rem;
+  background:var(--green-deep,#1E4A35);color:var(--cream);
+}
+.signin-strip a:hover{opacity:.9;}
+.signin-strip .si-note{flex:1;min-width:12rem;}
+
 .trust-strip{background:var(--maroon);overflow:hidden;padding:.7rem 0;}
 .trust-track{display:flex;width:max-content;gap:2.5rem;padding:0 1.25rem;animation:trustScroll 28s linear infinite;white-space:nowrap;}
 .trust-track span{color:var(--cream);font-size:.8rem;font-weight:600;letter-spacing:.04em;text-transform:uppercase;}
@@ -2270,6 +2288,42 @@ document.addEventListener('DOMContentLoaded', function(){
     }
     return new Promise(function(resolve){ setTimeout(function(){ resolve({}); },800); });
   }
+
+  /* ===== signed-in state =====
+     The landing page is plain HTML, so it asks the server who is signed in and
+     fills the two strips accordingly. Signing in is encouraged, not required:
+     guest checkout still works, because forcing an account on someone holding
+     a full cart loses the sale. */
+  function renderSigninStrips(state){
+    var strips=[
+      {el:document.getElementById('signinStripJoin'),   next:'/#join'},
+      {el:document.getElementById('signinStripCheckout'),next:'/#checkout'}
+    ];
+    strips.forEach(function(s){
+      if(!s.el) return;
+      if(state.signedIn){
+        s.el.className='signin-strip is-in';
+        s.el.innerHTML='<span class="si-note">Signed in as <strong>'+
+          String(state.label||'your account').replace(/[<]/g,'&lt;')+
+          '</strong>. This will be saved to your account.</span>'+
+          '<a href="/account">My account</a>';
+      }else{
+        s.el.className='signin-strip';
+        s.el.innerHTML='<span class="si-note">You&rsquo;re not signed in &mdash; '+
+          'sign in to keep your orders and details in one place.</span>'+
+          '<a href="/login?next='+encodeURIComponent(s.next)+'">Sign in</a>';
+      }
+      s.el.hidden=false;
+    });
+  }
+
+  function refreshSigninState(){
+    fetch('/api/me',{credentials:'same-origin',cache:'no-store'})
+      .then(function(r){ return r.ok ? r.json() : {signedIn:false}; })
+      ['catch'](function(){ return {signedIn:false}; })
+      .then(renderSigninStrips);
+  }
+  refreshSigninState();
 
   /* Confirmation popup, shown the moment a place is reserved.
      Built in JS rather than sitting in the markup so it can never flash on

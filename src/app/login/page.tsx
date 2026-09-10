@@ -1,14 +1,33 @@
 'use client';
 
-import { useState } from 'react';
-import { useRouter } from 'next/navigation';
+import { Suspense, useState } from 'react';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { createClient } from '@/lib/supabase/client';
 
 type Mode = 'email' | 'phone';
 
 export default function LoginPage() {
+  // useSearchParams needs a Suspense boundary; without one the whole route is
+  // forced out of static rendering.
+  return (
+    <Suspense fallback={null}>
+      <LoginForm />
+    </Suspense>
+  );
+}
+
+function LoginForm() {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const supabase = createClient();
+
+  /**
+   * Where to send the person after signing in. Only same-site paths are
+   * accepted - taking a full URL here would let anyone craft a login link that
+   * bounces your customers off to their own site afterwards.
+   */
+  const rawNext = searchParams.get('next') ?? '/account';
+  const next = rawNext.startsWith('/') && !rawNext.startsWith('//') ? rawNext : '/account';
 
   const [mode, setMode] = useState<Mode>('email');
   const [email, setEmail] = useState('');
@@ -26,7 +45,7 @@ export default function LoginPage() {
     const { error } = await supabase.auth.signInWithOtp({
       email,
       options: {
-        emailRedirectTo: `${window.location.origin}/auth/callback`,
+        emailRedirectTo: `${window.location.origin}/auth/callback?next=${encodeURIComponent(next)}`,
       },
     });
     setBusy(false);
@@ -67,7 +86,7 @@ export default function LoginPage() {
       setMessage({ kind: 'error', text: error.message });
       return;
     }
-    router.push('/account');
+    router.push(next);
     router.refresh();
   }
 
