@@ -910,6 +910,30 @@ Color: warm cream ground, deep gaushala-green = trust/tradition, hand-ghee gold 
             <span class="form-error">Enter a 6-digit PIN.</span>
           </div>
         </div>
+        <div class="form-row">
+          <!-- A dropdown, not free text: GST and courier rate cards both key on
+               the exact state name, and "MH" / "Maharastra" / "maharashtra"
+               would each be a different value in the database. -->
+          <label for="coState">State</label>
+          <select id="coState" autocomplete="address-level1">
+            <option value="">Select your state</option>
+            <option>Andhra Pradesh</option><option>Arunachal Pradesh</option><option>Assam</option>
+            <option>Bihar</option><option>Chhattisgarh</option><option>Goa</option>
+            <option>Gujarat</option><option>Haryana</option><option>Himachal Pradesh</option>
+            <option>Jharkhand</option><option>Karnataka</option><option>Kerala</option>
+            <option>Madhya Pradesh</option><option>Maharashtra</option><option>Manipur</option>
+            <option>Meghalaya</option><option>Mizoram</option><option>Nagaland</option>
+            <option>Odisha</option><option>Punjab</option><option>Rajasthan</option>
+            <option>Sikkim</option><option>Tamil Nadu</option><option>Telangana</option>
+            <option>Tripura</option><option>Uttar Pradesh</option><option>Uttarakhand</option>
+            <option>West Bengal</option>
+            <option>Andaman and Nicobar Islands</option><option>Chandigarh</option>
+            <option>Dadra and Nagar Haveli and Daman and Diu</option><option>Delhi</option>
+            <option>Jammu and Kashmir</option><option>Ladakh</option>
+            <option>Lakshadweep</option><option>Puducherry</option>
+          </select>
+          <span class="form-error">Please select your state.</span>
+        </div>
       </section>
 
       <section class="co-pane" id="pane2" hidden>
@@ -2628,6 +2652,7 @@ document.addEventListener('DOMContentLoaded', function(){
       ['coEmail',function(v){ return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v); }],
       ['coAddr',function(v){ return v.trim().length>5; }],
       ['coCity',function(v){ return v.trim().length>1; }],
+      ['coState',function(v){ return v.trim().length>1; }],
       ['coPin',function(v){ return /^\d{6}$/.test(v.trim()); }]
     ];
     function validate(){
@@ -2655,6 +2680,7 @@ document.addEventListener('DOMContentLoaded', function(){
         address:{
           line1:document.getElementById('coAddr').value.trim(),
           city:document.getElementById('coCity').value.trim(),
+          state:document.getElementById('coState').value.trim(),
           postcode:document.getElementById('coPin').value.trim(),
           country:'IN'
         },

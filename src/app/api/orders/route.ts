@@ -16,11 +16,14 @@ const orderSchema = z.object({
     line1: z.string().trim().min(3).max(200),
     line2: z.string().trim().max(200).optional().or(z.literal('')),
     city: z.string().trim().min(2).max(120),
-    // The checkout form does not collect state yet. Optional rather than
-    // invented - Indian GST and courier rates both depend on it, so it should
-    // be added to the form before real shipping.
-    state: z.string().trim().max(120).default(''),
-    postcode: z.string().trim().min(4).max(20),
+    // Required. GST and courier rate cards both key on the state, and the
+    // first four orders were saved without one - which is why this is now
+    // enforced here and not only in the browser.
+    state: z.string().trim().min(2, 'Please select your state').max(120),
+    postcode: z
+      .string()
+      .trim()
+      .regex(/^\d{6}$/, 'Enter a 6-digit PIN code'),
     country: z.string().trim().length(2).default('IN'),
   }),
   /** Only ids and quantities. Deliberately no price field to tamper with. */
