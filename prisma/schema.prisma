@@ -74,6 +74,11 @@ model Product {
   sizeLabel   String?
   /// Integer paise. Never store money as a float.
   pricePaise  Int
+  /// Read-only rupee view of pricePaise, calculated by Postgres.
+  /// @ignore keeps it out of the client so nothing can try to write it, while
+  /// still telling Prisma the column exists - without this, `migrate dev`
+  /// would see it as drift and drop it.
+  priceRupees Decimal? @map("price_rupees") @db.Decimal(12, 2) @default(dbgenerated("((\"pricePaise\")::numeric / (100)::numeric)")) @ignore
   imagePath   String?
   isActive    Boolean @default(true)
   sortOrder   Int     @default(0)
@@ -119,6 +124,8 @@ model Membership {
   depositStatus DepositStatus    @default(UNPAID)
   /// Refundable founding deposit, default Rs 5,000.
   depositPaise  Int              @default(500000)
+  /// Read-only rupee view, calculated by Postgres. See priceRupees on Product.
+  depositRupees Decimal?         @map("deposit_rupees") @db.Decimal(12, 2) @default(dbgenerated("((\"depositPaise\")::numeric / (100)::numeric)")) @ignore
 
   joinedOn DateTime?
   leftOn   DateTime?
@@ -232,6 +239,12 @@ model Order {
   shippingPaise Int @default(0)
   totalPaise    Int
 
+  /// Read-only rupee views, calculated by Postgres from the paise columns
+  /// above. See priceRupees on Product for why these are @ignore.
+  subtotalRupees Decimal? @map("subtotal_rupees") @db.Decimal(12, 2) @default(dbgenerated("((\"subtotalPaise\")::numeric / (100)::numeric)")) @ignore
+  deliveryRupees Decimal? @map("delivery_rupees") @db.Decimal(12, 2) @default(dbgenerated("((\"shippingPaise\")::numeric / (100)::numeric)")) @ignore
+  totalRupees    Decimal? @map("total_rupees") @db.Decimal(12, 2) @default(dbgenerated("((\"totalPaise\")::numeric / (100)::numeric)")) @ignore
+
   status           OrderStatus @default(PENDING)
   paymentProvider  String?
   paymentReference String?
@@ -260,6 +273,11 @@ model OrderItem {
   productName    String
   unitPricePaise Int
   quantity       Int
+
+  /// Read-only rupee views, calculated by Postgres. lineTotalRupees is
+  /// unitPricePaise * quantity, so it can never disagree with the line.
+  unitPriceRupees Decimal? @map("unit_price_rupees") @db.Decimal(12, 2) @default(dbgenerated("((\"unitPricePaise\")::numeric / (100)::numeric)")) @ignore
+  lineTotalRupees Decimal? @map("line_total_rupees") @db.Decimal(12, 2) @default(dbgenerated("(((\"unitPricePaise\" * quantity))::numeric / (100)::numeric)")) @ignore
 
   @@unique([orderId, productId])
   @@index([orderId])
