@@ -2,6 +2,19 @@ import { redirect } from 'next/navigation';
 import { getCurrentCustomer } from '@/lib/auth';
 
 /**
+ * Never prerender this page. It shows one specific person's orders and seat
+ * number, so a build-time snapshot would be wrong for everyone.
+ *
+ * It also has to be stated explicitly. Next normally works this out by itself
+ * when a page reads cookies, but that only happens once `cookies()` is
+ * actually called - and everything above it runs during the build first. A
+ * missing Supabase variable therefore threw while the BUILD was rendering
+ * this page, and took the whole deployment down with it. /admin already
+ * declared this; /account was the one that did not.
+ */
+export const dynamic = 'force-dynamic';
+
+/**
  * The signed-in area.
  *
  * The check happens here, next to the data - not in proxy.ts. Proxy runs
