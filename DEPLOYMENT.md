@@ -66,6 +66,45 @@ The application no longer fails its build over a missing `DATABASE_URL` - see
 `src/lib/prisma.ts`. Queries still fail at request time, which is correct: a
 database that is not configured should not appear to work.
 
+## Email
+
+Nodemailer over SMTP. Nodemailer is a client, not a mail service - it needs a
+server to hand messages to, and which one is purely configuration:
+`SMTP_HOST`, `SMTP_PORT`, `SMTP_USER`, `SMTP_PASS`, plus `MAIL_FROM` and
+`MAIL_TO`. No provider is named anywhere in the code, so switching is an
+environment change and nothing else.
+
+Test settings before trusting them to customers:
+
+```bash
+npm run email:test -- you@example.com
+```
+
+It checks two things separately, because they fail for different reasons:
+whether the server can be reached and logged into, and whether it will
+actually accept a message from `MAIL_FROM`. A server will happily let you sign
+in and then refuse to send as an address that is not yours.
+
+`MAIL_FROM` normally has to match `SMTP_USER` or be an alias on the same
+domain. This is the second surprise after a wrong password.
+
+Sending failures never propagate. `sendEmail` returns `{delivered, reason}` and
+never throws, because by the time it runs the order or enquiry is already in
+the database - losing a real order because a mail server hiccuped would be the
+worse failure. Check `delivered` if the caller needs to know.
+
+The transporter is cached per process but deliberately **not** pooled. A pool
+holds connections open between sends, which suits a long-lived server and not a
+serverless function that can be frozen at any moment - the idle sockets die
+with it and the next send times out. Three timeouts are set for the same
+reason: a server that accepts a connection and then goes silent would
+otherwise hold the function open until the platform kills it.
+
+Sign-in emails are **not** sent by this code. Those come from Supabase, which
+has its own SMTP settings under Project Settings > Authentication. Supabase's
+built-in sender allows only a handful of messages per hour, so it needs the
+same SMTP details configured there.
+
 ## Checking a deployment
 
 `/api/health` reports which settings a deployment actually has. It reports

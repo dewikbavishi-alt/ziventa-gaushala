@@ -1,14 +1,18 @@
 /**
- * Sending email.
+ * Sending email, over SMTP, with Nodemailer.
  *
- * Uses Resend over plain fetch - no SDK. Two REST calls do not justify another
- * dependency that has to work identically on a laptop and in a serverless
- * function.
+ * Nodemailer is a client, not a mail service - it needs an SMTP server to hand
+ * messages to. Which one is entirely a matter of configuration: Hostinger,
+ * Gmail, Resend's SMTP endpoint, anything that speaks SMTP. Nothing in this
+ * file names a provider, so switching later is four environment variables and
+ * no code change.
  *
- * If RESEND_API_KEY is missing, nothing breaks: the message is logged and the
+ * If SMTP is not configured, nothing breaks: the message is logged and the
  * caller is told it was not delivered. That way the site works before email is
  * set up, and no order is ever lost because a mail server was down.
  */
+
+import nodemailer, { type Transporter } from 'nodemailer';
 
 export interface EmailMessage {
   to: string;
@@ -23,10 +27,10 @@ export interface EmailResult {
 }
 
 function fromAddress(): string {
-  // Resend's shared sender works without a verified domain, but can only
-  // deliver to the address that owns the Resend account. Set MAIL_FROM to
-  // your own domain once it is verified.
-  return process.env.MAIL_FROM ?? 'Ziventa Gaushala <onboarding@resend.dev>';
+  // Must be an address the SMTP server is willing to send as. Most providers
+  // reject a From that does not belong to the account, so this normally needs
+  // to match SMTP_USER or a verified alias on the same domain.
+  return process.env.MAIL_FROM ?? 'Ziventa Gaushala <orders@girbyziventa.com>';
 }
 
 /** Where order and enquiry alerts go. */
@@ -34,39 +38,84 @@ export function businessInbox(): string {
   return process.env.MAIL_TO ?? 'dewikbavishi4@gmail.com';
 }
 
-export async function sendEmail(message: EmailMessage): Promise<EmailResult> {
-  const apiKey = process.env.RESEND_API_KEY;
+/** Whether this deployment can send at all. Used by /api/health too. */
+export function smtpConfigured(): boolean {
+  return Boolean(
+    process.env.SMTP_HOST?.trim() &&
+      process.env.SMTP_USER?.trim() &&
+      process.env.SMTP_PASS?.trim(),
+  );
+}
 
-  if (!apiKey) {
+/**
+ * One transporter per process, cached like the Prisma client.
+ *
+ * Deliberately NOT pooled. A pool keeps connections open between sends, which
+ * is right for a long-lived server and wrong here - a serverless function can
+ * be frozen or discarded at any moment, and the pool's idle sockets go with
+ * it, producing timeouts on the next send rather than saving anything.
+ *
+ * The three timeouts matter more than they look. Without them a mail server
+ * that accepts the connection and then goes quiet will hold the function open
+ * until the platform kills it, and the customer watches a spinner. Ten seconds
+ * and we give up - the order is already saved by then either way.
+ */
+const globalForMail = globalThis as unknown as { mailer?: Transporter };
+
+function transporter(): Transporter {
+  if (globalForMail.mailer) return globalForMail.mailer;
+
+  const port = Number(process.env.SMTP_PORT ?? 587);
+
+  const created = nodemailer.createTransport({
+    host: process.env.SMTP_HOST,
+    port,
+    // Port 465 is implicit TLS from the first byte. Everything else starts in
+    // the clear and upgrades with STARTTLS, which `secure: false` selects.
+    secure: process.env.SMTP_SECURE ? process.env.SMTP_SECURE === 'true' : port === 465,
+    auth: {
+      user: process.env.SMTP_USER,
+      pass: process.env.SMTP_PASS,
+    },
+    connectionTimeout: 10_000,
+    greetingTimeout: 10_000,
+    socketTimeout: 10_000,
+  });
+
+  globalForMail.mailer = created;
+  return created;
+}
+
+export async function sendEmail(message: EmailMessage): Promise<EmailResult> {
+  if (!smtpConfigured()) {
     console.log(
       `[email:not-configured] to=${message.to} subject=${JSON.stringify(message.subject)}`,
     );
-    return { delivered: false, reason: 'RESEND_API_KEY is not set; logged only' };
+    return { delivered: false, reason: 'SMTP is not configured; logged only' };
   }
 
   try {
-    const res = await fetch('https://api.resend.com/emails', {
-      method: 'POST',
-      headers: {
-        Authorization: `Bearer ${apiKey}`,
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        from: fromAddress(),
-        to: [message.to],
-        subject: message.subject,
-        text: message.text,
-        ...(message.replyTo ? { reply_to: message.replyTo } : {}),
-      }),
+    const info = await transporter().sendMail({
+      from: fromAddress(),
+      to: message.to,
+      subject: message.subject,
+      text: message.text,
+      ...(message.replyTo ? { replyTo: message.replyTo } : {}),
     });
 
-    if (!res.ok) {
-      const detail = await res.text();
-      return { delivered: false, reason: `Resend returned ${res.status}: ${detail.slice(0, 200)}` };
+    // A server can accept the connection and still refuse the recipient, which
+    // is not an exception - it comes back in `rejected`.
+    if (info.rejected?.length) {
+      return { delivered: false, reason: `Rejected by mail server: ${info.rejected.join(', ')}` };
     }
+
     return { delivered: true };
   } catch (err) {
-    return { delivered: false, reason: (err as Error).message };
+    // Never rethrow. The order or enquiry is already in the database, and
+    // losing it because a mail server hiccuped would be the worse failure.
+    const reason = (err as Error).message;
+    console.error(`[email:failed] to=${message.to} reason=${reason}`);
+    return { delivered: false, reason };
   }
 }
 

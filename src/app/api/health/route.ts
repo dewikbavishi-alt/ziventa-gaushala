@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
+import { smtpConfigured } from '@/lib/email';
 
 /**
  * What this deployment actually has wired up.
@@ -28,8 +29,12 @@ export async function GET() {
     time: new Date().toISOString(),
     checks: {
       database,
-      // Email: configured means RESEND_API_KEY is set on THIS deployment.
-      email: present(process.env.RESEND_API_KEY) ? 'configured' : 'not-configured',
+      // Email: configured means host, user and password are all set on THIS
+      // deployment. The host is named because it is not a secret and it is the
+      // fastest way to see which mail server a deployment is actually using.
+      email: smtpConfigured() ? 'configured' : 'not-configured',
+      emailHost: process.env.SMTP_HOST ?? '(not set)',
+      emailFrom: process.env.MAIL_FROM ?? '(using default)',
       emailTo: present(process.env.MAIL_TO) ? 'set' : 'using default',
       // How many addresses can reach /admin. A count, not the addresses.
       adminAccounts: (process.env.ADMIN_EMAILS ?? '')

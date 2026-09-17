@@ -15,7 +15,8 @@
     "db:studio": "prisma studio",
     "db:seed": "tsx prisma/seed.ts",
     "db:verify": "tsx scripts/verify-db.ts",
-    "db:latest": "tsx scripts/latest.ts"
+    "db:latest": "tsx scripts/latest.ts",
+    "email:test": "tsx scripts/test-email.ts"
   },
   "dependencies": {
     "@prisma/adapter-pg": "^7.10.0",
@@ -24,6 +25,7 @@
     "@supabase/supabase-js": "^2.115.0",
     "dotenv": "^17.4.2",
     "next": "16.3.4",
+    "nodemailer": "^10.0.10",
     "prisma": "^7.10.0",
     "react": "19.2.8",
     "react-dom": "19.2.8",
@@ -32,6 +34,7 @@
   "devDependencies": {
     "@tailwindcss/postcss": "^4",
     "@types/node": "^20",
+    "@types/nodemailer": "^8.0.2",
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "eslint": "^9",
