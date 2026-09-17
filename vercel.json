@@ -2,8 +2,5 @@
   "$schema": "https://openapi.vercel.sh/vercel.json",
   "framework": "nextjs",
   "regions": ["bom1"],
-
-  "//": "Migrations are TEMPORARILY out of the build. The build command was `prisma migrate deploy && next build`. That was NOT the cause of the failed builds - reproduced locally, `prisma generate` and `migrate` were fine and `next build` was what exited 1, on a missing DATABASE_URL. The code no longer fails the build over that. Migrations stay out for a different reason: `migrate deploy` needs DIRECT_URL at BUILD time, and build-time env is exactly what is not reaching these builds - the live site queries the database fine at runtime, so the variables exist but the build cannot see them. Check they are enabled for every environment and not marked Sensitive (Sensitive variables are withheld from builds). Once a build can read DIRECT_URL, restore `prisma migrate deploy && next build` so schema changes ship with the code that needs them. Until then, run `npm run db:deploy` locally after any schema change.",
-
   "buildCommand": "next build"
 }
