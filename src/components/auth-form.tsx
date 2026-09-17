@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
-import { useRouter, useSearchParams } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 import { createClient } from '@/lib/supabase/client';
 
 type Mode = 'email' | 'phone';
@@ -34,18 +34,17 @@ const NO_ACCOUNT = /signups not allowed|otp_disabled|user not found/i;
  */
 const MAIL_BROKEN = /error sending|rate limit|smtp/i;
 
-export function AuthForm({ intent }: { intent: 'signin' | 'signup' }) {
+/**
+ * `next` arrives as a prop, already read and checked on the server.
+ *
+ * It used to come from useSearchParams(), which forced this whole form behind
+ * a Suspense boundary and meant the delivered HTML contained none of it - a
+ * blank page until JavaScript loaded, and nothing at all without it. Reading
+ * it on the server instead lets the form ship as real HTML.
+ */
+export function AuthForm({ intent, next }: { intent: 'signin' | 'signup'; next: string }) {
   const router = useRouter();
-  const searchParams = useSearchParams();
   const supabase = createClient();
-
-  /**
-   * Where to send the person after signing in. Only same-site paths are
-   * accepted - taking a full URL here would let anyone craft a login link that
-   * bounces your customers off to their own site afterwards.
-   */
-  const rawNext = searchParams.get('next') ?? '/account';
-  const next = rawNext.startsWith('/') && !rawNext.startsWith('//') ? rawNext : '/account';
 
   const [mode, setMode] = useState<Mode>('email');
   const [email, setEmail] = useState('');
