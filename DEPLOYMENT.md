@@ -2,6 +2,33 @@
 
 Notes that used to live inside `vercel.json`. They cannot go back there.
 
+## There is no `vercel.json`
+
+It was deleted, and that is deliberate. Everything it held was either the
+default or a liability:
+
+- `framework: "nextjs"` - detected automatically
+- `buildCommand: "next build"` - already the default for a Next project
+- `$schema` - an editor hint, of no use at build time
+- `regions: ["bom1"]` - the only line with real effect, and the only one worth
+  discussing
+
+The file had already failed every build once, over a `"//"` key (below). After
+that, five commits in a row reached GitHub and never produced a deployment,
+while `npm ci` and `next build` both passed locally with and without
+environment variables - which left this file as the last thing that had not
+been ruled out.
+
+**About the region.** `bom1` is Mumbai. Without it, functions run from the
+platform default, which is in the United States and adds roughly 200ms to
+every request from an Indian customer. That is worth having back - but set it
+in the Vercel dashboard under Project Settings > Functions, not here. Region
+choice is restricted on Hobby plans, and a rejected value in this file takes
+down the whole build rather than just being ignored.
+
+If a setting genuinely needs to live in this repo, add the file back with that
+one key and watch the very next deployment.
+
 ## Never put comments in `vercel.json`
 
 JSON has no comment syntax, and the usual workaround is a `"//"` key. **Vercel
