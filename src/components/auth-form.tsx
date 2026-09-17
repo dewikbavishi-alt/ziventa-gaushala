@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { createClient } from '@/lib/supabase/client';
 
-type Mode = 'email' | 'phone';
+type Mode = 'email' | 'phone' | 'password';
 
 /**
  * Whether mobile sign-in is switched on.
@@ -48,6 +48,7 @@ export function AuthForm({ intent, next }: { intent: 'signin' | 'signup'; next: 
 
   const [mode, setMode] = useState<Mode>('email');
   const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
   const [fullName, setFullName] = useState('');
   const [phone, setPhone] = useState('');
   const [code, setCode] = useState('');
@@ -116,6 +117,33 @@ export function AuthForm({ intent, next }: { intent: 'signin' | 'signup'; next: 
     setMessage({ kind: 'error', text: error.message });
   }
 
+  /**
+   * Password sign-in.
+   *
+   * Exists because the magic link depends on email arriving, and when email
+   * breaks it locks you out of your own admin dashboard - exactly when you
+   * most need to look at it. A password does not touch the mail server.
+   *
+   * Sign-in only. Creating an account this way needs a confirmation email,
+   * which puts us straight back where we started.
+   */
+  async function signInWithPassword(e: React.FormEvent) {
+    e.preventDefault();
+    setBusy(true);
+    setMessage(null);
+
+    const { error } = await supabase.auth.signInWithPassword({ email, password });
+    setBusy(false);
+
+    if (error) {
+      setMessage({ kind: 'error', text: error.message });
+      return;
+    }
+
+    router.push(next);
+    router.refresh();
+  }
+
   /** Phone step 1: ask Supabase to text a 6-digit code. */
   async function sendCode(e: React.FormEvent) {
     e.preventDefault();
@@ -181,7 +209,10 @@ export function AuthForm({ intent, next }: { intent: 'signin' | 'signup'; next: 
                   setCodeSent(false);
                 }}
                 className={`rounded-md py-2 transition ${
-                  mode === m ? 'bg-white text-[#1E4A35] shadow-sm' : 'text-[#2F4A3D]/60'
+                  // 'password' is still email sign-in, so the Email tab stays lit.
+                  (m === 'phone') === (mode === 'phone')
+                    ? 'bg-white text-[#1E4A35] shadow-sm'
+                    : 'text-[#2F4A3D]/60'
                 }`}
               >
                 {m === 'email' ? 'Email' : 'Phone'}
@@ -228,6 +259,67 @@ export function AuthForm({ intent, next }: { intent: 'signin' | 'signup'; next: 
               <p className="text-center text-xs text-[#2F4A3D]/60">
                 No password needed. We send a link that signs you in.
               </p>
+
+              {!isSignup && (
+                <button
+                  type="button"
+                  onClick={() => {
+                    setMode('password');
+                    setMessage(null);
+                  }}
+                  className="w-full text-center text-xs text-[#2F4A3D]/60 underline"
+                >
+                  Sign in with a password instead
+                </button>
+              )}
+            </form>
+          )}
+
+          {mode === 'password' && (
+            <form onSubmit={signInWithPassword} className="space-y-4">
+              <label className="block">
+                <span className="text-sm font-medium text-[#2F4A3D]">Email address</span>
+                <input
+                  type="email"
+                  required
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  placeholder="you@example.com"
+                  className="mt-1 w-full rounded-lg border border-[#2F4A3D]/20 px-3 py-2 text-[#2F4A3D] outline-none focus:border-[#D9A92B] focus:ring-2 focus:ring-[#D9A92B]/30"
+                />
+              </label>
+
+              <label className="block">
+                <span className="text-sm font-medium text-[#2F4A3D]">Password</span>
+                <input
+                  type="password"
+                  required
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  autoComplete="current-password"
+                  className="mt-1 w-full rounded-lg border border-[#2F4A3D]/20 px-3 py-2 text-[#2F4A3D] outline-none focus:border-[#D9A92B] focus:ring-2 focus:ring-[#D9A92B]/30"
+                />
+              </label>
+
+              <button
+                type="submit"
+                disabled={busy}
+                className="w-full rounded-lg bg-[#1E4A35] py-2.5 font-medium text-[#FBF6EC] transition hover:bg-[#173a29] disabled:opacity-60"
+              >
+                {busy ? 'Signing in...' : 'Sign in'}
+              </button>
+
+              <button
+                type="button"
+                onClick={() => {
+                  setMode('email');
+                  setPassword('');
+                  setMessage(null);
+                }}
+                className="w-full text-center text-xs text-[#2F4A3D]/60 underline"
+              >
+                Email me a link instead
+              </button>
             </form>
           )}
 

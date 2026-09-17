@@ -20,7 +20,14 @@ import { PrismaClient } from '@/generated/prisma/client';
  * degrading one feature. That is exactly what happened: builds died with
  * "Failed to collect page data for /api/products".
  */
-const UNCONFIGURED = 'postgresql://unset:unset@127.0.0.1:1/unset';
+/**
+ * The hostname is the error message. Any query made without DATABASE_URL fails
+ * with "Can't reach database server at DATABASE_URL-is-not-set.invalid", which
+ * says what is wrong; an address like 127.0.0.1:1 sends you looking for a
+ * local database that was never the point. `.invalid` is reserved by RFC 2606
+ * and can never resolve, so this cannot accidentally reach anything.
+ */
+const UNCONFIGURED = 'postgresql://unset:unset@DATABASE_URL-is-not-set.invalid:5432/unset';
 
 export const databaseConfigured = Boolean(process.env.DATABASE_URL?.trim());
 

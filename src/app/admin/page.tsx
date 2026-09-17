@@ -53,18 +53,90 @@ export default async function AdminPage() {
     );
   }
 
-  const [orders, leads, products, customers, memberships, paidAgg, pendingAgg] =
-    await Promise.all([
-      prisma.order.findMany({ orderBy: { placedAt: 'desc' }, include: { items: true }, take: 100 }),
-      prisma.lead.findMany({ orderBy: { createdAt: 'desc' }, take: 100 }),
-      prisma.product.findMany({ orderBy: { sortOrder: 'asc' } }),
-      prisma.customer.count(),
-      prisma.membership.count(),
-      prisma.order.aggregate({ where: { status: 'PAID' }, _sum: { totalPaise: true } }),
-      prisma.order.aggregate({ where: { status: 'PENDING' }, _sum: { totalPaise: true } }),
-    ]);
+  /**
+   * Thirty days back, from midnight, so "last 30 days" means whole days rather
+   * than a window that slides through the afternoon and makes today's figure
+   * look different every time the page is refreshed.
+   */
+  const since = new Date();
+  since.setHours(0, 0, 0, 0);
+  since.setDate(since.getDate() - 29);
+
+  const [
+    orders,
+    leads,
+    products,
+    customers,
+    memberships,
+    paidAgg,
+    pendingAgg,
+    allOrders,
+    statusCounts,
+    itemsSold,
+    leadsByStatus,
+    recentOrderAgg,
+  ] = await Promise.all([
+    prisma.order.findMany({ orderBy: { placedAt: 'desc' }, include: { items: true }, take: 100 }),
+    prisma.lead.findMany({ orderBy: { createdAt: 'desc' }, take: 100 }),
+    prisma.product.findMany({ orderBy: { sortOrder: 'asc' } }),
+    prisma.customer.count(),
+    prisma.membership.count(),
+    prisma.order.aggregate({ where: { status: 'PAID' }, _sum: { totalPaise: true } }),
+    prisma.order.aggregate({ where: { status: 'PENDING' }, _sum: { totalPaise: true } }),
+    // Every order's date and total, for the daily chart and the averages.
+    // Only two small columns, so this stays cheap as the table grows.
+    prisma.order.findMany({
+      where: { placedAt: { gte: since } },
+      select: { placedAt: true, totalPaise: true },
+      orderBy: { placedAt: 'asc' },
+    }),
+    prisma.order.groupBy({ by: ['status'], _count: { _all: true }, _sum: { totalPaise: true } }),
+    // Grouped in the database rather than summed in JavaScript, so it does not
+    // need every order item loaded into memory to answer one question.
+    prisma.orderItem.groupBy({
+      by: ['productName'],
+      _sum: { quantity: true },
+      orderBy: { _sum: { quantity: 'desc' } },
+      take: 5,
+    }),
+    prisma.lead.groupBy({ by: ['status'], _count: { _all: true } }),
+    prisma.order.aggregate({
+      where: { placedAt: { gte: since } },
+      _count: { _all: true },
+      _sum: { totalPaise: true },
+      _avg: { totalPaise: true },
+    }),
+  ]);
 
   const seatsLeft = 250 - memberships;
+
+  // ---- daily series for the last 30 days, zero-filled -----------------
+  //
+  // Zero-filling matters: without it a quiet day is simply absent and the
+  // chart silently closes the gap, making a week with two orders look like a
+  // week of steady trade.
+  const dayKey = (d: Date) => d.toISOString().slice(0, 10);
+  const byDay = new Map<string, { orders: number; paise: number }>();
+
+  for (let i = 0; i < 30; i += 1) {
+    const d = new Date(since);
+    d.setDate(since.getDate() + i);
+    byDay.set(dayKey(d), { orders: 0, paise: 0 });
+  }
+  for (const o of allOrders) {
+    const bucket = byDay.get(dayKey(o.placedAt));
+    if (bucket) {
+      bucket.orders += 1;
+      bucket.paise += o.totalPaise;
+    }
+  }
+
+  const series = [...byDay.entries()].map(([day, v]) => ({ day, ...v }));
+  const peak = Math.max(1, ...series.map((s) => s.paise));
+
+  const convertedLeads = leadsByStatus.find((l) => l.status === 'converted')?._count._all ?? 0;
+  const totalLeads = leadsByStatus.reduce((n, l) => n + l._count._all, 0);
+  const conversion = totalLeads === 0 ? 0 : Math.round((convertedLeads / totalLeads) * 100);
 
   return (
     <main className="min-h-screen bg-[#FBF6EC] px-4 py-8">
@@ -89,6 +161,88 @@ export default async function AdminPage() {
           <Stat label="Accounts" value={String(customers)} />
           <Stat label="Seats left" value={String(seatsLeft)} hint={`${memberships} of 250 taken`} />
         </section>
+
+        {/* ------------------------------------------------------- analytics */}
+        <h2 className="mb-3 text-lg font-semibold text-[#2F4A3D]">Last 30 days</h2>
+
+        <section className="mb-6 grid gap-3 sm:grid-cols-3">
+          <Stat label="Orders" value={String(recentOrderAgg._count._all)} />
+          <Stat label="Value" value={rs(recentOrderAgg._sum.totalPaise ?? 0)} />
+          <Stat
+            label="Average order"
+            value={rs(Math.round(recentOrderAgg._avg.totalPaise ?? 0))}
+          />
+        </section>
+
+        {/* Bars are plain divs on purpose - a charting library would be ~100KB
+            to draw thirty rectangles, and this has no runtime to go wrong. */}
+        <div className="mb-10 rounded-xl border border-[#2F4A3D]/10 bg-white p-4">
+          <div className="flex h-32 items-end gap-[3px]">
+            {series.map((s) => (
+              <div
+                key={s.day}
+                title={`${s.day}: ${s.orders} order${s.orders === 1 ? '' : 's'}, ${rs(s.paise)}`}
+                className="flex-1 rounded-t bg-[#1E4A35] transition hover:bg-[#D9A92B]"
+                style={{
+                  // A day with orders always shows at least a sliver, so real
+                  // trade is never mistaken for a blank day.
+                  height: s.paise === 0 ? '2px' : `${Math.max(6, (s.paise / peak) * 100)}%`,
+                  opacity: s.paise === 0 ? 0.25 : 1,
+                }}
+              />
+            ))}
+          </div>
+          <div className="mt-2 flex justify-between text-[0.65rem] text-[#2F4A3D]/50">
+            <span>{series[0]?.day}</span>
+            <span>Peak day {rs(peak)}</span>
+            <span>{series[series.length - 1]?.day}</span>
+          </div>
+        </div>
+
+        <div className="mb-10 grid gap-4 lg:grid-cols-3">
+          <Panel title="Orders by status">
+            {statusCounts.length === 0 && <Empty>Nothing yet.</Empty>}
+            {statusCounts.map((s) => (
+              <Row
+                key={s.status}
+                left={
+                  <span
+                    className={`rounded px-2 py-0.5 text-xs font-medium ${
+                      STATUS_COLOUR[s.status] ?? 'bg-stone-200 text-stone-700'
+                    }`}
+                  >
+                    {s.status}
+                  </span>
+                }
+                right={`${s._count._all} · ${rs(s._sum.totalPaise ?? 0)}`}
+              />
+            ))}
+          </Panel>
+
+          <Panel title="Best sellers">
+            {itemsSold.length === 0 && <Empty>Nothing sold yet.</Empty>}
+            {itemsSold.map((i) => (
+              <Row
+                key={i.productName}
+                left={<span className="text-sm text-[#2F4A3D]">{i.productName}</span>}
+                right={`${i._sum.quantity ?? 0} sold`}
+              />
+            ))}
+          </Panel>
+
+          <Panel title="Membership funnel">
+            <Row left={<span className="text-sm text-[#2F4A3D]">Enquiries</span>} right={String(totalLeads)} />
+            <Row left={<span className="text-sm text-[#2F4A3D]">Converted</span>} right={String(convertedLeads)} />
+            <Row
+              left={<span className="text-sm text-[#2F4A3D]">Conversion</span>}
+              right={`${conversion}%`}
+            />
+            <Row
+              left={<span className="text-sm text-[#2F4A3D]">Seats taken</span>}
+              right={`${memberships} of 250`}
+            />
+          </Panel>
+        </div>
 
         {/* ---------------------------------------------------------- orders */}
         <h2 className="mb-3 text-lg font-semibold text-[#2F4A3D]">Orders</h2>
@@ -257,6 +411,26 @@ function Stat({ label, value, hint }: { label: string; value: string; hint?: str
       <p className="text-xl font-semibold text-[#1E4A35]">{value}</p>
       <p className="mt-0.5 text-xs text-[#2F4A3D]/70">{label}</p>
       {hint && <p className="text-[0.65rem] text-[#2F4A3D]/45">{hint}</p>}
+    </div>
+  );
+}
+
+function Panel({ title, children }: { title: string; children: React.ReactNode }) {
+  return (
+    <div className="rounded-xl border border-[#2F4A3D]/10 bg-white p-4">
+      <h3 className="mb-2 text-xs font-semibold uppercase tracking-wide text-[#2F4A3D]/60">
+        {title}
+      </h3>
+      <div className="space-y-1">{children}</div>
+    </div>
+  );
+}
+
+function Row({ left, right }: { left: React.ReactNode; right: string }) {
+  return (
+    <div className="flex items-center justify-between gap-2 py-1">
+      {left}
+      <span className="text-sm font-medium text-[#2F4A3D]">{right}</span>
     </div>
   );
 }
