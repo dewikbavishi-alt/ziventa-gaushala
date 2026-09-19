@@ -73,6 +73,45 @@ export async function POST(request: Request) {
     throw err;
   }
 
+  const contactEmail = input.customer.email.toLowerCase();
+
+  /**
+   * Same customer, same total, within two minutes - almost certainly one order
+   * sent twice rather than two orders.
+   *
+   * The checkout button disables on click, but a retry after a dropped
+   * connection or a replayed request still arrives as a second POST, and the
+   * cost of getting this wrong is a family charged and delivered twice.
+   * Matching on total as well as email keeps a genuine second, different order
+   * from being swallowed. Two minutes is short enough that reordering the same
+   * thing deliberately still works.
+   */
+  const duplicate = await prisma.order.findFirst({
+    where: {
+      contactEmail,
+      totalPaise: cart.totalPaise,
+      placedAt: { gte: new Date(Date.now() - 2 * 60 * 1000) },
+    },
+    orderBy: { placedAt: 'desc' },
+  });
+
+  if (duplicate) {
+    return NextResponse.json(
+      {
+        ok: true,
+        orderNumber: duplicate.orderNumber,
+        amountPaise: duplicate.totalPaise,
+        duplicate: true,
+        // Not recorded for the original order, so this branch cannot know.
+        // Saying false is honest; saying true would promise an email that may
+        // never have been sent.
+        confirmationSent: false,
+        payment: { provider: 'none' },
+      },
+      { status: 200 },
+    );
+  }
+
   // Attach the order to an account if the person happens to be signed in.
   // Guest checkout still works - customerId is nullable.
   let customerId: string | null = null;
@@ -87,7 +126,7 @@ export async function POST(request: Request) {
       orderNumber: generateOrderNumber(),
       customerId,
       contactName: input.customer.name,
-      contactEmail: input.customer.email.toLowerCase(),
+      contactEmail,
       contactPhone: input.customer.phone,
       shipLine1: input.address.line1,
       shipLine2: input.address.line2 || null,

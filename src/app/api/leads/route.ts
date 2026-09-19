@@ -46,11 +46,52 @@ export async function POST(request: Request) {
   // Quietly accept and drop it, so the bot learns nothing.
   if (company) return NextResponse.json({ ok: true }, { status: 201 });
 
+  const email = data.email.toLowerCase();
+
+  /**
+   * Same person, same form, within ten minutes - hand back what they already
+   * have instead of making a second enquiry.
+   *
+   * The button is disabled on click, but that only covers one tab in one
+   * browser. A retry after a flaky connection, a double-tap on mobile, or a
+   * replayed request all arrive here as genuine second requests, and the
+   * result would be two reservations for one family and two emails telling
+   * them so. Checked in the database rather than in memory, so it holds across
+   * every serverless instance.
+   */
+  const recent = await prisma.lead.findFirst({
+    where: {
+      email,
+      createdAt: { gte: new Date(Date.now() - 10 * 60 * 1000) },
+    },
+    orderBy: { createdAt: 'desc' },
+  });
+
+  if (recent) {
+    return NextResponse.json(
+      {
+        ok: true,
+        id: recent.id,
+        reference: recent.reference,
+        duplicate: true,
+        /**
+         * False because this branch genuinely does not know. Whether the first
+         * submission managed to send is not recorded, and the page words its
+         * message from this field - claiming true would promise an email that
+         * may never have gone. False produces "Registered as ...", which is
+         * true either way.
+         */
+        confirmationSent: false,
+      },
+      { status: 200 },
+    );
+  }
+
   const lead = await prisma.lead.create({
     data: {
       reference: generateReservationReference(),
       fullName: data.name,
-      email: data.email.toLowerCase(),
+      email,
       phone: data.phone || null,
       city: data.city || null,
       message: data.message || null,
