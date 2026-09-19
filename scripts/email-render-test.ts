@@ -8,6 +8,7 @@
  */
 
 import {
+  authCodeEmail,
   businessLeadEmail,
   businessOrderEmail,
   customerLeadEmail,
@@ -126,6 +127,15 @@ assertSafe('businessLeadEmail', {
   to: headerSafe(leadToBusiness.to),
   replyTo: leadToBusiness.replyTo ? headerSafe(leadToBusiness.replyTo) : undefined,
 });
+
+console.log('\nauthCodeEmail');
+const codeMail = authCodeEmail({ to: 'family@example.com', code: '08791920', isSignup: false });
+check('marked sensitive so the subject stays out of logs', codeMail.sensitive === true);
+check('code appears in the subject for phone notifications', codeMail.subject.includes('08791920'));
+check('code appears in the HTML body', (codeMail.html ?? '').includes('08791920'));
+check('code appears in the text fallback', codeMail.text.includes('08791920'));
+check('warns against sharing it', /never share/i.test(codeMail.text));
+check('no link to click', !/https?:\/\//.test(codeMail.text));
 
 console.log('\nheaderSafe / escapeHtml directly');
 check('strips CR and LF', !/[\r\n]/.test(headerSafe(INJECT)));

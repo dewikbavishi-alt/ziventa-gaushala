@@ -50,25 +50,26 @@ export function AuthForm({ intent, next }: { intent: 'signin' | 'signup'; next: 
   const isSignup = intent === 'signup';
 
   /**
-   * Email: send a one-time link. No password to forget.
+   * Step 1: ask our own endpoint to email a one-time code.
    *
-   * Goes to our own endpoint rather than supabase.auth.signInWithOtp, so the
-   * message is sent by the same mail server as every other email the site
-   * sends. Supabase's built-in sender allows only a handful an hour, which
-   * repeatedly locked this site out during testing.
+   * Ours rather than supabase.auth.signInWithOtp, so the message goes through
+   * the same mail server as every other email the site sends. Supabase's
+   * built-in sender allows only a handful an hour, which repeatedly locked
+   * this site out during testing.
    *
-   * The endpoint answers the same way whatever happens - delivered, unknown
+   * The endpoint answers the same way whatever happens - sent, unknown
    * address, rate-limited - because whether an address has an account here is
-   * private. That is why there is no "no such account" branch any more: the
-   * server will not say, so the page must not pretend to know.
+   * private. So there is no "no such account" branch: the server will not
+   * say, and the page must not pretend to know. The person moves to the code
+   * step either way, and simply never receives a code if there is no account.
    */
-  async function sendMagicLink(e: React.FormEvent) {
+  async function sendEmailCode(e: React.FormEvent) {
     e.preventDefault();
     setBusy(true);
     setMessage(null);
 
     try {
-      const res = await fetch('/api/auth/send-link', {
+      const res = await fetch('/api/auth/send-code', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -94,12 +95,10 @@ export function AuthForm({ intent, next }: { intent: 'signin' | 'signup'; next: 
         return;
       }
 
+      setCodeSent(true);
       setMessage({
         kind: 'ok',
-        text: isSignup
-          ? `Almost there. If that address is new, a link is on its way to ${email} - open it to finish creating your account.`
-          : `If ${email} can be used to sign in, a link is on its way. It may take a minute.`,
-        offerSignup: !isSignup,
+        text: `If ${email} can be used to sign in, a code is on its way. It may take a minute - check your spam folder too.`,
       });
     } catch {
       // Network failure, offline, DNS - never the person's fault.
@@ -110,6 +109,41 @@ export function AuthForm({ intent, next }: { intent: 'signin' | 'signup'; next: 
     } finally {
       setBusy(false);
     }
+  }
+
+  /**
+   * Step 2: hand the code to Supabase, which turns it into a session.
+   *
+   * Verified in the browser rather than on our server, so the session cookies
+   * are set by Supabase's own client exactly as they are for password
+   * sign-in. `type: 'magiclink'` because that is what generated the code -
+   * Supabase reports it as the verification type.
+   */
+  async function verifyEmailCode(e: React.FormEvent) {
+    e.preventDefault();
+    setBusy(true);
+    setMessage(null);
+
+    const { error } = await supabase.auth.verifyOtp({
+      email,
+      token: code.trim(),
+      type: 'magiclink',
+    });
+
+    setBusy(false);
+
+    if (error) {
+      setMessage({
+        kind: 'error',
+        // Covers a wrong code, an expired one and one already used. Saying
+        // which would help someone guessing far more than it helps a customer.
+        text: 'That code did not work. It may have expired or already been used - request a new one.',
+      });
+      return;
+    }
+
+    router.push(next);
+    router.refresh();
   }
 
   /**
@@ -215,8 +249,8 @@ export function AuthForm({ intent, next }: { intent: 'signin' | 'signup'; next: 
             ))}
           </div>
 
-          {mode === 'email' && (
-            <form onSubmit={sendMagicLink} className="space-y-4">
+          {mode === 'email' && !codeSent && (
+            <form onSubmit={sendEmailCode} className="space-y-4">
               {isSignup && (
                 <label className="block">
                   <span className="text-sm font-medium text-[#2F4A3D]">Your name</span>
@@ -248,11 +282,11 @@ export function AuthForm({ intent, next }: { intent: 'signin' | 'signup'; next: 
                 disabled={busy}
                 className="w-full rounded-lg bg-[#1E4A35] py-2.5 font-medium text-[#FBF6EC] transition hover:bg-[#173a29] disabled:opacity-60"
               >
-                {busy ? 'Sending...' : isSignup ? 'Create my account' : 'Email me a sign-in link'}
+                {busy ? 'Sending...' : isSignup ? 'Create my account' : 'Email me a code'}
               </button>
 
               <p className="text-center text-xs text-[#2F4A3D]/60">
-                No password needed. We send a link that signs you in.
+                No password needed. We email you a code to type in here.
               </p>
 
               {!isSignup && (
@@ -267,6 +301,49 @@ export function AuthForm({ intent, next }: { intent: 'signin' | 'signup'; next: 
                   Sign in with a password instead
                 </button>
               )}
+            </form>
+          )}
+
+          {mode === 'email' && codeSent && (
+            <form onSubmit={verifyEmailCode} className="space-y-4">
+              <label className="block">
+                <span className="text-sm font-medium text-[#2F4A3D]">
+                  Code sent to {email}
+                </span>
+                <input
+                  inputMode="numeric"
+                  autoComplete="one-time-code"
+                  // Length is a Supabase project setting, so it is not pinned
+                  // to six here - a hard maxLength would silently truncate a
+                  // longer code and look like the customer typed it wrong.
+                  required
+                  value={code}
+                  onChange={(e) => setCode(e.target.value.replace(/\D/g, ''))}
+                  placeholder="123456"
+                  autoFocus
+                  className="mt-1 w-full rounded-lg border border-[#2F4A3D]/20 px-3 py-2 text-center text-lg tracking-[0.4em] text-[#2F4A3D] outline-none focus:border-[#D9A92B] focus:ring-2 focus:ring-[#D9A92B]/30"
+                />
+              </label>
+
+              <button
+                type="submit"
+                disabled={busy || code.length < 4}
+                className="w-full rounded-lg bg-[#1E4A35] py-2.5 font-medium text-[#FBF6EC] transition hover:bg-[#173a29] disabled:opacity-60"
+              >
+                {busy ? 'Checking...' : isSignup ? 'Create my account' : 'Sign in'}
+              </button>
+
+              <button
+                type="button"
+                onClick={() => {
+                  setCodeSent(false);
+                  setCode('');
+                  setMessage(null);
+                }}
+                className="w-full text-center text-xs text-[#2F4A3D]/60 underline"
+              >
+                Use a different address, or send another code
+              </button>
             </form>
           )}
 
