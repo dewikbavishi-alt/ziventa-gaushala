@@ -2,32 +2,33 @@
 
 Notes that used to live inside `vercel.json`. They cannot go back there.
 
-## There is no `vercel.json`
+## `vercel.json` must keep `framework: "nextjs"`
 
-It was deleted, and that is deliberate. Everything it held was either the
-default or a liability:
+It says almost nothing, and the one line it does say is load bearing.
 
-- `framework: "nextjs"` - detected automatically
+This project started life as a plain static site, so the Framework Preset in
+the Vercel dashboard is set to something other than Next.js. `framework` here
+overrides that. Delete the line and Vercel stops treating the repo as a Next
+app: the build still succeeds and still reports Ready, but the deployment
+serves nothing at all. Every route - the landing page, the API, everything -
+returns 404.
+
+That happened. The file was deleted while hunting a separate failure, builds
+went green, and nobody noticed for two days because the domain was still
+pinned to an older deployment. The moment that deployment was replaced, the
+whole site went dark. A green Ready badge is not evidence that a deployment
+serves anything.
+
+Either keep this file, or set the Framework Preset to Next.js under Project
+Settings > Build and Development Settings. Doing both is safer than either.
+
+What is deliberately NOT here:
+
 - `buildCommand: "next build"` - already the default for a Next project
-- `$schema` - an editor hint, of no use at build time
-- `regions: ["bom1"]` - the only line with real effect, and the only one worth
-  discussing
-
-The file had already failed every build once, over a `"//"` key (below). After
-that, five commits in a row reached GitHub and never produced a deployment,
-while `npm ci` and `next build` both passed locally with and without
-environment variables - which left this file as the last thing that had not
-been ruled out.
-
-**About the region.** `bom1` is Mumbai. Without it, functions run from the
-platform default, which is in the United States and adds roughly 200ms to
-every request from an Indian customer. That is worth having back - but set it
-in the Vercel dashboard under Project Settings > Functions, not here. Region
-choice is restricted on Hobby plans, and a rejected value in this file takes
-down the whole build rather than just being ignored.
-
-If a setting genuinely needs to live in this repo, add the file back with that
-one key and watch the very next deployment.
+- `regions: ["bom1"]` - Mumbai, worth roughly 200ms per request for an Indian
+  customer, but region choice is restricted on Hobby plans and a rejected
+  value fails the entire build instead of being ignored. Set it in the
+  dashboard under Project Settings > Functions.
 
 ## Never put comments in `vercel.json`
 
