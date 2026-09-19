@@ -22,19 +22,6 @@ type Mode = 'email' | 'phone' | 'password';
 const PHONE_ENABLED = process.env.NEXT_PUBLIC_PHONE_AUTH_ENABLED === 'true';
 
 /**
- * Supabase says this when an email has no account and we asked it not to make
- * one. It is accurate but reads like a fault; for a new customer it is not.
- */
-const NO_ACCOUNT = /signups not allowed|otp_disabled|user not found/i;
-
-/**
- * Both of these mean the message could not be handed to the email provider.
- * Nothing the person typed caused it, so telling them to check the address
- * would send them hunting for a mistake they did not make.
- */
-const MAIL_BROKEN = /error sending|rate limit|smtp/i;
-
-/**
  * `next` arrives as a prop, already read and checked on the server.
  *
  * It used to come from useSearchParams(), which forced this whole form behind
@@ -62,59 +49,67 @@ export function AuthForm({ intent, next }: { intent: 'signin' | 'signup'; next: 
 
   const isSignup = intent === 'signup';
 
-  /** Email: send a one-time link. No password to forget. */
+  /**
+   * Email: send a one-time link. No password to forget.
+   *
+   * Goes to our own endpoint rather than supabase.auth.signInWithOtp, so the
+   * message is sent by the same mail server as every other email the site
+   * sends. Supabase's built-in sender allows only a handful an hour, which
+   * repeatedly locked this site out during testing.
+   *
+   * The endpoint answers the same way whatever happens - delivered, unknown
+   * address, rate-limited - because whether an address has an account here is
+   * private. That is why there is no "no such account" branch any more: the
+   * server will not say, so the page must not pretend to know.
+   */
   async function sendMagicLink(e: React.FormEvent) {
     e.preventDefault();
     setBusy(true);
     setMessage(null);
 
-    const { error } = await supabase.auth.signInWithOtp({
-      email,
-      options: {
-        emailRedirectTo: `${window.location.origin}/auth/callback?next=${encodeURIComponent(next)}`,
-        /**
-         * This is the real difference between the two pages.
-         *
-         * Signing in must NOT quietly create an account: someone mistyping
-         * their address would otherwise land in a new, empty account and
-         * conclude their orders had vanished.
-         */
-        shouldCreateUser: isSignup,
-        // Carried into user_metadata, which is where syncCustomer reads it.
-        data: isSignup ? { full_name: fullName.trim() || null } : undefined,
-      },
-    });
+    try {
+      const res = await fetch('/api/auth/send-link', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          email,
+          intent: isSignup ? 'signup' : 'signin',
+          next,
+          // Stored as user_metadata, which is where syncCustomer reads it, so
+          // the customer row has a real name from the first moment.
+          ...(isSignup && fullName.trim() ? { fullName: fullName.trim() } : {}),
+        }),
+      });
 
-    setBusy(false);
+      if (res.status === 422) {
+        setMessage({ kind: 'error', text: 'Please enter a valid email address.' });
+        return;
+      }
 
-    if (!error) {
+      if (!res.ok) {
+        setMessage({
+          kind: 'error',
+          text: 'We could not send that email just now. This is a problem at our end, not with your address. Please try again shortly.',
+        });
+        return;
+      }
+
       setMessage({
         kind: 'ok',
         text: isSignup
-          ? `Almost there. We sent a link to ${email} - open it to finish creating your account.`
-          : `Check ${email} for your sign-in link.`,
+          ? `Almost there. If that address is new, a link is on its way to ${email} - open it to finish creating your account.`
+          : `If ${email} can be used to sign in, a link is on its way. It may take a minute.`,
+        offerSignup: !isSignup,
       });
-      return;
-    }
-
-    if (!isSignup && NO_ACCOUNT.test(error.message)) {
+    } catch {
+      // Network failure, offline, DNS - never the person's fault.
       setMessage({
         kind: 'error',
-        text: `We could not find an account for ${email}.`,
-        offerSignup: true,
+        text: 'We could not reach our server. Please check your connection and try again.',
       });
-      return;
+    } finally {
+      setBusy(false);
     }
-
-    if (MAIL_BROKEN.test(error.message)) {
-      setMessage({
-        kind: 'error',
-        text: 'We could not send that email just now. This is a problem at our end, not with your address. Please try again shortly.',
-      });
-      return;
-    }
-
-    setMessage({ kind: 'error', text: error.message });
   }
 
   /**

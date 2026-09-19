@@ -127,10 +127,30 @@ with it and the next send times out. Three timeouts are set for the same
 reason: a server that accepts a connection and then goes silent would
 otherwise hold the function open until the platform kills it.
 
-Sign-in emails are **not** sent by this code. Those come from Supabase, which
-has its own SMTP settings under Project Settings > Authentication. Supabase's
-built-in sender allows only a handful of messages per hour, so it needs the
-same SMTP details configured there.
+Sign-in emails go through Nodemailer too, via `/api/auth/send-link`. Supabase
+still mints the link - `generateLink()` produces a real single-use credential
+and, unlike `signInWithOtp`, sends nothing - and we post it ourselves. So every
+email the site sends leaves through one mail server, with one set of limits and
+one place to look when something does not arrive.
+
+Nothing needs configuring in Supabase's own SMTP settings for this. Supabase's
+built-in sender allows only a handful of messages an hour, which is what
+repeatedly locked this site out during testing.
+
+**`generateLink` creates the account if it does not exist.** This is not
+documented prominently and it is easy to miss: during testing, two addresses
+that had never signed up became real accounts the moment a link was generated
+for them. `/api/auth/send-link` therefore checks `accountExists()` first and
+refuses to mint a link for an unknown address on the sign-in path. Without
+that check, one mistyped address gives someone a new empty account and the
+impression that their orders have vanished.
+
+That endpoint will mail any address it is handed, so it is rate limited to 5
+messages per address per 15 minutes, counted in the `email_throttle` table.
+The count is written *before* the send, so an attempt that hangs still counts
+- counting only successes would let a stream of timeouts through. It answers
+identically whether the address is known, unknown or throttled, because
+whether someone has an account here is private.
 
 ## Checking a deployment
 

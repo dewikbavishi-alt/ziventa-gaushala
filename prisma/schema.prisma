@@ -303,3 +303,30 @@ model Review {
   @@index([isPublished, createdAt])
   @@map("reviews")
 }
+
+// ------------------------------------------------------------- mail limits
+
+/// One row per sign-in email we send, used only to rate limit.
+///
+/// The endpoint that sends sign-in links will mail any address it is given -
+/// that is what it is for. Without a limit it is also a way to send
+/// Ziventa-branded email to strangers, at our mail server's expense and our
+/// domain's reputation.
+///
+/// Kept in the database rather than in memory because serverless instances do
+/// not share memory: an in-process counter limits one instance while the next
+/// request starts a fresh one somewhere else.
+model EmailThrottle {
+  id String @id @default(uuid()) @db.Uuid
+
+  /// Lower-cased recipient.
+  email String
+  /// What was sent, so one kind of mail cannot exhaust another's allowance.
+  kind  String @default("auth_link")
+
+  sentAt DateTime @default(now())
+
+  @@index([email, kind, sentAt])
+  @@index([sentAt])
+  @@map("email_throttle")
+}
