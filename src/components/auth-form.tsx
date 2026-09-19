@@ -29,12 +29,21 @@ const PHONE_ENABLED = process.env.NEXT_PUBLIC_PHONE_AUTH_ENABLED === 'true';
  * blank page until JavaScript loaded, and nothing at all without it. Reading
  * it on the server instead lets the form ship as real HTML.
  */
-export function AuthForm({ intent, next }: { intent: 'signin' | 'signup'; next: string }) {
+export function AuthForm({
+  intent,
+  next,
+  initialEmail = '',
+}: {
+  intent: 'signin' | 'signup';
+  next: string;
+  /** Carried over from the sign-up page when the account already existed. */
+  initialEmail?: string;
+}) {
   const router = useRouter();
   const supabase = createClient();
 
   const [mode, setMode] = useState<Mode>('email');
-  const [email, setEmail] = useState('');
+  const [email, setEmail] = useState(initialEmail);
   const [password, setPassword] = useState('');
   const [fullName, setFullName] = useState('');
   const [phone, setPhone] = useState('');
@@ -45,6 +54,7 @@ export function AuthForm({ intent, next }: { intent: 'signin' | 'signup'; next: 
     kind: 'ok' | 'error';
     text: string;
     offerSignup?: boolean;
+    offerSignin?: boolean;
   } | null>(null);
 
   const isSignup = intent === 'signup';
@@ -83,6 +93,24 @@ export function AuthForm({ intent, next }: { intent: 'signin' | 'signup'; next: 
 
       if (res.status === 422) {
         setMessage({ kind: 'error', text: 'Please enter a valid email address.' });
+        return;
+      }
+
+      /**
+       * 409 means this address already has an account.
+       *
+       * Only the sign-up form can receive this. Telling someone their own
+       * address is already registered is far kinder than sending a link and
+       * letting them wonder later why their past orders are missing - and the
+       * sign-in link below carries the address across so they do not retype
+       * it.
+       */
+      if (res.status === 409) {
+        setMessage({
+          kind: 'error',
+          text: `An account already exists for ${email}. Please sign in instead.`,
+          offerSignin: true,
+        });
         return;
       }
 
@@ -176,7 +204,7 @@ export function AuthForm({ intent, next }: { intent: 'signin' | 'signup'; next: 
     router.refresh();
   }
 
-  const nextQuery = next !== '/account' ? `?next=${encodeURIComponent(next)}` : '';
+  const nextQuery = next !== '/your-account' ? `?next=${encodeURIComponent(next)}` : '';
 
   return (
     <main className="min-h-screen bg-[#FBF6EC] flex items-center justify-center px-4 py-12">
@@ -417,6 +445,18 @@ export function AuthForm({ intent, next }: { intent: 'signin' | 'signup'; next: 
                   className="mt-1 inline-block font-medium underline"
                 >
                   Create an account instead
+                </Link>
+              )}
+              {message.offerSignin && (
+                <Link
+                  // Carries the address across so it does not have to be
+                  // retyped on the page they are being sent to.
+                  href={`/login?email=${encodeURIComponent(email)}${
+                    nextQuery ? `&${nextQuery.slice(1)}` : ''
+                  }`}
+                  className="mt-2 inline-block rounded-lg bg-[#1E4A35] px-4 py-2 font-medium text-[#FBF6EC] no-underline transition hover:bg-[#173a29]"
+                >
+                  Sign in with this email
                 </Link>
               )}
             </div>

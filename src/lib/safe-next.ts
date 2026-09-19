@@ -9,7 +9,7 @@
  */
 export function safeNext(raw: string | string[] | undefined): string {
   const value = Array.isArray(raw) ? raw[0] : raw;
-  if (!value) return '/account';
-  if (!value.startsWith('/') || value.startsWith('//')) return '/account';
+  if (!value) return '/your-account';
+  if (!value.startsWith('/') || value.startsWith('//')) return '/your-account';
   return value;
 }

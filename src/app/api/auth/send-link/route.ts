@@ -109,6 +109,28 @@ export async function POST(request: Request) {
     }
 
     /**
+     * Signing up with an address that already has an account says so.
+     *
+     * This is the one place the site reveals whether an address is
+     * registered, and it is a deliberate trade: it lets someone test whether
+     * a given person is a Ziventa customer by trying to sign them up. Every
+     * other path - sign-in, unknown address, throttled - still answers
+     * identically. The exchange is that a returning customer who forgets they
+     * already have an account is told so and sent to sign in, instead of
+     * silently receiving a link and wondering why their orders are missing.
+     */
+    if (isSignup && exists) {
+      return NextResponse.json(
+        {
+          ok: false,
+          exists: true,
+          error: 'An account already exists for this email address.',
+        },
+        { status: 409 },
+      );
+    }
+
+    /**
      * Signing up creates the account explicitly, so the name from the form is
      * stored with it. Supabase's own 'signup' link type demands a password,
      * which defeats a passwordless flow, so createUser plus a magic link does
@@ -117,7 +139,7 @@ export async function POST(request: Request) {
      * email_confirm stays false: the address is only proven once the link is
      * actually opened, which is the entire point of sending it.
      */
-    if (isSignup && !exists) {
+    if (isSignup) {
       const { error: createError } = await admin.auth.admin.createUser({
         email,
         email_confirm: false,
@@ -128,10 +150,6 @@ export async function POST(request: Request) {
         return generic();
       }
     }
-
-    // Someone who already has an account but used the sign-up form simply
-    // gets a sign-in link. That is what they wanted, and saying "you are
-    // already registered" would leak that fact to anyone who guessed.
 
     const { data, error } = await admin.auth.admin.generateLink({
       type: 'magiclink',
