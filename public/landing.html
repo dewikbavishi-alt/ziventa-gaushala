@@ -836,6 +836,13 @@ Color: warm cream ground, deep gaushala-green = trust/tradition, hand-ghee gold 
     </div>
     <div class="footer-col">
       <h4>Connect</h4>
+      <!--
+        Goes straight to the account page. Anyone not signed in is bounced to
+        /login by the page itself and returned here afterwards, so there is no
+        need for this link to know whether they are signed in - and no risk of
+        it showing the wrong thing from a stale cache.
+      -->
+      <a href="/your-account"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2" key="975kel"/><circle cx="12" cy="7" r="4" key="17ys0d"/></svg> Your Account</a>
       <a href="#join">Pre-Registration</a>
       <a href="https://instagram.com/ziventagaushala" target="_blank" rel="noopener noreferrer"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="20" x="2" y="2" rx="5" ry="5" key="2e1cvw"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z" key="9exkf1"/><line x1="17.5" x2="17.51" y1="6.5" y2="6.5" key="r4j83e"/></svg> Instagram</a>
       <a href="mailto:hello@ziventagaushala.com"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="16" x="2" y="4" rx="2" key="18n3k1"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7" key="1ocrg3"/></svg> Contact Us</a>
