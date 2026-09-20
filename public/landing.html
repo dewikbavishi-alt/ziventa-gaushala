@@ -44,6 +44,15 @@ Color: warm cream ground, deep gaushala-green = trust/tradition, hand-ghee gold 
       <a href="#gallery" class="nav-link">Gallery</a>
       <a href="#join" class="nav-cta">Reserve a Seat</a>
     </nav>
+    <!--
+      Sits beside the cart rather than inside the nav, so it stays visible on
+      a phone instead of disappearing behind the hamburger. A plain link: the
+      account page redirects to sign-in by itself, so this never has to know
+      whether anyone is signed in.
+    -->
+    <a class="cart-btn acct-btn" id="acctBtn" href="/your-account" aria-label="My account" title="My account">
+      <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2" key="975kel"/><circle cx="12" cy="7" r="4" key="17ys0d"/></svg>
+    </a>
     <button class="cart-btn" id="cartBtn" aria-label="Open cart">
       <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z" key="hou9p0"/><path d="M3 6h18" key="d0wm0j"/><path d="M16 10a4 4 0 0 1-8 0" key="1ltviw"/></svg>
       <span class="cart-count" id="cartCount" hidden>0</span>
@@ -1791,6 +1800,9 @@ img[data-blur="loaded"]{filter:blur(0);transform:scale(1);}
   cursor:pointer;color:var(--ink);margin-left:.6rem;flex-shrink:0;transition:border-color .2s ease,color .2s ease;
 }
 .cart-btn:hover{border-color:var(--gold);color:var(--gold-deep);}
+/* Same box as the cart button, but it is a link, so the underline has to go. */
+.acct-btn{text-decoration:none;}
+.acct-btn svg{width:20px;height:20px;}
 .cart-btn i{width:20px;height:20px;}
 .cart-count{
   position:absolute;top:-7px;right:-7px;min-width:21px;height:21px;padding:0 5px;
@@ -2605,8 +2617,18 @@ document.addEventListener('DOMContentLoaded', function(){
       icons();
     }
 
-    function openDrawer(){ els.drawer.classList.add('open'); els.drawer.setAttribute('aria-hidden','false'); els.scrim.hidden=false; document.body.style.overflow='hidden'; }
-    function closeDrawer(){ els.drawer.classList.remove('open'); els.drawer.setAttribute('aria-hidden','true'); if(els.modal.hidden){ els.scrim.hidden=true; document.body.style.overflow=''; } }
+    /* The AI assistant is pinned bottom-right above the cart and checkout, so
+       it lands on top of the cart total and the checkout buttons - exactly
+       where someone is trying to tap. This flag takes it out of the way while
+       either is open. Set here rather than with a CSS :has() rule, which
+       matched but did not repaint reliably. */
+    function syncChatVisibility(){
+      var busy = els.drawer.classList.contains('open') || !els.modal.hidden;
+      document.body.classList.toggle('zv-hide-chat', busy);
+    }
+
+    function openDrawer(){ els.drawer.classList.add('open'); els.drawer.setAttribute('aria-hidden','false'); els.scrim.hidden=false; document.body.style.overflow='hidden'; syncChatVisibility(); }
+    function closeDrawer(){ els.drawer.classList.remove('open'); els.drawer.setAttribute('aria-hidden','true'); if(els.modal.hidden){ els.scrim.hidden=true; document.body.style.overflow=''; } syncChatVisibility(); }
 
     document.querySelectorAll('.btn-add').forEach(function(b){
       b.addEventListener('click',function(){
@@ -2673,9 +2695,11 @@ document.addEventListener('DOMContentLoaded', function(){
       els.modal.scrollTop=0;
       setStep(1);
       els.summary.innerHTML=summaryHtml();
+      syncChatVisibility();
     }
     function hideCheckout(restoreScroll){
       els.modal.hidden=true;
+      syncChatVisibility();
       document.body.style.overflow='';
       if(restoreScroll) window.scrollTo(0,returnY);
     }
@@ -2847,7 +2871,27 @@ document.addEventListener('DOMContentLoaded', function(){
 </div>
 
 <style>
-.zv-chat{position:fixed;right:1.4rem;bottom:5.6rem;z-index:400;font-family:var(--font-body);display:flex;align-items:center;gap:.55rem;}
+.zv-chat{position:fixed;right:1.4rem;bottom:5.6rem;z-index:400;font-family:var(--font-body);display:flex;align-items:center;gap:.55rem;transition:opacity .18s ease,visibility .18s ease;}
+
+/*
+  Out of the way while the cart drawer or checkout is open.
+
+  The assistant is pinned bottom-right at z-index 400, above both, so it
+  floats over the cart total and the checkout buttons - exactly where someone
+  is trying to tap. The class is set by syncChatVisibility() in the cart
+  script, off state the cart already tracks.
+
+  This began as `body:has(.cart.open) .zv-chat`. The selector matched - both
+  :has() support and the rule matching the element were confirmed in the
+  browser - and the element still computed to visible, so it is driven from
+  JS instead rather than left half-working.
+
+  visibility rather than display:none so it fades instead of vanishing, and
+  pointer-events so it cannot be tapped during the fade.
+*/
+body.zv-hide-chat .zv-chat{
+  opacity:0;visibility:hidden;pointer-events:none;
+}
 
 .zv-chat-tag{
   display:inline-flex;align-items:center;gap:.45rem;
