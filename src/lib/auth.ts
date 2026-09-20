@@ -11,18 +11,48 @@ import { getCurrentUser } from './supabase/server';
  *
  * Safe to call on every page load - it updates rather than duplicates.
  */
+/**
+ * Empty string to null.
+ *
+ * Supabase returns `""` - not null - for a user with no phone, and `??` does
+ * not catch an empty string. Both `email` and `phone` are UNIQUE on Customer,
+ * so writing `""` means the FIRST phone-less customer takes `""` and every
+ * one after them collides on it. Verified against the real database: creating
+ * a second customer with an empty phone is refused outright, which would have
+ * thrown inside getCurrentCustomer and turned the second customer's account
+ * page into a 500.
+ *
+ * Null is exempt from a unique constraint. Empty string is not.
+ */
+const orNull = (v: string | null | undefined): string | null => {
+  const trimmed = v?.trim();
+  return trimmed ? trimmed : null;
+};
+
 export async function syncCustomer(user: User) {
+  const authPhone = orNull(user.phone);
+
   const customer = await prisma.customer.upsert({
     where: { id: user.id },
     update: {
-      email: user.email ?? null,
-      phone: user.phone ?? null,
+      email: orNull(user.email),
+      /**
+       * Only overwritten when Supabase actually holds a number.
+       *
+       * This runs on every account page load. Writing null whenever Supabase
+       * has none would erase the number the customer just typed into Login &
+       * Security the moment they loaded the next page - the save would appear
+       * to work and then silently undo itself. Supabase only knows a number
+       * for someone who signed in by SMS; for everyone else ours is the only
+       * copy, and it is the one to keep.
+       */
+      ...(authPhone ? { phone: authPhone } : {}),
     },
     create: {
       id: user.id,
-      email: user.email ?? null,
-      phone: user.phone ?? null,
-      fullName: (user.user_metadata?.full_name as string | undefined) ?? null,
+      email: orNull(user.email),
+      phone: authPhone,
+      fullName: orNull(user.user_metadata?.full_name as string | undefined),
     },
   });
 

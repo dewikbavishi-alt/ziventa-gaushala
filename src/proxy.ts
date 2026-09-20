@@ -16,7 +16,19 @@ import { createServerClient } from '@supabase/ssr';
  * getCurrentUser() in src/lib/supabase/server.ts.
  */
 export async function proxy(request: NextRequest) {
-  let response = NextResponse.next({ request });
+  /**
+   * The path, passed along as a header.
+   *
+   * A layout cannot see which page below it is being rendered, so the account
+   * layout had no way to say where to return after signing in - every deep
+   * link came back as plain /your-account, dropping someone who followed a
+   * link to their orders onto the hub instead. Setting it here is the
+   * supported way to get it there.
+   */
+  const requestHeaders = new Headers(request.headers);
+  requestHeaders.set('x-pathname', request.nextUrl.pathname);
+
+  let response = NextResponse.next({ request: { headers: requestHeaders } });
 
   const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
   const anonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
@@ -34,7 +46,9 @@ export async function proxy(request: NextRequest) {
         for (const { name, value } of cookiesToSet) {
           request.cookies.set(name, value);
         }
-        response = NextResponse.next({ request });
+        // Rebuilt with the same headers, or x-pathname is lost whenever the
+        // session happens to be refreshed on this request.
+        response = NextResponse.next({ request: { headers: requestHeaders } });
         for (const { name, value, options } of cookiesToSet) {
           response.cookies.set(name, value, options);
         }
