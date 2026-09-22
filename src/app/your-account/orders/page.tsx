@@ -14,25 +14,30 @@ const rs = (paise: number) =>
 const when = (d: Date) =>
   new Intl.DateTimeFormat('en-IN', { day: 'numeric', month: 'short', year: 'numeric' }).format(d);
 
-/** Status worded for a customer, not for the database. */
+/**
+ * Status worded for a customer, not for the database. Kept in step with the
+ * admin's statuses in src/lib/admin/status.ts - same stages, customer words.
+ */
 const STATUS_TEXT: Record<string, string> = {
   PENDING: 'Awaiting confirmation',
-  PAID: 'Paid',
-  SHIPPED: 'On its way',
+  CONFIRMED: 'Confirmed',
+  PROCESSING: 'Being packed',
+  DISPATCHED: 'On its way',
+  OUT_FOR_DELIVERY: 'Out for delivery',
   DELIVERED: 'Delivered',
   CANCELLED: 'Cancelled',
-  REFUNDED: 'Refunded',
-  FAILED: 'Payment failed',
+  RETURNED: 'Returned',
 };
 
 const STATUS_COLOUR: Record<string, string> = {
   PENDING: 'bg-amber-100 text-amber-800',
-  PAID: 'bg-emerald-100 text-emerald-800',
-  SHIPPED: 'bg-sky-100 text-sky-800',
+  CONFIRMED: 'bg-sky-100 text-sky-800',
+  PROCESSING: 'bg-orange-100 text-orange-800',
+  DISPATCHED: 'bg-violet-100 text-violet-800',
+  OUT_FOR_DELIVERY: 'bg-violet-100 text-violet-800',
   DELIVERED: 'bg-emerald-100 text-emerald-900',
   CANCELLED: 'bg-stone-200 text-stone-700',
-  REFUNDED: 'bg-stone-200 text-stone-700',
-  FAILED: 'bg-red-100 text-red-800',
+  RETURNED: 'bg-stone-200 text-stone-700',
 };
 
 export default async function OrdersPage() {

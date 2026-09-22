@@ -18,7 +18,10 @@
     "db:latest": "tsx scripts/latest.ts",
     "email:test": "tsx scripts/test-email.ts",
     "auth:set-password": "tsx scripts/set-password.ts",
-    "email:render-test": "tsx scripts/email-render-test.ts"
+    "email:render-test": "tsx scripts/email-render-test.ts",
+    "test:range": "tsx scripts/range-test.ts",
+    "admin:check-queries": "tsx --conditions=react-server scripts/admin-queries-check.ts",
+    "test:owner": "tsx --conditions=react-server scripts/owner-test.ts"
   },
   "dependencies": {
     "@prisma/adapter-pg": "^7.10.0",

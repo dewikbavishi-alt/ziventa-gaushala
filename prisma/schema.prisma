@@ -24,6 +24,11 @@ datasource db {
 
 /// One row per signed-in customer. `id` is the Supabase auth.users UUID, so
 /// there is no second identity to keep in sync.
+///
+/// There is deliberately no role column. The admin dashboard belongs to one
+/// owner, named in ADMIN_EMAILS - see src/lib/admin.ts. A role here would be
+/// a second way in, and editing a row in the Supabase table editor would then
+/// be enough to hand someone every customer's address.
 model Customer {
   id        String   @id @db.Uuid
   email     String?  @unique
@@ -84,6 +89,9 @@ model Product {
   sortOrder   Int     @default(0)
   /// Null means "not tracked"; a number means decrement on paid order.
   stockCount  Int?
+  /// At or below this, the product counts as low stock. Per product because a
+  /// 1kg tin and a 250g jar do not run out at the same pace.
+  lowStockThreshold Int @default(5)
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -201,14 +209,30 @@ model HealthReport {
 
 // ---------------------------------------------------------------- commerce
 
+/// Where the ORDER is in fulfilment. Payment is tracked separately below.
+///
+/// These used to be one enum holding PAID and FAILED beside SHIPPED and
+/// DELIVERED - two different questions in one field. A cash-on-delivery order
+/// is DELIVERED and not yet PAID at the same moment, and one column could not
+/// say both.
 enum OrderStatus {
+  PENDING
+  CONFIRMED
+  PROCESSING
+  DISPATCHED
+  OUT_FOR_DELIVERY
+  DELIVERED
+  CANCELLED
+  RETURNED
+}
+
+/// Whether the MONEY has arrived. Independent of fulfilment.
+enum PaymentStatus {
   PENDING
   PAID
   FAILED
-  CANCELLED
-  SHIPPED
-  DELIVERED
   REFUNDED
+  PARTIALLY_REFUNDED
 }
 
 model Order {
@@ -245,10 +269,31 @@ model Order {
   deliveryRupees Decimal? @map("delivery_rupees") @db.Decimal(12, 2) @default(dbgenerated("((\"shippingPaise\")::numeric / (100)::numeric)")) @ignore
   totalRupees    Decimal? @map("total_rupees") @db.Decimal(12, 2) @default(dbgenerated("((\"totalPaise\")::numeric / (100)::numeric)")) @ignore
 
-  status           OrderStatus @default(PENDING)
+  /// All three default to zero, so every existing order is unchanged. The
+  /// database enforces total = subtotal - discount + shipping + tax.
+  discountPaise Int @default(0)
+  taxPaise      Int @default(0)
+  /// Money handed back. Never more than was charged.
+  refundedPaise Int @default(0)
+
+  status           OrderStatus   @default(PENDING)
+  paymentStatus    PaymentStatus @default(PENDING)
   paymentProvider  String?
   paymentReference String?
   notes            String?
+
+  /// Optional free text, recorded when an order is cancelled.
+  cancelReason   String?
+  courier        String?
+  trackingNumber String?
+
+  /// Stamped when the order ENTERS each state, so "how long from order to
+  /// dispatch" can be answered later without an audit table.
+  confirmedAt  DateTime?
+  dispatchedAt DateTime?
+  deliveredAt  DateTime?
+  cancelledAt  DateTime?
+  returnedAt   DateTime?
 
   placedAt  DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -257,6 +302,9 @@ model Order {
 
   @@index([customerId])
   @@index([status, placedAt])
+  @@index([paymentStatus, placedAt])
+  /// Every dashboard figure is filtered by date first.
+  @@index([placedAt])
   @@map("orders")
 }
 
@@ -317,7 +365,7 @@ model Review {
 /// not share memory: an in-process counter limits one instance while the next
 /// request starts a fresh one somewhere else.
 model EmailThrottle {
-  id String @id @default(uuid()) @db.Uuid
+  id String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
 
   /// Lower-cased recipient.
   email String
@@ -329,4 +377,40 @@ model EmailThrottle {
   @@index([email, kind, sentAt])
   @@index([sentAt])
   @@map("email_throttle")
+}
+
+// ----------------------------------------------------------- visitor data
+
+/// One row per page view, for the admin visitor charts.
+///
+/// First-party and deliberately thin. There is no IP address, no raw
+/// user-agent, no fingerprint and no full referrer URL - only what the charts
+/// need:
+///
+///   visitorId  a random id kept in the visitor's own browser. It identifies a
+///              browser, not a person, and is gone when they clear storage.
+///   sessionId  rotates after 30 minutes of inactivity, which is what makes
+///              "visits" countable separately from "visitors".
+///   device     mobile | tablet | desktop, derived server-side then discarded.
+///   browser    a family name only.
+///   referrerHost  the domain someone came from, never the path - a path can
+///              carry search terms or tokens.
+///
+/// customerId is set only when someone is signed in, which is what lets the
+/// dashboard separate registered visitors from anonymous ones.
+model PageView {
+  id           String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  visitorId    String   @db.Uuid
+  sessionId    String   @db.Uuid
+  customerId   String?  @db.Uuid
+  path         String
+  referrerHost String?
+  device       String
+  browser      String
+  createdAt    DateTime @default(now())
+
+  @@index([createdAt])
+  @@index([visitorId, createdAt])
+  @@index([sessionId])
+  @@map("page_views")
 }

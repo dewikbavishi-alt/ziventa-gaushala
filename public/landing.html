@@ -3251,4 +3251,36 @@ body.zv-hide-chat .zv-chat{
   else boot();
 })();
 </script>
+
+<script>
+/* First-party visit counter for the admin dashboard.
+   Same storage keys as src/components/visitor-tracker.tsx, so one visitor
+   keeps one id across this page and the account pages. Sends a random id,
+   the path and the referring site - no name, email, IP address or
+   fingerprint. Skipped when the browser signals Global Privacy Control or
+   Do Not Track. Any failure is swallowed: counting visits must never be
+   able to break the shop. */
+(function(){
+  try{
+    if(navigator.globalPrivacyControl===true || navigator.doNotTrack==='1') return;
+    var uuid=function(){
+      if(window.crypto && crypto.randomUUID) return crypto.randomUUID();
+      var b=crypto.getRandomValues(new Uint8Array(16));
+      b[6]=(b[6]&15)|64; b[8]=(b[8]&63)|128;
+      var h=Array.prototype.map.call(b,function(x){return ('0'+x.toString(16)).slice(-2);}).join('');
+      return h.slice(0,8)+'-'+h.slice(8,12)+'-'+h.slice(12,16)+'-'+h.slice(16,20)+'-'+h.slice(20);
+    };
+    var vid=localStorage.getItem('zv_vid');
+    if(!vid){ vid=uuid(); localStorage.setItem('zv_vid',vid); }
+    var now=Date.now(), last=Number(localStorage.getItem('zv_seen'))||0;
+    var sid=localStorage.getItem('zv_sid');
+    /* A new visit after 30 minutes without a page view. */
+    if(!sid || now-last>1800000){ sid=uuid(); localStorage.setItem('zv_sid',sid); }
+    localStorage.setItem('zv_seen',String(now));
+    var body=JSON.stringify({v:vid,s:sid,p:location.pathname,r:document.referrer||''});
+    var sent=navigator.sendBeacon && navigator.sendBeacon('/api/track',new Blob([body],{type:'application/json'}));
+    if(!sent) fetch('/api/track',{method:'POST',body:body,keepalive:true,headers:{'Content-Type':'application/json'}});
+  }catch(e){}
+})();
+</script>
 </html>

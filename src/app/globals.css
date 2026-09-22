@@ -24,3 +24,54 @@ body {
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
 }
+
+/* ------------------------------------------------------------ admin theme
+
+   Scoped to [data-admin], so nothing here can leak into the shop or the
+   account pages. Derived from the brand: gold #BF8F3A and green #3F6B52 are
+   lifted a little so they hold their contrast on a dark ground, and the
+   serif is the same Georgia stack the landing page uses - no web font to
+   download. */
+@theme {
+  --color-a-bg: #0f1612;
+  --color-a-surface: #161f1a;
+  --color-a-raised: #1c2721;
+  --color-a-line: rgb(237 230 214 / 0.08);
+  --color-a-text: #ede6d6;
+  --color-a-muted: #8e998f;
+  --color-a-gold: #d2a04a;
+  --color-a-green: #6fa982;
+  --color-a-red: #d46a5b;
+  --color-a-amber: #d9a441;
+  --color-a-blue: #6e9fd1;
+  --color-a-violet: #9a86c8;
+  --color-a-orange: #d88a4e;
+  --font-display: Georgia, 'Iowan Old Style', 'Palatino Linotype', 'Book Antiqua', serif;
+}
+
+[data-admin] {
+  background: var(--color-a-bg);
+  color: var(--color-a-text);
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  color-scheme: dark;
+}
+
+/* Visible keyboard focus everywhere in the admin, in the brand gold. */
+[data-admin] :focus-visible {
+  outline: 2px solid var(--color-a-gold);
+  outline-offset: 2px;
+}
+
+/* Skeleton shimmer. Stilled for anyone who has asked for less motion. */
+@keyframes a-shimmer {
+  from { background-position: -200% 0; }
+  to { background-position: 200% 0; }
+}
+.a-skeleton {
+  background: linear-gradient(90deg, rgb(237 230 214 / 0.04), rgb(237 230 214 / 0.09), rgb(237 230 214 / 0.04));
+  background-size: 200% 100%;
+  animation: a-shimmer 1.4s ease-in-out infinite;
+}
+@media (prefers-reduced-motion: reduce) {
+  .a-skeleton { animation: none; }
+}
