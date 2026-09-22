@@ -46,9 +46,14 @@ export default async function AdminLayout({ children }: { children: React.ReactN
             You are signed in as <strong className="text-a-text">{user.email}</strong>. This dashboard
             belongs to the shop owner and cannot be opened by any other account.
           </p>
+          <p className="mt-3 text-sm text-a-muted">
+            If you are the owner and signed in with a different account, switch to the owner&apos;s
+            account and you will come straight back here.
+          </p>
           <form action="/auth/signout" method="post" className="mt-6">
-            <button className="rounded-xl border border-a-line px-4 py-2 text-sm hover:border-a-gold/40">
-              Sign out
+            <input type="hidden" name="next" value="/admin" />
+            <button className="rounded-xl bg-a-gold px-4 py-2 text-sm font-medium text-a-bg">
+              Switch account
             </button>
           </form>
         </div>
