@@ -27,6 +27,9 @@ export default function sitemap(): MetadataRoute.Sitemap {
     // served through a rewrite in next.config.ts; add a line here whenever a
     // section graduates to its own URL.
     { url: `${site}/our-story`, lastModified: now, changeFrequency: 'monthly', priority: 0.8 },
+    { url: `${site}/gir-gold-club`, lastModified: now, changeFrequency: 'monthly', priority: 0.9 },
+    { url: `${site}/bilona-process`, lastModified: now, changeFrequency: 'monthly', priority: 0.8 },
+    { url: `${site}/gallery`, lastModified: now, changeFrequency: 'monthly', priority: 0.6 },
     { url: `${site}/login`, lastModified: now, changeFrequency: 'yearly', priority: 0.3 },
     { url: `${site}/signup`, lastModified: now, changeFrequency: 'yearly', priority: 0.3 },
   ];

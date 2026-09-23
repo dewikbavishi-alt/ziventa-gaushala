@@ -665,6 +665,11 @@ img[data-blur="loaded"]{filter:blur(0);transform:scale(1);}
 }
 .carousel-dots button.active{background:var(--gold);width:22px;border-radius:4px;transition:width .2s ease;}
 
+/* The link that stands in for a section now living on its own page.
+   Centred to match .section-head, which every teaser sits under. */
+.section-cta{text-align:center;margin:1.4rem 0 0;}
+.section-cta .text-link{justify-content:center;}
+
 /* pricing */
 .pricing{padding:2.7rem 1.5rem;background:var(--maroon);color:var(--cream);border-top:none;}
 .pricing-inner{max-width:980px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr;gap:3rem;align-items:center;}

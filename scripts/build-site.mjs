@@ -35,6 +35,9 @@ const OUT_DIR = join(ROOT, 'public');
  */
 const MIGRATED = {
   '#story': '/our-story',
+  '#membership': '/gir-gold-club',
+  '#gallery': '/gallery',
+  '#process': '/bilona-process',
 };
 
 function frontMatter(raw) {

@@ -32,10 +32,10 @@ const nextConfig: NextConfig = {
          * add the matching entry to MIGRATED in the build script so every
          * page's nav points at it.
          */
-        {
-          source: '/our-story',
-          destination: '/our-story.html',
-        },
+        { source: '/our-story', destination: '/our-story.html' },
+        { source: '/gir-gold-club', destination: '/gir-gold-club.html' },
+        { source: '/gallery', destination: '/gallery.html' },
+        { source: '/bilona-process', destination: '/bilona-process.html' },
       ],
       afterFiles: [],
       fallback: [],
