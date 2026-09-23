@@ -34,10 +34,9 @@ const OUT_DIR = join(ROOT, 'public');
  * its section moves, and every page's nav updates together.
  */
 const MIGRATED = {
-  '#story': '/our-story',
-  '#membership': '/gir-gold-club',
-  '#gallery': '/gallery',
-  '#process': '/bilona-process',
+  // Nothing here: every section lives on the home page. Add an entry - e.g.
+  // '#process': '/bilona-process' - and every page's nav points at it, the
+  // anchors elsewhere become "/#anchor", and the section can move out.
 };
 
 function frontMatter(raw) {
@@ -74,6 +73,10 @@ function rewriteLinks(html, currentPath) {
     }
     if (anchor === 'main') return whole; // the skip link, always same-page
     if (anchor === 'top') return currentPath === '/' ? whole : 'href="/"';
+    // On the home page the section IS on this page, so a bare anchor is
+    // correct and is what the markup should say. The "/#anchor" form only
+    // earns its keep on a page that does not contain the section.
+    if (currentPath === '/') return whole;
     return `href="/${hash}"`;
   });
 }
