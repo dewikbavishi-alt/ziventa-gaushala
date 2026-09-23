@@ -307,7 +307,7 @@ export function AuthForm({
                   setCodeSent(false);
                   setEmailCodeSent(false);
                 }}
-                className={`rounded-md py-2 transition ${
+                className={`min-h-[44px] rounded-md py-2 transition ${
                   // 'password' is still email sign-in, so the Email tab stays lit.
                   (m === 'phone') === (mode === 'phone')
                     ? 'bg-white text-[#1E4A35] shadow-sm'
@@ -330,7 +330,7 @@ export function AuthForm({
                     value={fullName}
                     onChange={(e) => setFullName(e.target.value)}
                     placeholder="Dewik Bavishi"
-                    className="mt-1 w-full rounded-lg border border-[#2F4A3D]/20 px-3 py-2 text-[#2F4A3D] outline-none focus:border-[#D9A92B] focus:ring-2 focus:ring-[#D9A92B]/30"
+                    className="mt-1 w-full rounded-lg border border-[#2F4A3D]/20 min-h-[44px] px-3 py-2 text-[#2F4A3D] outline-none focus:border-[#D9A92B] focus:ring-2 focus:ring-[#D9A92B]/30"
                   />
                 </label>
               )}
@@ -343,7 +343,7 @@ export function AuthForm({
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   placeholder="you@example.com"
-                  className="mt-1 w-full rounded-lg border border-[#2F4A3D]/20 px-3 py-2 text-[#2F4A3D] outline-none focus:border-[#D9A92B] focus:ring-2 focus:ring-[#D9A92B]/30"
+                  className="mt-1 w-full rounded-lg border border-[#2F4A3D]/20 min-h-[44px] px-3 py-2 text-[#2F4A3D] outline-none focus:border-[#D9A92B] focus:ring-2 focus:ring-[#D9A92B]/30"
                 />
               </label>
 
@@ -366,7 +366,7 @@ export function AuthForm({
                     setMode('password');
                     setMessage(null);
                   }}
-                  className="w-full text-center text-xs text-[#2F4A3D]/60 underline"
+                  className="min-h-[44px] w-full text-center text-xs text-[#2F4A3D]/60 underline"
                 >
                   Sign in with a password instead
                 </button>
@@ -390,7 +390,7 @@ export function AuthForm({
                   value={emailCode}
                   onChange={(e) => setEmailCode(e.target.value.replace(/\D/g, ''))}
                   placeholder="Enter the code"
-                  className="mt-1 w-full rounded-lg border border-[#2F4A3D]/20 px-3 py-2 text-center text-lg tracking-[0.3em] text-[#2F4A3D] outline-none placeholder:tracking-normal focus:border-[#D9A92B] focus:ring-2 focus:ring-[#D9A92B]/30"
+                  className="mt-1 w-full rounded-lg border border-[#2F4A3D]/20 min-h-[44px] px-3 py-2 text-center text-lg tracking-[0.3em] text-[#2F4A3D] outline-none placeholder:tracking-normal focus:border-[#D9A92B] focus:ring-2 focus:ring-[#D9A92B]/30"
                 />
               </label>
 
@@ -409,7 +409,7 @@ export function AuthForm({
                   setEmailCode('');
                   setMessage(null);
                 }}
-                className="w-full text-center text-xs text-[#2F4A3D]/60 underline"
+                className="min-h-[44px] w-full text-center text-xs text-[#2F4A3D]/60 underline"
               >
                 Use a different email, or send a new code
               </button>
@@ -426,7 +426,7 @@ export function AuthForm({
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   placeholder="you@example.com"
-                  className="mt-1 w-full rounded-lg border border-[#2F4A3D]/20 px-3 py-2 text-[#2F4A3D] outline-none focus:border-[#D9A92B] focus:ring-2 focus:ring-[#D9A92B]/30"
+                  className="mt-1 w-full rounded-lg border border-[#2F4A3D]/20 min-h-[44px] px-3 py-2 text-[#2F4A3D] outline-none focus:border-[#D9A92B] focus:ring-2 focus:ring-[#D9A92B]/30"
                 />
               </label>
 
@@ -438,7 +438,7 @@ export function AuthForm({
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   autoComplete="current-password"
-                  className="mt-1 w-full rounded-lg border border-[#2F4A3D]/20 px-3 py-2 text-[#2F4A3D] outline-none focus:border-[#D9A92B] focus:ring-2 focus:ring-[#D9A92B]/30"
+                  className="mt-1 w-full rounded-lg border border-[#2F4A3D]/20 min-h-[44px] px-3 py-2 text-[#2F4A3D] outline-none focus:border-[#D9A92B] focus:ring-2 focus:ring-[#D9A92B]/30"
                 />
               </label>
 
@@ -457,7 +457,7 @@ export function AuthForm({
                   setPassword('');
                   setMessage(null);
                 }}
-                className="w-full text-center text-xs text-[#2F4A3D]/60 underline"
+                className="min-h-[44px] w-full text-center text-xs text-[#2F4A3D]/60 underline"
               >
                 Email me a code instead
               </button>
@@ -496,7 +496,7 @@ export function AuthForm({
                   value={phone}
                   onChange={(e) => setPhone(e.target.value)}
                   placeholder="98765 43210"
-                  className="mt-1 w-full rounded-lg border border-[#2F4A3D]/20 px-3 py-2 text-[#2F4A3D] outline-none focus:border-[#D9A92B] focus:ring-2 focus:ring-[#D9A92B]/30"
+                  className="mt-1 w-full rounded-lg border border-[#2F4A3D]/20 min-h-[44px] px-3 py-2 text-[#2F4A3D] outline-none focus:border-[#D9A92B] focus:ring-2 focus:ring-[#D9A92B]/30"
                 />
               </label>
               <button
@@ -523,7 +523,7 @@ export function AuthForm({
                   value={code}
                   onChange={(e) => setCode(e.target.value.replace(/\D/g, ''))}
                   placeholder="123456"
-                  className="mt-1 w-full rounded-lg border border-[#2F4A3D]/20 px-3 py-2 text-center text-lg tracking-[0.4em] text-[#2F4A3D] outline-none focus:border-[#D9A92B] focus:ring-2 focus:ring-[#D9A92B]/30"
+                  className="mt-1 w-full rounded-lg border border-[#2F4A3D]/20 min-h-[44px] px-3 py-2 text-center text-lg tracking-[0.4em] text-[#2F4A3D] outline-none focus:border-[#D9A92B] focus:ring-2 focus:ring-[#D9A92B]/30"
                 />
               </label>
               <button
@@ -540,7 +540,7 @@ export function AuthForm({
                   setCode('');
                   setMessage(null);
                 }}
-                className="w-full text-center text-xs text-[#2F4A3D]/60 underline"
+                className="min-h-[44px] w-full text-center text-xs text-[#2F4A3D]/60 underline"
               >
                 Use a different number
               </button>
@@ -560,7 +560,7 @@ export function AuthForm({
               {message.offerSignup && (
                 <Link
                   href={`/signup${nextQuery}`}
-                  className="mt-1 inline-block font-medium underline"
+                  className="mt-1 inline-flex min-h-[44px] items-center font-medium underline"
                 >
                   Create an account instead
                 </Link>
@@ -572,7 +572,7 @@ export function AuthForm({
                   href={`/login?email=${encodeURIComponent(email)}${
                     nextQuery ? `&${nextQuery.slice(1)}` : ''
                   }`}
-                  className="mt-2 inline-block rounded-lg bg-[#1E4A35] px-4 py-2 font-medium text-[#FBF6EC] no-underline transition hover:bg-[#173a29]"
+                  className="mt-2 inline-flex min-h-[44px] items-center rounded-lg bg-[#1E4A35] px-4 py-2 font-medium text-[#FBF6EC] no-underline transition hover:bg-[#173a29]"
                 >
                   Sign in with this email
                 </Link>
@@ -586,14 +586,14 @@ export function AuthForm({
           {isSignup ? (
             <>
               Already have an account?{' '}
-              <Link href={`/login${nextQuery}`} className="font-medium text-[#1E4A35] underline">
+              <Link href={`/login${nextQuery}`} className="inline-flex min-h-[44px] items-center font-medium text-[#1E4A35] underline">
                 Sign in
               </Link>
             </>
           ) : (
             <>
               New to Ziventa?{' '}
-              <Link href={`/signup${nextQuery}`} className="font-medium text-[#1E4A35] underline">
+              <Link href={`/signup${nextQuery}`} className="inline-flex min-h-[44px] items-center font-medium text-[#1E4A35] underline">
                 Create an account
               </Link>
             </>

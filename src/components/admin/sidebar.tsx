@@ -226,7 +226,7 @@ export function Sidebar({ email }: { email: string }) {
           aria-label="Open menu"
           aria-expanded={open}
           aria-controls="admin-drawer"
-          className="rounded-lg p-2 text-a-text hover:bg-a-raised"
+          className="flex h-11 w-11 items-center justify-center rounded-lg text-a-text hover:bg-a-raised"
         >
           <Icon name="menu" />
         </button>
@@ -254,7 +254,7 @@ export function Sidebar({ email }: { email: string }) {
                 type="button"
                 onClick={() => setOpen(false)}
                 aria-label="Close menu"
-                className="mt-6 rounded-lg p-2 text-a-muted hover:bg-a-raised hover:text-a-text"
+                className="mt-6 flex h-11 w-11 items-center justify-center rounded-lg text-a-muted hover:bg-a-raised hover:text-a-text"
               >
                 <Icon name="close" />
               </button>

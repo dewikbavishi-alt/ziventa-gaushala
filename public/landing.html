@@ -2064,7 +2064,10 @@ img[data-blur="loaded"]{filter:blur(0);transform:scale(1);}
   .co-shell{padding:1.6rem 1.15rem 2.4rem;}
   .co-shell > h3{font-size:1.4rem;}
   .modal-foot .btn{flex:1;justify-content:center;}
-  .step{font-size:.72rem;}
+  /* .72rem was 11.5px - under the 12px floor where small text starts costing
+     readability on a phone, and these three words are the only thing telling
+     someone how far through checkout they are. */
+  .step{font-size:.78rem;}
   .shop-actions{flex-direction:column;}
 }
 
@@ -2094,6 +2097,50 @@ img[data-blur="loaded"]{filter:blur(0);transform:scale(1);}
 .back-to-top.visible{opacity:1;pointer-events:auto;transform:translateY(0);}
 .back-to-top i{width:20px;height:20px;}
 
+/* ===== touch targets =====
+
+   Keyed on (pointer:coarse) rather than a width, because what matters is
+   whether the thing doing the tapping is a fingertip - a touch laptop at
+   1440px has the same problem a phone does, and a narrow window on a desktop
+   does not. Mouse users see none of this.
+
+   Measured before writing it: Add to Cart and Buy Now were 33px tall, the
+   Member/Regular toggle 26px, the carousel dots 8x8. The usual floor is 44px
+   (Apple) / 48dp (Material); everything below is a button people miss.
+
+   Nothing here changes how anything looks on a mouse, and on touch only the
+   hit area grows - the dots keep their exact size and shape. */
+@media (pointer:coarse){
+  .btn-add,.btn-buy{min-height:44px;}
+  .rate-btn{min-height:44px;padding-inline:1em;}
+  .carousel-btn{width:44px;height:44px;}
+  .nav-toggle{width:44px;height:44px;}
+  .co-brand,.co-topbar .btn{min-height:44px;}
+  /* The "Sign in" offered beside the pre-registration and checkout forms. */
+  .signin-strip a{display:inline-flex;align-items:center;min-height:44px;}
+
+  /* These are already flex rows, so min-height centres the label without
+     moving it. margin-bottom goes, because the added height now supplies the
+     spacing the list used to get from the margin. */
+  .footer-col a{min-height:44px;margin-bottom:0;}
+  .text-link{min-height:44px;}
+
+  /* The dot moves into a pseudo-element so the button itself can be a 44px
+     target while the visible dot stays 8px. The active pill (22px wide) moves
+     with it, so the animation is unchanged. */
+  .carousel-dots{gap:0;}
+  .carousel-dots button{
+    width:44px;height:44px;padding:0;border:none;background:none;border-radius:0;
+    display:flex;align-items:center;justify-content:center;
+  }
+  .carousel-dots button::before{
+    content:"";display:block;width:8px;height:8px;border-radius:50%;
+    background:var(--border);transition:width .2s ease;
+  }
+  .carousel-dots button.active{width:44px;background:none;}
+  .carousel-dots button.active::before{width:22px;border-radius:4px;background:var(--gold);}
+}
+
 /* responsive */
 @media (max-width:900px){
   .story-inner,.pricing-inner,.join-inner{grid-template-columns:1fr;}
@@ -2102,7 +2149,17 @@ img[data-blur="loaded"]{filter:blur(0);transform:scale(1);}
   .shop-grid{grid-template-columns:repeat(2,1fr);}
   .stats-grid{grid-template-columns:repeat(2,1fr);}
 }
-@media (max-width:720px){
+/* The header runs out of room well before the phone breakpoint.
+
+   Measured at 768px (iPad portrait): brand 119px + nav 552px + the account
+   and cart buttons 88px + gaps came to 803px against a 768px viewport, so the
+   cart button - the one that matters most - sat 35px off the right edge with
+   no way to scroll to it, because the hamburger did not appear until 720px.
+
+   So the drawer rules live here at 860px, separate from the 720px block,
+   which is about grids and the hero and is right where it is. 860 rather than
+   820 leaves room for the nav to reflow a little wider on other platforms. */
+@media (max-width:860px){
   .main-nav{
     position:fixed;inset:0 0 0 auto;top:64px;width:min(320px,85vw);height:calc(100vh - 64px);
     background:var(--cream);border-left:1px solid var(--border);flex-direction:column;align-items:flex-start;
@@ -2114,6 +2171,9 @@ img[data-blur="loaded"]{filter:blur(0);transform:scale(1);}
   .main-nav.open{transform:translateX(0);visibility:visible;}
   .nav-cta{width:100%;justify-content:center;}
   .nav-toggle{display:flex;}
+}
+
+@media (max-width:720px){
   .benefit-grid{grid-template-columns:repeat(2,1fr);gap:.6rem;}
   .benefit-card{padding:.85rem;}
   .benefit-title{font-size:.9rem;}
