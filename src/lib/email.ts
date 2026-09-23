@@ -22,6 +22,15 @@ export interface EmailMessage {
   /** Optional HTML alternative. Mail clients pick whichever they prefer. */
   html?: string;
   replyTo?: string;
+  /**
+   * Keeps the subject out of the logs.
+   *
+   * Sign-in codes go in the subject line so a phone shows them in the
+   * notification - which also means logging the subject would write a live
+   * credential into the log. The recipient and the outcome are still logged,
+   * which is what matters when chasing a message that did not arrive.
+   */
+  sensitive?: boolean;
 }
 
 /**
@@ -152,10 +161,10 @@ function transporter(): Transporter {
 }
 
 export async function sendEmail(message: EmailMessage): Promise<EmailResult> {
+  const describe = message.sensitive ? '(withheld)' : JSON.stringify(message.subject);
+
   if (!smtpConfigured()) {
-    console.log(
-      `[email:not-configured] to=${message.to} subject=${JSON.stringify(message.subject)}`,
-    );
+    console.log(`[email:not-configured] to=${message.to} subject=${describe}`);
     return { delivered: false, reason: 'SMTP is not configured; logged only' };
   }
 
@@ -183,7 +192,7 @@ export async function sendEmail(message: EmailMessage): Promise<EmailResult> {
     // Never rethrow. The order or enquiry is already in the database, and
     // losing it because a mail server hiccuped would be the worse failure.
     const reason = (err as Error).message;
-    console.error(`[email:failed] to=${message.to} reason=${reason}`);
+    console.error(`[email:failed] to=${message.to} subject=${describe} reason=${reason}`);
     return { delivered: false, reason };
   }
 }
@@ -328,51 +337,48 @@ export function businessOrderEmail(order: OrderEmailData): EmailMessage {
 // -------------------------------------------------------------- sign-in
 
 /**
- * The sign-in link, sent by us rather than by Supabase.
+ * The one-time sign-in code, sent by us rather than by Supabase.
  *
- * Supabase mints the link; this sends it. That keeps every email the site
- * sends on one mail server, with one set of limits and one place to look when
- * something does not arrive.
+ * A code rather than a link: a link means leaving the page, opening a mail
+ * app, and landing back in a different browser, which is where "session
+ * missing" failures come from. A code is typed into the page already open.
  *
- * The link is a single-use credential. It is never escaped into visible text
- * anywhere it could be shoulder-read, the email says how long it lasts, and
- * it says plainly what to do if the recipient did not ask for it - because
- * anyone can type someone else's address into a sign-in form.
+ * Supabase mints it and owns its expiry and single use; this only carries it.
+ * The email says how long it lasts and what to do if the recipient did not
+ * ask for it, because anyone can type someone else's address into a form.
  */
-export function authLinkEmail(params: {
+export function authCodeEmail(params: {
   to: string;
-  link: string;
+  code: string;
   isSignup: boolean;
 }): EmailMessage {
-  const { to, link, isSignup } = params;
-  const action = isSignup ? 'Create your account' : 'Sign in';
-  const heading = isSignup ? 'Finish creating your account' : 'Your sign-in link';
+  const { to, code, isSignup } = params;
+  const heading = isSignup ? 'Finish creating your account' : 'Your sign-in code';
 
   return {
     to,
-    subject: isSignup
-      ? 'Finish creating your Ziventa account'
-      : 'Your Ziventa sign-in link',
+    // In the subject so a phone shows it in the notification without opening
+    // anything - and therefore marked sensitive, so it never reaches the log.
+    subject: `${code} is your Ziventa ${isSignup ? 'sign-up' : 'sign-in'} code`,
+    sensitive: true,
     html: htmlShell(
       heading,
       `<p style="margin:0 0 16px;font-size:14px;">
          ${isSignup
-           ? 'Tap the button below to finish setting up your Ziventa Gaushala account.'
-           : 'Tap the button below and you will be signed in. There is no password to remember.'}
+           ? 'Enter this code on the sign-up page to finish setting up your account.'
+           : 'Enter this code on the sign-in page and you will be signed in.'}
        </p>
-       <p style="margin:0 0 20px;">
-         <a href="${escapeHtml(link)}"
-            style="display:inline-block;background:#1E4A35;color:#FBF6EC;text-decoration:none;
-                   padding:12px 22px;border-radius:8px;font-size:15px;font-weight:600;">
-           ${escapeHtml(action)}
-         </a>
+       <p style="margin:0 0 20px;padding:16px;background:#FBF6EC;border:1px solid #e6ded0;
+                 border-radius:10px;text-align:center;font-size:30px;font-weight:700;
+                 letter-spacing:8px;color:#1E4A35;font-family:monospace;">
+         ${escapeHtml(code)}
        </p>
        <p style="margin:0 0 8px;font-size:13px;color:#6b7d72;">
-         This link works once and expires in about an hour.
+         This code works once and expires in about an hour.
        </p>
        <p style="margin:0;font-size:13px;color:#6b7d72;">
          If you did not ask to sign in, you can ignore this email - nothing will happen
-         until the link is opened.
+         unless the code is entered. Never share it with anyone, including us.
        </p>`,
       'Ziventa Gaushala',
     ),
@@ -380,15 +386,15 @@ export function authLinkEmail(params: {
       heading,
       '',
       isSignup
-        ? 'Open this link to finish setting up your Ziventa Gaushala account:'
-        : 'Open this link and you will be signed in:',
+        ? 'Enter this code on the sign-up page to finish setting up your account:'
+        : 'Enter this code on the sign-in page and you will be signed in:',
       '',
-      link,
+      `    ${code}`,
       '',
-      'This link works once and expires in about an hour.',
+      'This code works once and expires in about an hour.',
       '',
-      'If you did not ask to sign in, you can ignore this email - nothing',
-      'will happen until the link is opened.',
+      'If you did not ask to sign in, you can ignore this email - nothing will',
+      'happen unless the code is entered. Never share it with anyone, including us.',
       '',
       'Ziventa Gaushala',
     ].join('\n'),

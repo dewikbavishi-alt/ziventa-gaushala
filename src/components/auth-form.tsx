@@ -49,6 +49,10 @@ export function AuthForm({
   const [phone, setPhone] = useState('');
   const [code, setCode] = useState('');
   const [codeSent, setCodeSent] = useState(false);
+  // Separate from the phone flow's code state above, so switching tabs can
+  // never leave one flow's half-finished step showing in the other.
+  const [emailCode, setEmailCode] = useState('');
+  const [emailCodeSent, setEmailCodeSent] = useState(false);
   const [busy, setBusy] = useState(false);
   const [message, setMessage] = useState<{
     kind: 'ok' | 'error';
@@ -60,25 +64,25 @@ export function AuthForm({
   const isSignup = intent === 'signup';
 
   /**
-   * Email: send a one-time link. No password to forget.
+   * Email step 1: ask our own endpoint to email a one-time code.
    *
-   * Goes to our own endpoint rather than supabase.auth.signInWithOtp, so the
-   * message is sent by the same mail server as every other email the site
-   * sends. Supabase's built-in sender allows only a handful an hour, which
+   * Ours rather than supabase.auth.signInWithOtp, so the message is sent by
+   * the same mail server (Nodemailer) as every other email the site sends.
+   * Supabase's built-in sender allows only a handful an hour, which
    * repeatedly locked this site out during testing.
    *
-   * The endpoint answers the same way whatever happens - delivered, unknown
+   * The endpoint answers the same way whatever happens - sent, unknown
    * address, rate-limited - because whether an address has an account here is
-   * private. That is why there is no "no such account" branch any more: the
-   * server will not say, so the page must not pretend to know.
+   * private. So the page moves to the code step either way, and someone with
+   * no account simply never receives a code.
    */
-  async function sendMagicLink(e: React.FormEvent) {
+  async function sendEmailCode(e: React.FormEvent) {
     e.preventDefault();
     setBusy(true);
     setMessage(null);
 
     try {
-      const res = await fetch('/api/auth/send-link', {
+      const res = await fetch('/api/auth/send-code', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -100,7 +104,7 @@ export function AuthForm({
        * 409 means this address already has an account.
        *
        * Only the sign-up form can receive this. Telling someone their own
-       * address is already registered is far kinder than sending a link and
+       * address is already registered is far kinder than sending a code and
        * letting them wonder later why their past orders are missing - and the
        * sign-in link below carries the address across so they do not retype
        * it.
@@ -122,12 +126,11 @@ export function AuthForm({
         return;
       }
 
+      setEmailCode('');
+      setEmailCodeSent(true);
       setMessage({
         kind: 'ok',
-        text: isSignup
-          ? `Almost there. If that address is new, a link is on its way to ${email} - open it to finish creating your account.`
-          : `If ${email} can be used to sign in, a link is on its way. It may take a minute.`,
-        offerSignup: !isSignup,
+        text: `If ${email} can be used to sign in, a code is on its way. It can take a minute - check your spam folder too.`,
       });
     } catch {
       // Network failure, offline, DNS - never the person's fault.
@@ -141,9 +144,43 @@ export function AuthForm({
   }
 
   /**
+   * Email step 2: hand the code to Supabase, which turns it into a session.
+   *
+   * Verified in the browser, so the session cookies are set by Supabase's own
+   * client exactly as they are for password sign-in. `type: 'magiclink'`
+   * because that is what minted the code.
+   */
+  async function verifyEmailCode(e: React.FormEvent) {
+    e.preventDefault();
+    setBusy(true);
+    setMessage(null);
+
+    const { error } = await supabase.auth.verifyOtp({
+      email,
+      token: emailCode.trim(),
+      type: 'magiclink',
+    });
+
+    setBusy(false);
+
+    if (error) {
+      setMessage({
+        kind: 'error',
+        // One message for wrong, expired and already-used codes. Saying which
+        // helps someone guessing far more than it helps a customer.
+        text: 'That code did not work. It may have expired or already been used - send a new one.',
+      });
+      return;
+    }
+
+    router.push(next);
+    router.refresh();
+  }
+
+  /**
    * Password sign-in.
    *
-   * Exists because the magic link depends on email arriving, and when email
+   * Exists because an emailed code depends on email arriving, and when email
    * breaks it locks you out of your own admin dashboard - exactly when you
    * most need to look at it. A password does not touch the mail server.
    *
@@ -230,6 +267,7 @@ export function AuthForm({
                   setMode(m);
                   setMessage(null);
                   setCodeSent(false);
+                  setEmailCodeSent(false);
                 }}
                 className={`rounded-md py-2 transition ${
                   // 'password' is still email sign-in, so the Email tab stays lit.
@@ -243,8 +281,8 @@ export function AuthForm({
             ))}
           </div>
 
-          {mode === 'email' && (
-            <form onSubmit={sendMagicLink} className="space-y-4">
+          {mode === 'email' && !emailCodeSent && (
+            <form onSubmit={sendEmailCode} className="space-y-4">
               {isSignup && (
                 <label className="block">
                   <span className="text-sm font-medium text-[#2F4A3D]">Your name</span>
@@ -276,11 +314,11 @@ export function AuthForm({
                 disabled={busy}
                 className="w-full rounded-lg bg-[#1E4A35] py-2.5 font-medium text-[#FBF6EC] transition hover:bg-[#173a29] disabled:opacity-60"
               >
-                {busy ? 'Sending...' : isSignup ? 'Create my account' : 'Email me a sign-in link'}
+                {busy ? 'Sending...' : 'Email me a code'}
               </button>
 
               <p className="text-center text-xs text-[#2F4A3D]/60">
-                No password needed. We send a link that signs you in.
+                No password needed. We email you a code to type in here.
               </p>
 
               {!isSignup && (
@@ -295,6 +333,48 @@ export function AuthForm({
                   Sign in with a password instead
                 </button>
               )}
+            </form>
+          )}
+
+          {mode === 'email' && emailCodeSent && (
+            <form onSubmit={verifyEmailCode} className="space-y-4">
+              <label className="block">
+                <span className="text-sm font-medium text-[#2F4A3D]">Code sent to {email}</span>
+                <input
+                  inputMode="numeric"
+                  autoComplete="one-time-code"
+                  required
+                  autoFocus
+                  // Not capped at six: the length is a Supabase setting, and a
+                  // hard maxLength would silently chop a longer code and look
+                  // like the customer typed it wrong.
+                  maxLength={10}
+                  value={emailCode}
+                  onChange={(e) => setEmailCode(e.target.value.replace(/\D/g, ''))}
+                  placeholder="Enter the code"
+                  className="mt-1 w-full rounded-lg border border-[#2F4A3D]/20 px-3 py-2 text-center text-lg tracking-[0.3em] text-[#2F4A3D] outline-none placeholder:tracking-normal focus:border-[#D9A92B] focus:ring-2 focus:ring-[#D9A92B]/30"
+                />
+              </label>
+
+              <button
+                type="submit"
+                disabled={busy || emailCode.length < 4}
+                className="w-full rounded-lg bg-[#1E4A35] py-2.5 font-medium text-[#FBF6EC] transition hover:bg-[#173a29] disabled:opacity-60"
+              >
+                {busy ? 'Checking...' : isSignup ? 'Create my account' : 'Sign in'}
+              </button>
+
+              <button
+                type="button"
+                onClick={() => {
+                  setEmailCodeSent(false);
+                  setEmailCode('');
+                  setMessage(null);
+                }}
+                className="w-full text-center text-xs text-[#2F4A3D]/60 underline"
+              >
+                Use a different email, or send a new code
+              </button>
             </form>
           )}
 
@@ -341,7 +421,7 @@ export function AuthForm({
                 }}
                 className="w-full text-center text-xs text-[#2F4A3D]/60 underline"
               >
-                Email me a link instead
+                Email me a code instead
               </button>
             </form>
           )}

@@ -2,18 +2,22 @@ import { NextResponse } from 'next/server';
 import { z } from 'zod';
 import { prisma } from '@/lib/prisma';
 import { accountExists, adminClient } from '@/lib/supabase/admin';
-import { authLinkEmail, sendEmail } from '@/lib/email';
-import { safeNext } from '@/lib/safe-next';
+import { authCodeEmail, sendEmail } from '@/lib/email';
 
 /**
- * Sends the sign-in link ourselves instead of letting Supabase send it.
+ * Emails a one-time sign-in code, sent by us rather than by Supabase.
  *
- * Supabase still mints the link - generateLink() produces a real, single-use
- * credential and, unlike signInWithOtp, sends nothing. We then post it through
- * Nodemailer like every other email the site sends. One mail server, one set
- * of limits, one place to look when something does not arrive. Supabase's
- * built-in sender allows only a handful of messages an hour, which is what
- * kept locking this site out during testing.
+ * Supabase still mints it - generateLink() returns `email_otp` alongside the
+ * link and, unlike signInWithOtp, sends nothing - so Supabase keeps ownership
+ * of expiry, single use and session creation, and we only carry the message
+ * through Nodemailer like every other email the site sends.
+ *
+ * The code's length is a Supabase project setting (Authentication > Email >
+ * OTP length), so nothing here assumes six digits.
+ *
+ * Why not Supabase's own sender: it allows only a handful of messages an hour,
+ * which kept locking this site out during testing. Here it is one mail server,
+ * one set of limits, and one place to look when something does not arrive.
  *
  * This route is deliberately the most defensive one in the project, because it
  * is the only endpoint that will mail an arbitrary address on request.
@@ -49,7 +53,7 @@ function generic() {
   return NextResponse.json(
     {
       ok: true,
-      message: 'If that address can be used to sign in, a link is on its way.',
+      message: 'If that address can be used to sign in, a code is on its way.',
     },
     { status: 202 },
   );
@@ -80,15 +84,12 @@ export async function POST(request: Request) {
   });
 
   if (recent >= MAX_PER_WINDOW) {
-    console.warn(`[auth-link] throttled ${email}: ${recent} in ${WINDOW_MINUTES}m`);
+    console.warn(`[auth-code] throttled ${email}: ${recent} in ${WINDOW_MINUTES}m`);
     return generic();
   }
 
-  // ---- mint the link, without sending anything ------------------------
-  const origin = process.env.NEXT_PUBLIC_SITE_URL?.replace(/\/$/, '') ?? new URL(request.url).origin;
-  const redirectTo = `${origin}/auth/callback?next=${encodeURIComponent(safeNext(parsed.data.next))}`;
-
-  let link: string;
+  // ---- mint the code, without sending anything ------------------------
+  let code: string;
   try {
     const admin = adminClient();
     const exists = await accountExists(email);
@@ -98,13 +99,13 @@ export async function POST(request: Request) {
      *
      * generateLink({type:'magiclink'}) creates one when it is missing -
      * confirmed against a real project, where two addresses that had never
-     * signed up became accounts the moment a link was generated for them. So
+     * signed up became accounts the moment a code was generated for them. So
      * existence is checked here first, and an unknown address is turned away
-     * before any link is minted. Otherwise a single typo would hand someone a
+     * before any code is minted. Otherwise a single typo would hand someone a
      * new empty account and leave them thinking their orders had disappeared.
      */
     if (!isSignup && !exists) {
-      console.warn(`[auth-link] no account for ${email}; refusing to create one`);
+      console.warn(`[auth-code] no account for ${email}; refusing to create one`);
       return generic();
     }
 
@@ -117,7 +118,7 @@ export async function POST(request: Request) {
      * other path - sign-in, unknown address, throttled - still answers
      * identically. The exchange is that a returning customer who forgets they
      * already have an account is told so and sent to sign in, instead of
-     * silently receiving a link and wondering why their orders are missing.
+     * silently receiving a code and wondering why their orders are missing.
      */
     if (isSignup && exists) {
       return NextResponse.json(
@@ -136,8 +137,8 @@ export async function POST(request: Request) {
      * which defeats a passwordless flow, so createUser plus a magic link does
      * the same job without one.
      *
-     * email_confirm stays false: the address is only proven once the link is
-     * actually opened, which is the entire point of sending it.
+     * email_confirm stays false: the address is only proven once the code is
+     * actually entered, which is the entire point of sending it.
      */
     if (isSignup) {
       const { error: createError } = await admin.auth.admin.createUser({
@@ -146,7 +147,7 @@ export async function POST(request: Request) {
         user_metadata: parsed.data.fullName ? { full_name: parsed.data.fullName } : undefined,
       });
       if (createError) {
-        console.warn(`[auth-link] createUser for ${email}: ${createError.message}`);
+        console.warn(`[auth-code] createUser for ${email}: ${createError.message}`);
         return generic();
       }
     }
@@ -154,19 +155,18 @@ export async function POST(request: Request) {
     const { data, error } = await admin.auth.admin.generateLink({
       type: 'magiclink',
       email,
-      options: { redirectTo },
     });
 
-    if (error || !data?.properties?.action_link) {
+    if (error || !data?.properties?.email_otp) {
       // Usually "user not found" - a private fact. Logged for us, generic to
       // them.
-      console.warn(`[auth-link] generateLink failed for ${email}: ${error?.message ?? 'no link'}`);
+      console.warn(`[auth-code] generateLink failed for ${email}: ${error?.message ?? 'no code'}`);
       return generic();
     }
 
-    link = data.properties.action_link;
+    code = data.properties.email_otp;
   } catch (err) {
-    console.error(`[auth-link] admin call threw: ${(err as Error).message}`);
+    console.error(`[auth-code] admin call threw: ${(err as Error).message}`);
     return generic();
   }
 
@@ -176,10 +176,10 @@ export async function POST(request: Request) {
   // let a stream of timeouts slip past the limit entirely.
   await prisma.emailThrottle.create({ data: { email, kind: 'auth_link' } });
 
-  const result = await sendEmail(authLinkEmail({ to: email, link, isSignup }));
+  const result = await sendEmail(authCodeEmail({ to: email, code, isSignup }));
 
   if (!result.delivered) {
-    console.error(`[auth-link] send failed for ${email}: ${result.reason}`);
+    console.error(`[auth-code] send failed for ${email}: ${result.reason}`);
     // Still generic to the caller - the reason names our mail server.
   }
 
