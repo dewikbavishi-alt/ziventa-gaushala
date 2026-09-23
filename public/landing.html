@@ -31,7 +31,23 @@
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:image" content="https://girbyziventa.com/logo/og-image.png">
 
-<script>document.documentElement.className+=' js';</script>
+<script>
+  /* `js` switches on the scroll-reveal animations, which start at opacity:0.
+
+     `no-io` is the safety net under them. Those 38 elements are only made
+     visible by an IntersectionObserver callback, so on a browser that has
+     JavaScript but NOT IntersectionObserver - Opera Mini, UC Browser, older
+     Android WebView, iOS before 12.1, all of which still turn up in India -
+     the observer throws, nothing is ever revealed, and most of the page stays
+     permanently blank. <noscript> does not help: JavaScript IS running.
+
+     Checked here rather than later so the class is set before first paint and
+     nothing flashes. */
+  document.documentElement.className += ' js';
+  if (!('IntersectionObserver' in window)) {
+    document.documentElement.className += ' no-io';
+  }
+</script>
 </head>
 <body>
 <!-- design-decisions
@@ -1138,6 +1154,13 @@ img[data-blur="loaded"]{filter:blur(0);transform:scale(1);}
 
 .js .reveal{opacity:0;transform:translateY(24px);}
 .js .reveal.in-view{animation:revealIn .7s ease forwards;}
+/* No IntersectionObserver means nothing will ever add .in-view, so show
+   everything at once. Same rules as the <noscript> block near the top - that
+   one covers JS being off, this one covers JS being on without the API. */
+.no-io .reveal{opacity:1 !important;transform:none !important;}
+.no-io .gallery-item.reveal{clip-path:none !important;}
+.no-io .churn{opacity:1 !important;transform:none !important;}
+.no-io .scroll-progress{display:none;}
 @keyframes revealIn{from{opacity:0;transform:translateY(24px);}to{opacity:1;transform:translateY(0);}}
 
 .btn{
@@ -1160,10 +1183,21 @@ img[data-blur="loaded"]{filter:blur(0);transform:scale(1);}
 /* header */
 .site-header{
   position:sticky;top:0;z-index:100;
+  /* Solid first, translucent second. color-mix() is recent - Chrome 111,
+     Safari 16.2, Firefox 113 - and this is the header's ONLY background, so
+     a browser that drops the declaration gets a transparent bar with the page
+     scrolling through the nav text. rgba says the same thing everywhere and
+     is overridden below wherever color-mix is understood. */
+  background:rgba(251,246,236,.88);
   background:color-mix(in srgb, var(--cream) 88%, transparent);
+  -webkit-backdrop-filter:blur(10px);
   backdrop-filter:blur(10px);
   border-bottom:1px solid var(--border);
   transition:box-shadow .2s ease;
+}
+/* Without blur the bar needs to be opaque, or text shows through it. */
+@supports not ((backdrop-filter:blur(1px)) or (-webkit-backdrop-filter:blur(1px))){
+  .site-header{background:var(--cream);}
 }
 .site-header.scrolled{box-shadow:0 8px 24px rgba(0,0,0,.08);}
 .header-inner{
@@ -1455,7 +1489,7 @@ img[data-blur="loaded"]{filter:blur(0);transform:scale(1);}
   padding:1.15rem;cursor:pointer;font-family:var(--font-body);color:var(--ink);
   display:flex;flex-direction:column;gap:.45rem;transition:box-shadow .2s ease, transform .2s ease, border-color .2s ease;
 }
-.benefit-card:hover{box-shadow:var(--shadow);transform:translateY(-3px);border-color:color-mix(in srgb, var(--gold) 40%, var(--border));}
+.benefit-card:hover{box-shadow:var(--shadow);transform:translateY(-3px);border-color:rgba(191,143,58,.45);border-color:color-mix(in srgb, var(--gold) 40%, var(--border));}
 .benefit-top{display:flex;align-items:center;justify-content:space-between;color:var(--gold-deep);}
 .benefit-top i{width:24px;height:24px;}
 .benefit-num{font-family:var(--font-display);font-size:.85rem;color:var(--ink-soft);}
@@ -1653,7 +1687,7 @@ img[data-blur="loaded"]{filter:blur(0);transform:scale(1);}
   color:var(--ink-soft);transition:all .3s ease;
 }
 .ritual-icon i{width:20px;height:20px;}
-.ritual-step.active .ritual-icon{border-color:var(--gold);color:var(--gold-deep);background:color-mix(in srgb, var(--gold) 12%, var(--card-bg));box-shadow:0 6px 16px rgba(191,143,58,.2);}
+.ritual-step.active .ritual-icon{border-color:var(--gold);color:var(--gold-deep);background:#F7EEDC;background:color-mix(in srgb, var(--gold) 12%, var(--card-bg));box-shadow:0 6px 16px rgba(191,143,58,.2);}
 .ritual-tag{display:block;font-size:.78rem;text-transform:uppercase;letter-spacing:.1em;color:var(--gold-deep);font-weight:700;margin-bottom:.3em;}
 .ritual-step h3{font-size:1.3rem;margin-bottom:.3em;}
 .ritual-step p{margin:0;}
@@ -1988,7 +2022,7 @@ img[data-blur="loaded"]{filter:blur(0);transform:scale(1);}
 .btn-add:hover{background:var(--gold);color:#fff;transform:translateY(-1px);}
 .btn-add.added{background:var(--green);border-color:var(--green);color:#fff;}
 
-.scrim{position:fixed;inset:0;background:rgba(26,34,28,.5);z-index:190;backdrop-filter:blur(2px);}
+.scrim{position:fixed;inset:0;background:rgba(26,34,28,.5);z-index:190;-webkit-backdrop-filter:blur(2px);backdrop-filter:blur(2px);}
 
 .cart{
   position:fixed;top:0;right:0;bottom:0;width:min(420px,92vw);z-index:200;
@@ -2093,9 +2127,15 @@ img[data-blur="loaded"]{filter:blur(0);transform:scale(1);}
   border:1.5px solid var(--border);border-radius:14px;padding:.85rem 1rem;
   background:var(--card-bg);transition:border-color .18s ease,background .18s ease;
 }
-.pay:hover{border-color:color-mix(in srgb,var(--gold) 55%,var(--border));}
+.pay:hover{border-color:rgba(191,143,58,.6);border-color:color-mix(in srgb,var(--gold) 55%,var(--border));}
 .pay input{accent-color:var(--gold);width:17px;height:17px;flex-shrink:0;}
-.pay:has(input:checked){border-color:var(--gold);background:rgba(191,143,58,.08);}
+/* Two selectors for one state. :has() is recent - Firefox only got it in 121,
+   Samsung Internet in 20 - and this is the ONLY thing marking which payment
+   method is chosen, so without it a customer cannot tell what they picked.
+   The .selected class is set by a change handler in the script below and
+   works everywhere; :has() stays so it is still correct with JS disabled. */
+.pay:has(input:checked),
+.pay.selected{border-color:var(--gold);background:rgba(191,143,58,.08);}
 .pay-ic{width:38px;height:38px;border-radius:10px;background:var(--cream-alt);display:flex;align-items:center;justify-content:center;flex-shrink:0;}
 .pay-ic i{width:19px;height:19px;color:var(--gold-deep);}
 .pay-txt{display:flex;flex-direction:column;gap:.1em;}
@@ -2329,10 +2369,15 @@ document.addEventListener('DOMContentLoaded', function(){
     });
   }
 
+  var HAS_IO = 'IntersectionObserver' in window;
   /* scroll-spy nav */
   var navLinks=Array.prototype.slice.call(document.querySelectorAll('.nav-link'));
   var sections=navLinks.map(function(l){ return document.querySelector(l.getAttribute('href')); }).filter(Boolean);
-  if(sections.length){
+  /* Each observer is guarded separately. Without this the first `new
+     IntersectionObserver` on an unsupporting browser throws a ReferenceError
+     and every line after it in this script stops running - which would take
+     the cart and the whole checkout down with it, not just an animation. */
+  if(sections.length && HAS_IO){
     var spyObserver=new IntersectionObserver(function(entries){
       entries.forEach(function(entry){
         var id='#'+entry.target.id;
@@ -2349,7 +2394,15 @@ document.addEventListener('DOMContentLoaded', function(){
 
   /* count-up stats */
   var counters=document.querySelectorAll('.stat[data-count]');
-  var countObserver=new IntersectionObserver(function(entries,obs){
+  if(!HAS_IO){
+    /* No count-up animation, so print the final figures instead of leaving
+       a row of zeros on the page. */
+    Array.prototype.forEach.call(counters,function(el){
+      var c=el.querySelector('.counter');
+      if(c) c.textContent=el.getAttribute('data-count');
+    });
+  }
+  var countObserver=HAS_IO && new IntersectionObserver(function(entries,obs){
     entries.forEach(function(entry){
       if(!entry.isIntersecting) return;
       var el=entry.target;
@@ -2367,7 +2420,7 @@ document.addEventListener('DOMContentLoaded', function(){
       obs.unobserve(el);
     });
   },{threshold:0.5});
-  counters.forEach(function(el){ countObserver.observe(el); });
+  if(countObserver) counters.forEach(function(el){ countObserver.observe(el); });
 
   /* benefit cards expand */
   document.querySelectorAll('.benefit-card').forEach(function(card){
@@ -2683,7 +2736,7 @@ document.addEventListener('DOMContentLoaded', function(){
     var idx=siblings.indexOf(el);
     el.style.animationDelay=Math.min(idx*70,420)+'ms';
   });
-  var revealObserver=new IntersectionObserver(function(entries,obs){
+  var revealObserver=HAS_IO && new IntersectionObserver(function(entries,obs){
     entries.forEach(function(entry){
       if(entry.isIntersecting){
         entry.target.classList.add('in-view');
@@ -2691,7 +2744,7 @@ document.addEventListener('DOMContentLoaded', function(){
       }
     });
   },{threshold:0.15, rootMargin:'0px 0px -60px 0px'});
-  revealEls.forEach(function(el){ revealObserver.observe(el); });
+  if(revealObserver) revealEls.forEach(function(el){ revealObserver.observe(el); });
 
   setTimeout(function(){
     revealEls.forEach(function(el){
@@ -2703,7 +2756,7 @@ document.addEventListener('DOMContentLoaded', function(){
 
   /* gallery: start loading early, wipe in only once the photo is ready */
   var galleryItems=Array.prototype.slice.call(document.querySelectorAll('.gallery-item'));
-  if(galleryItems.length){
+  if(galleryItems.length && HAS_IO){
     var galleryObserver=new IntersectionObserver(function(entries,obs){
       entries.forEach(function(entry){
         if(!entry.isIntersecting) return;
@@ -3025,6 +3078,24 @@ document.addEventListener('DOMContentLoaded', function(){
       }
       return box;
     }
+
+    /* Mark the chosen payment method with a class as well as :has(), so the
+       selection is visible on browsers that do not support :has(). Delegated
+       from the container, so it keeps working if the list is ever re-rendered. */
+    (function markPayChoice(){
+      var list=document.querySelector('.pay-list');
+      if(!list) return;
+      function sync(){
+        var pays=list.querySelectorAll('.pay');
+        for(var i=0;i<pays.length;i++){
+          var input=pays[i].querySelector('input[name="pay"]');
+          if(input && input.checked){ pays[i].classList.add('selected'); }
+          else { pays[i].classList.remove('selected'); }
+        }
+      }
+      list.addEventListener('change',sync);
+      sync();   // the first option ships checked
+    })();
 
     els.coNext.addEventListener('click',function(){
       if(step===1){
