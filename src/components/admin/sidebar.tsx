@@ -186,9 +186,21 @@ export function Sidebar({ email }: { email: string }) {
     </div>
   );
 
+  /**
+   * The cream logo, because the admin ground is near-black and the logo's own
+   * #1c4a23 green disappears against it. Collapsed, the rail is too narrow for
+   * a 3.8:1 wordmark, so it falls back to the square icon.
+   */
   const brand = (compact: boolean) => (
     <div className={`flex items-center gap-2 px-6 pb-6 pt-7 ${compact ? 'justify-center px-2' : ''}`}>
-      <span className="font-display text-2xl text-a-text">{compact ? 'Z' : 'Ziventa'}</span>
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img
+        src={compact ? '/logo/ziventa-symbol.svg' : '/logo/ziventa-logo-light.svg'}
+        alt="Ziventa"
+        width={compact ? 100 : 329}
+        height={compact ? 100 : 86}
+        className={compact ? 'h-7 w-7' : 'h-6 w-auto'}
+      />
       {!compact && <span className="mt-1 text-[10px] uppercase tracking-[0.2em] text-a-gold">Admin</span>}
     </div>
   );
@@ -197,8 +209,16 @@ export function Sidebar({ email }: { email: string }) {
     <>
       {/* ---- mobile top bar ---- */}
       <div className="sticky top-0 z-30 flex items-center justify-between border-b border-a-line bg-a-bg/95 px-4 py-3 backdrop-blur lg:hidden">
-        <span className="font-display text-xl text-a-text">
-          Ziventa <span className="text-[10px] uppercase tracking-[0.2em] text-a-gold">Admin</span>
+        <span className="flex items-center gap-2">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src="/logo/ziventa-logo-light.svg"
+            alt="Ziventa"
+            width={329}
+            height={86}
+            className="h-5 w-auto"
+          />
+          <span className="text-[10px] uppercase tracking-[0.2em] text-a-gold">Admin</span>
         </span>
         <button
           type="button"

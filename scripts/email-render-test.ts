@@ -50,8 +50,18 @@ function assertSafe(label: string, msg: EmailMessage) {
      * the string "onerror=" instead would fail on correctly escaped output,
      * because `&lt;img src=x onerror=&quot;...&quot;&gt;` still contains those
      * characters as harmless text - which is exactly what it should do.
+     *
+     * The shell now opens with our own logo, so the test cannot simply ban
+     * `<img`. It removes that one known tag first and then applies the same
+     * rule to everything left, which is still the property that matters:
+     * every remaining image tag could only have come from user input. Note it
+     * is removed by matching our own src, not by counting - a payload that
+     * produced a second <img> would survive a count and must not survive this.
      */
-    check('no user-supplied tag became real markup', !/<img/i.test(msg.html));
+    const ours = /<img src="https?:\/\/[^"]*\/logo\/ziventa-logo-email\.png"[^>]*>/gi;
+    const withoutOurLogo = msg.html.replace(ours, '');
+    check('our logo tag is present exactly once', (msg.html.match(ours) ?? []).length === 1);
+    check('no user-supplied tag became real markup', !/<img/i.test(withoutOurLogo));
     check('only our own tags present', !/<(script|iframe|object|embed)/i.test(msg.html));
     check('has a text fallback too', msg.text.length > 0);
   }

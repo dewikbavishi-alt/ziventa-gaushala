@@ -255,12 +255,41 @@ export function AuthForm({
   return (
     <main className="min-h-screen bg-[#FBF6EC] flex items-center justify-center px-4 py-12">
       <div className="w-full max-w-md">
-        <div className="text-center mb-8">
-          <div className="mx-auto mb-3 h-12 w-12 rounded-full bg-[#1E4A35] flex items-center justify-center">
-            <span className="text-[#D9A92B] text-xl">&#10047;</span>
-          </div>
-          <h1 className="text-2xl font-semibold text-[#2F4A3D]">Ziventa Gaushala</h1>
-          <p className="mt-1 text-sm text-[#2F4A3D]/70">
+        <div className="mb-8 text-center">
+          {/*
+            The real logo replaces the placeholder glyph that stood here. It is
+            the <h1> as well: this is the page's heading, and an image with alt
+            text says the brand name once rather than twice.
+          */}
+          <h1>
+            <a
+              href="/"
+              aria-label="Ziventa Gaushala home"
+              className="inline-flex flex-col items-center"
+            >
+              {/* Decorative: the wordmark below already names the brand. */}
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src="/logo/ziventa-symbol.svg"
+                alt=""
+                width={100}
+                height={100}
+                className="mb-3 h-14 w-14"
+              />
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src="/logo/ziventa-logo.svg"
+                alt="Ziventa"
+                width={329}
+                height={86}
+                className="mx-auto h-8 w-auto"
+              />
+              <span className="mt-1 block text-[0.6rem] font-semibold tracking-[0.42em] text-[#8F6A1E] uppercase">
+                Gaushala
+              </span>
+            </a>
+          </h1>
+          <p className="mt-3 text-sm text-[#2F4A3D]/70">
             {isSignup ? 'Create your account' : 'Sign in to your account'}
           </p>
         </div>
