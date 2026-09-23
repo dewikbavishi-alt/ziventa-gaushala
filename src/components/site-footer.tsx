@@ -29,7 +29,9 @@ const ICON = {
 export function SiteFooter() {
   return (
     <footer className="border-t border-white/10 bg-[#5C201D] px-6 pt-16 pb-6 text-[#FBF6EC]/75">
-      <div className="mx-auto grid max-w-[1060px] gap-10 md:grid-cols-[1.5fr_1fr_1fr]">
+      {/* Two columns from tablet, four only once there is room - at four the
+          address column gets narrow enough to break mid-word. */}
+      <div className="mx-auto grid max-w-[1060px] gap-x-10 gap-y-8 sm:grid-cols-2 lg:grid-cols-[1.4fr_1fr_1fr_1.25fr]">
         {/* brand */}
         <div>
           <a
@@ -132,6 +134,49 @@ export function SiteFooter() {
                 <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7" />
               </svg>
               Contact Us
+            </a>
+          </div>
+        </div>
+
+        {/* reach us */}
+        <div>
+          <h2 className="mb-4 text-[0.82rem] tracking-[0.08em] text-[#BF8F3A] uppercase">
+            Reach Us
+          </h2>
+          {/*
+            <address> is the element for the contact details of the business
+            that owns the page, and it is announced as such. Browsers italicise
+            it by default, hence not-italic.
+          */}
+          <address className="mb-4 text-[0.88rem] leading-[1.65] text-[#FBF6EC]/65 not-italic">
+            <strong className="mb-1 block font-semibold text-[#FBF6EC]/85">
+              Aarya Gir Nutriments
+            </strong>
+            Plot No 21, Village: Khari
+            <br />
+            Taluka: Bagasara, Dist. Amreli
+            <br />
+            Gujarat, 365456, India
+          </address>
+          <div className="flex flex-col gap-[0.7em]">
+            {/* tel: and mailto: so a phone dials or opens mail on one tap. The
+                number is spaced for reading; the href keeps it unbroken. */}
+            <a href="tel:+919033525352" className={COL_LINK}>
+              <svg {...ICON}>
+                <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z" />
+              </svg>
+              +91 90335 25352
+            </a>
+            {/* An address with no spaces cannot wrap on its own. */}
+            <a
+              href="mailto:girbyziventagaushala@gmail.com"
+              className={`${COL_LINK} break-words`}
+            >
+              <svg {...ICON}>
+                <rect width="20" height="16" x="2" y="4" rx="2" />
+                <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7" />
+              </svg>
+              girbyziventagaushala@gmail.com
             </a>
           </div>
         </div>

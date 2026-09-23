@@ -908,6 +908,25 @@ Color: warm cream ground, deep gaushala-green = trust/tradition, hand-ghee gold 
       <a href="https://instagram.com/ziventagaushala" target="_blank" rel="noopener noreferrer"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="20" x="2" y="2" rx="5" ry="5" key="2e1cvw"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z" key="9exkf1"/><line x1="17.5" x2="17.51" y1="6.5" y2="6.5" key="r4j83e"/></svg> Instagram</a>
       <a href="mailto:hello@ziventagaushala.com"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="16" x="2" y="4" rx="2" key="18n3k1"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7" key="1ocrg3"/></svg> Contact Us</a>
     </div>
+    <div class="footer-col">
+      <h4>Reach Us</h4>
+      <!--
+        <address>, not a plain <p>: this is the contact detail for the business
+        that owns the page, which is exactly what the element means, and it is
+        announced as such. Browsers italicise it by default, so the CSS undoes
+        that.
+      -->
+      <address class="footer-address">
+        <strong>Aarya Gir Nutriments</strong>
+        Plot No 21, Village: Khari<br>
+        Taluka: Bagasara, Dist. Amreli<br>
+        Gujarat, 365456, India
+      </address>
+      <!-- tel: and mailto: so a phone dials or opens mail on one tap. The
+           number is spaced for reading; the href keeps it unbroken. -->
+      <a href="tel:+919033525352"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg> +91 90335 25352</a>
+      <a class="footer-mail" href="mailto:girbyziventagaushala@gmail.com"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="16" x="2" y="4" rx="2" key="18n3k1"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7" key="1ocrg3"/></svg> girbyziventagaushala@gmail.com</a>
+    </div>
   </div>
   <div class="footer-bottom">
     <p>© 2026 Ziventa Gaushala. All rights reserved.</p>
@@ -1830,6 +1849,12 @@ img[data-blur="loaded"]{filter:blur(0);transform:scale(1);}
 /* join */
 .join{padding:2.7rem 1.5rem;background:var(--cream-alt);border-top:1px solid var(--border);}
 .join-inner{max-width:980px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr;gap:3rem;align-items:start;}
+/* A grid item defaults to min-width:auto, which means it refuses to shrink
+   below its content's minimum - and the form's minimum is the width of an
+   <input> plus 2rem of padding each side. On a 320px phone that pushed the
+   column about 8px wider than the screen. min-width:0 lets it shrink; the
+   inputs then stretch to whatever is left. */
+.join-inner > *,.pricing-inner > *,.story-inner > *{min-width:0;}
 .join-text h2{font-size:2rem;}
 .join-list{list-style:none;margin:1.5rem 0 0;padding:0;display:flex;flex-direction:column;gap:.8rem;}
 .join-list li{display:flex;align-items:center;gap:.6em;font-weight:500;color:var(--ink);}
@@ -1896,7 +1921,17 @@ img[data-blur="loaded"]{filter:blur(0);transform:scale(1);}
 
 /* footer */
 .site-footer{background:var(--maroon);color:rgba(251,246,236,.75);padding:4rem 1.5rem 1.5rem;border-top:1px solid rgba(255,255,255,.1);}
-.footer-inner{max-width:1060px;margin:0 auto;display:grid;grid-template-columns:1.5fr 1fr 1fr;gap:2.5rem;}
+.footer-inner{max-width:1060px;margin:0 auto;display:grid;grid-template-columns:1.4fr 1fr 1fr 1.25fr;gap:2.5rem;}
+/* The registered-business block. `font-style:normal` because <address> is
+   italic by default and this is an address, not an aside. */
+.footer-address{
+  font-style:normal;line-height:1.65;font-size:.88rem;
+  color:rgba(251,246,236,.65);margin:0 0 1rem;
+}
+.footer-address strong{display:block;color:rgba(251,246,236,.85);font-weight:600;margin-bottom:.25em;}
+/* The address is long enough to overflow a narrow column, and an email with
+   no spaces in it cannot wrap on its own. */
+.footer-mail{word-break:break-word;}
 /* The footer sits on maroon, where the deep-green disc scores 1.24:1 and all
    but disappears. Use the light variant of the badge here instead. */
 /* The footer serves the cream logo file; only the caption needs recolouring,
@@ -2090,6 +2125,8 @@ img[data-blur="loaded"]{filter:blur(0);transform:scale(1);}
      readability on a phone, and these three words are the only thing telling
      someone how far through checkout they are. */
   .step{font-size:.78rem;}
+  /* 2rem of padding each side is a lot of a 320px screen to spend on nothing. */
+  .join-form{padding:1.3rem;}
   .shop-actions{flex-direction:column;}
 }
 
@@ -2170,6 +2207,9 @@ img[data-blur="loaded"]{filter:blur(0);transform:scale(1);}
   .herd-grid{grid-template-columns:repeat(2,1fr);}
   .shop-grid{grid-template-columns:repeat(2,1fr);}
   .stats-grid{grid-template-columns:repeat(2,1fr);}
+  /* Four footer columns get too narrow here - the address starts breaking
+     mid-word. Two by two until the 720px rule stacks them entirely. */
+  .footer-inner{grid-template-columns:1fr 1fr;gap:2rem 2.5rem;}
 }
 /* The header runs out of room well before the phone breakpoint.
 
