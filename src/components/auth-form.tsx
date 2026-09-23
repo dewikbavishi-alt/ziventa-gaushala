@@ -130,7 +130,16 @@ export function AuthForm({
       setEmailCodeSent(true);
       setMessage({
         kind: 'ok',
-        text: `If ${email} can be used to sign in, a code is on its way. It can take a minute - check your spam folder too.`,
+        text: isSignup
+          ? `A code is on its way to ${email}. It can take a minute - check your spam folder too.`
+          : `If ${email} has an account, a code is on its way. It can take a minute - check your spam folder too. No code? You may not have an account yet.`,
+        /**
+         * Offered to EVERYONE who asks for a sign-in code, not only to
+         * addresses without an account - so it still gives nothing away about
+         * who shops here, while answering the one question someone staring at
+         * an empty inbox actually has.
+         */
+        offerSignup: !isSignup,
       });
     } catch {
       // Network failure, offline, DNS - never the person's fault.
