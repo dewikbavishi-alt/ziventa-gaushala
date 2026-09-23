@@ -15,7 +15,59 @@ import { createServerClient } from '@supabase/ssr';
  * cannot be the only gate. Real checks belong next to the data - see
  * getCurrentUser() in src/lib/supabase/server.ts.
  */
+/**
+ * The one domain the live site should ever be served on.
+ *
+ * Vercel keeps the project's own *.vercel.app address serving alongside a
+ * custom domain, so girbyziventa.com and ziventag.vercel.app were both
+ * answering with the whole site. That is not just untidy:
+ *
+ *  - Cookies are per-domain, so a customer signed in on girbyziventa.com is a
+ *    stranger on the vercel.app one. Landing there sends them to /login even
+ *    though they are signed in, which is exactly how this was noticed.
+ *  - Search engines can index both and split the ranking between them.
+ *  - Analytics, the visitor table and any saved cart are counted twice.
+ */
+const CANONICAL_HOST = process.env.CANONICAL_HOST ?? 'girbyziventa.com';
+
 export async function proxy(request: NextRequest) {
+  /**
+   * Send everything to the one domain, before any other work.
+   *
+   * Only in production. Preview deployments each get their own *.vercel.app
+   * address, and bouncing those to production would make it impossible to test
+   * a branch before it ships. Local development has no VERCEL_ENV at all.
+   *
+   * 308 rather than 302 so it is cached as permanent and the method is
+   * preserved, and the path and query ride along - someone following a link to
+   * their orders still arrives at their orders.
+   */
+  if (process.env.VERCEL_ENV === 'production') {
+    /**
+     * Read the host from the headers, not from nextUrl.
+     *
+     * nextUrl.hostname is built from the URL the server sees, which is not
+     * always the public one - proven locally, where it reports `localhost` and
+     * so treated EVERY host as wrong, including the canonical one. That is an
+     * infinite redirect loop on the real domain, which would take the whole
+     * site down rather than merely tidy it up.
+     *
+     * x-forwarded-host first because that is what a proxy sets when it
+     * rewrites Host; the port is stripped so a host:443 never fails to match.
+     */
+    const host = (request.headers.get('x-forwarded-host') ?? request.headers.get('host') ?? '')
+      .split(':')[0]
+      .toLowerCase();
+
+    if (host && host !== CANONICAL_HOST) {
+      const target = new URL(request.nextUrl);
+      target.protocol = 'https:';
+      target.hostname = CANONICAL_HOST;
+      target.port = '';
+      return NextResponse.redirect(target, 308);
+    }
+  }
+
   /**
    * The path, passed along as a header.
    *
