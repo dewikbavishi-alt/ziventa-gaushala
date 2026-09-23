@@ -64,9 +64,9 @@ export function SiteFooter() {
           </a>
 
           <p className="mt-4 max-w-[320px] text-[0.9rem] text-[#FBF6EC]/65">
-            A small, dedicated gaushala raising Gir cows and preparing A2 ghee and Panchgavya
-            products the traditional way &mdash; for a limited circle of families who value trust
-            over transactions.
+            A small, dedicated gaushala raising Gir cows and preparing A2 Bilona ghee and Panchgavya
+            products in small batches &mdash; for a limited circle of families who value trust over
+            transactions.
           </p>
         </div>
 

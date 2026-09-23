@@ -24,7 +24,7 @@ const products = [
   {
     slug: 'ghee-250',
     name: 'Bilona Ghee - 250g',
-    description: 'Small-batch, hand-churned A2 Gir ghee for everyday cooking.',
+    description: 'Small-batch A2 Gir ghee, curd-churned the Bilona way, for everyday cooking.',
     sizeLabel: '250g',
     pricePaise: 80_000,
     sortOrder: 1,
@@ -32,7 +32,7 @@ const products = [
   {
     slug: 'ghee-500',
     name: 'Bilona Ghee - 500g',
-    description: 'The household size. Same hand-churned batch, better value.',
+    description: 'The household size. Same Bilona batch, better value.',
     sizeLabel: '500g',
     pricePaise: 160_000,
     sortOrder: 2,
