@@ -1325,7 +1325,7 @@ img[data-blur="loaded"]{filter:blur(0);transform:scale(1);}
 
 /* illustrated pasture scene */
 .hero-scene{
-  position:absolute;inset:0;z-index:1;pointer-events:none;
+  position:absolute;top:0;right:0;bottom:0;left:0;z-index:1;pointer-events:none;
 }
 .hero-scene svg{width:100%;height:100%;display:block;}
 .zf-sky{fill:url(#zgSky);}
@@ -1566,7 +1566,7 @@ img[data-blur="loaded"]{filter:blur(0);transform:scale(1);}
 .process > .section-head,.process > .ritual{position:relative;z-index:1;}
 
 /* ambient process background */
-.process-bg{position:absolute;inset:0;z-index:0;pointer-events:none;overflow:hidden;}
+.process-bg{position:absolute;top:0;right:0;bottom:0;left:0;z-index:0;pointer-events:none;overflow:hidden;}
 .pbg-blob{position:absolute;border-radius:50%;filter:blur(58px);}
 .pbg-b1{
   width:44vmax;height:44vmax;background:var(--gold);opacity:.25;
@@ -1581,7 +1581,7 @@ img[data-blur="loaded"]{filter:blur(0);transform:scale(1);}
   top:34%;left:54%;animation:pbgDrift3 21s ease-in-out infinite alternate;
 }
 /* churning vortex */
-.pbg-svg{position:absolute;inset:0;width:100%;height:100%;display:block;}
+.pbg-svg{position:absolute;top:0;right:0;bottom:0;left:0;width:100%;height:100%;display:block;}
 .pbg-swirl{
   fill:none;stroke:var(--gold);stroke-linecap:round;
   transform-box:fill-box;transform-origin:50% 50%;
@@ -1800,7 +1800,7 @@ img[data-blur="loaded"]{filter:blur(0);transform:scale(1);}
   position:relative;width:100%;aspect-ratio:3/2;overflow:hidden;
   border-radius:14px;margin-bottom:.85rem;background:var(--cream-alt);
 }
-.shop-media .cell{inset:0;width:100%;height:100%;}
+.shop-media .cell{top:0;right:0;bottom:0;left:0;width:100%;height:100%;}
 .shop-media img{transition:transform .6s cubic-bezier(.2,.7,.3,1);}
 .shop-card:hover .shop-media img{transform:scale(1.07);}
 .shop-media-icon{display:flex;align-items:center;justify-content:center;background:linear-gradient(150deg,#F3E4C4,#E0C68F);}
@@ -1817,7 +1817,7 @@ img[data-blur="loaded"]{filter:blur(0);transform:scale(1);}
 .review-card{
   margin:0;background:var(--card-bg);border:1px solid var(--border);border-radius:var(--radius);
   padding:2.2rem;box-shadow:var(--shadow);
-  position:absolute;inset:0;opacity:0;pointer-events:none;transform:translateY(8px);
+  position:absolute;top:0;right:0;bottom:0;left:0;opacity:0;pointer-events:none;transform:translateY(8px);
   transition:opacity .3s ease, transform .3s ease;
 }
 .review-card.active{opacity:1;pointer-events:auto;transform:translateY(0);position:relative;}
@@ -2022,7 +2022,7 @@ img[data-blur="loaded"]{filter:blur(0);transform:scale(1);}
 .btn-add:hover{background:var(--gold);color:#fff;transform:translateY(-1px);}
 .btn-add.added{background:var(--green);border-color:var(--green);color:#fff;}
 
-.scrim{position:fixed;inset:0;background:rgba(26,34,28,.5);z-index:190;-webkit-backdrop-filter:blur(2px);backdrop-filter:blur(2px);}
+.scrim{position:fixed;top:0;right:0;bottom:0;left:0;background:rgba(26,34,28,.5);z-index:190;-webkit-backdrop-filter:blur(2px);backdrop-filter:blur(2px);}
 
 .cart{
   position:fixed;top:0;right:0;bottom:0;width:min(420px,92vw);z-index:200;
@@ -2048,7 +2048,7 @@ img[data-blur="loaded"]{filter:blur(0);transform:scale(1);}
 .cart-line{display:flex;gap:.85rem;padding:.9rem 0;border-bottom:1px solid var(--border);}
 .cart-line:last-child{border-bottom:none;}
 .cart-thumb{width:64px;height:52px;border-radius:10px;overflow:hidden;position:relative;flex-shrink:0;background:var(--cream-alt);}
-.cart-thumb .cell{inset:0;width:100%;height:100%;}
+.cart-thumb .cell{top:0;right:0;bottom:0;left:0;width:100%;height:100%;}
 .cart-thumb.shop-media-icon{display:flex;align-items:center;justify-content:center;}
 .cart-thumb.shop-media-icon i{width:24px;height:24px;}
 .cart-info{flex:1;min-width:0;}
@@ -2076,7 +2076,7 @@ img[data-blur="loaded"]{filter:blur(0);transform:scale(1);}
 .cart-note{font-size:.78rem;color:var(--gold-deep);margin:.5rem 0 .9rem;}
 
 .co-page{
-  position:fixed;inset:0;z-index:300;background:var(--cream);
+  position:fixed;top:0;right:0;bottom:0;left:0;z-index:300;background:var(--cream);
   overflow-y:auto;display:flex;flex-direction:column;
 }
 .co-topbar{
@@ -2196,6 +2196,27 @@ img[data-blur="loaded"]{filter:blur(0);transform:scale(1);}
 .back-to-top.visible{opacity:1;pointer-events:auto;transform:translateY(0);}
 .back-to-top i{width:20px;height:20px;}
 
+/* ===== aspect-ratio fallback (Chrome < 88) =====
+
+   Without aspect-ratio these boxes have no height at all - they are empty
+   elements whose only content is absolutely positioned - so the cow photos,
+   the product images and the Instagram grid all collapse to nothing and the
+   sections look broken rather than merely plain.
+
+   .shop-media holds its child in position:absolute, so a pseudo-element with
+   percentage padding reserves the height without disturbing it - percentage
+   padding resolves against WIDTH, which is what makes the ratio work. The two
+   herd boxes have a fixed 94px width, so they can just be told their height.
+   .insta-tile is a flex container, where a pseudo-element would become a flex
+   item and break the centring, so it gets a minimum instead - not a perfect
+   square at every width, but never a collapsed one. */
+@supports not (aspect-ratio: 1 / 1){
+  .shop-media::before{content:"";display:block;padding-bottom:66.667%;}
+  .herd-avatar{height:94px;}
+  .herd-avatar .cell{height:125px;}
+  .insta-tile{min-height:90px;}
+}
+
 /* ===== touch targets =====
 
    Keyed on (pointer:coarse) rather than a width, because what matters is
@@ -2211,7 +2232,7 @@ img[data-blur="loaded"]{filter:blur(0);transform:scale(1);}
    hit area grows - the dots keep their exact size and shape. */
 @media (pointer:coarse){
   .btn-add,.btn-buy{min-height:44px;}
-  .rate-btn{min-height:44px;padding-inline:1em;}
+  .rate-btn{min-height:44px;padding-left:1em;padding-right:1em;}
   .carousel-btn{width:44px;height:44px;}
   .nav-toggle{width:44px;height:44px;}
   .co-brand,.co-topbar .btn{min-height:44px;}
@@ -2263,7 +2284,7 @@ img[data-blur="loaded"]{filter:blur(0);transform:scale(1);}
    820 leaves room for the nav to reflow a little wider on other platforms. */
 @media (max-width:860px){
   .main-nav{
-    position:fixed;inset:0 0 0 auto;top:64px;width:min(320px,85vw);
+    position:fixed;top:0;right:0;bottom:0;left:auto;top:64px;width:min(320px,85vw);
     /* 100vh is the viewport with the address bar HIDDEN. On Android Chrome
        the bar is usually showing, so a 100vh drawer runs off the bottom of
        the screen and the last item - Reserve a Seat - cannot be reached.
@@ -2639,7 +2660,7 @@ document.addEventListener('DOMContentLoaded', function(){
     wrap.setAttribute('role','dialog');
     wrap.setAttribute('aria-modal','true');
     wrap.setAttribute('aria-labelledby','zvReservedTitle');
-    wrap.style.cssText='position:fixed;inset:0;z-index:900;display:flex;align-items:center;justify-content:center;padding:1.25rem;background:rgba(30,74,53,.55);';
+    wrap.style.cssText='position:fixed;top:0;right:0;bottom:0;left:0;z-index:900;display:flex;align-items:center;justify-content:center;padding:1.25rem;background:rgba(30,74,53,.55);';
 
     var mailLine=res.confirmationSent
       ? ('A confirmation has been emailed to '+data.email+'.')
@@ -3206,7 +3227,7 @@ body.zv-hide-chat .zv-chat{
 }
 .zv-chat-tag:hover{transform:translateY(-2px);box-shadow:0 9px 20px rgba(36,56,45,.22);}
 .zv-chat-tag-dot{width:7px;height:7px;border-radius:50%;background:var(--green);position:relative;flex:none;}
-.zv-chat-tag-dot::after{content:"";position:absolute;inset:0;border-radius:50%;background:var(--green);animation:zvTagPulse 2.2s ease-out infinite;}
+.zv-chat-tag-dot::after{content:"";position:absolute;top:0;right:0;bottom:0;left:0;border-radius:50%;background:var(--green);animation:zvTagPulse 2.2s ease-out infinite;}
 .zv-chat.open .zv-chat-tag{display:none;}
 @keyframes zvTagIn{from{opacity:0;transform:translateX(10px);}to{opacity:1;transform:none;}}
 @keyframes zvTagPulse{0%{transform:scale(1);opacity:.5;}70%{transform:scale(2.4);opacity:0;}100%{transform:scale(2.4);opacity:0;}}
