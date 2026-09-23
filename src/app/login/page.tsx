@@ -28,5 +28,24 @@ export default async function LoginPage({ searchParams }: PageProps<'/login'>) {
   const raw = Array.isArray(params.email) ? params.email[0] : params.email;
   const initialEmail = typeof raw === 'string' ? raw.slice(0, 200) : '';
 
-  return <AuthForm intent="signin" next={safeNext(params.next)} initialEmail={initialEmail} />;
+  /**
+   * ?mode=password opens the password form.
+   *
+   * The page no longer offers it - signing in means an emailed code - but the
+   * code depends on our mail server and a password does not, so this stays as
+   * the way back into /admin if Gmail ever stops accepting the app password.
+   * Undocumented rather than secret: it still checks the password against
+   * Supabase like any other sign-in, so knowing the URL grants nothing.
+   */
+  const modeRaw = Array.isArray(params.mode) ? params.mode[0] : params.mode;
+  const initialMode = modeRaw === 'password' ? 'password' : 'email';
+
+  return (
+    <AuthForm
+      intent="signin"
+      next={safeNext(params.next)}
+      initialEmail={initialEmail}
+      initialMode={initialMode}
+    />
+  );
 }

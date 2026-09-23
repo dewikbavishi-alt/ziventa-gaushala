@@ -33,16 +33,27 @@ export function AuthForm({
   intent,
   next,
   initialEmail = '',
+  initialMode = 'email',
 }: {
   intent: 'signin' | 'signup';
   next: string;
   /** Carried over from the sign-up page when the account already existed. */
   initialEmail?: string;
+  /**
+   * Which form to open on.
+   *
+   * Only /login?mode=password sets this. Nothing on the page offers it any
+   * more - an emailed code is the way in - but the form is kept reachable,
+   * because the code depends on our mail server and a password does not. If
+   * Gmail ever stops accepting the app password, this is the only way back
+   * into /admin to fix it.
+   */
+  initialMode?: Mode;
 }) {
   const router = useRouter();
   const supabase = createClient();
 
-  const [mode, setMode] = useState<Mode>('email');
+  const [mode, setMode] = useState<Mode>(initialMode);
   const [email, setEmail] = useState(initialEmail);
   const [password, setPassword] = useState('');
   const [fullName, setFullName] = useState('');
@@ -359,18 +370,6 @@ export function AuthForm({
                 No password needed. We email you a code to type in here.
               </p>
 
-              {!isSignup && (
-                <button
-                  type="button"
-                  onClick={() => {
-                    setMode('password');
-                    setMessage(null);
-                  }}
-                  className="min-h-[44px] w-full text-center text-xs text-[#2F4A3D]/60 underline"
-                >
-                  Sign in with a password instead
-                </button>
-              )}
             </form>
           )}
 
