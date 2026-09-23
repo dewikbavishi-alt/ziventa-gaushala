@@ -219,7 +219,7 @@ export default async function YourAccountPage() {
         />
 
         <AccountCard
-          href="mailto:hello@ziventagaushala.com"
+          href="mailto:girbyziventagaushala@gmail.com"
           external
           title="Contact Us"
           description="Speak to us about an order or your membership"

@@ -74,10 +74,10 @@ export default async function MembershipPage() {
           <p className="mt-6 rounded-lg bg-[#FBF6EC] p-3 text-xs text-[#2F4A3D]/70">
             The deposit is fully refundable. To ask anything about your membership, write to{' '}
             <a
-              className="font-medium underline underline-offset-2"
-              href="mailto:hello@ziventagaushala.com?subject=Gir%20Gold%20Club"
+              className="font-medium break-words underline underline-offset-2"
+              href="mailto:girbyziventagaushala@gmail.com?subject=Gir%20Gold%20Club"
             >
-              hello@ziventagaushala.com
+              girbyziventagaushala@gmail.com
             </a>
             .
           </p>

@@ -67,10 +67,10 @@ export default async function SecurityPage() {
           <p className="mt-5 rounded-lg bg-[#FBF6EC] p-3 text-xs text-[#2F4A3D]/70">
             To change the email address on your account, write to{' '}
             <a
-              className="font-medium underline underline-offset-2"
-              href="mailto:hello@ziventagaushala.com?subject=Change%20my%20account%20email"
+              className="font-medium break-words underline underline-offset-2"
+              href="mailto:girbyziventagaushala@gmail.com?subject=Change%20my%20account%20email"
             >
-              hello@ziventagaushala.com
+              girbyziventagaushala@gmail.com
             </a>{' '}
             and we will move your orders across for you.
           </p>

@@ -253,7 +253,7 @@ export default async function OrdersPage({
                       ask a question about it.
                     */}
                     <a
-                      href={`mailto:hello@ziventagaushala.com?subject=${encodeURIComponent(
+                      href={`mailto:girbyziventagaushala@gmail.com?subject=${encodeURIComponent(
                         `Order ${o.orderNumber}`,
                       )}`}
                       className="rounded-lg border border-[#2F4A3D]/20 px-3.5 py-1.5 text-xs font-medium text-[#2F4A3D] transition hover:bg-[#FBF6EC] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#1E4A35]"
