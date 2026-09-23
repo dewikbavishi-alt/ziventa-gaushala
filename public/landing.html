@@ -1060,7 +1060,29 @@ Color: warm cream ground, deep gaushala-green = trust/tradition, hand-ghee gold 
 }
 *{box-sizing:border-box;}
 [hidden]{display:none !important;}
-html{scroll-behavior:smooth;overflow-x:clip;}
+/* Stop the page scrolling sideways. Reported on Android, fine on iOS.
+
+   This was `overflow-x:clip` on <html> alone. `clip` is the better of the
+   two - unlike `hidden` it does not turn the element into a scroll container,
+   which is what breaks position:sticky - but a browser that does not know the
+   value throws the whole declaration away, and then nothing stops the page
+   scrolling sideways at all. iOS Safari has understood it since 16 and
+   Android Chrome since 90, but Samsung Internet - the default browser on a
+   lot of Android phones - only from 15. That is the split.
+
+   So `hidden` first for everyone, then `clip` for browsers that support it,
+   and on both elements because setting it on <html> alone is unreliable on
+   several Android browsers.
+
+   Worth saying: nothing of ours is actually cut off by this. Audited at every
+   width from 320 to 1920 and no element genuinely overflows - the wide
+   marquee is already clipped by .trust-strip, and the cart and nav drawers
+   are position:fixed. What was scrolling into view was empty space. */
+html,body{overflow-x:hidden;}
+html{scroll-behavior:smooth;}
+@supports (overflow-x:clip){
+  html,body{overflow-x:clip;}
+}
 body{
   margin:0;
   background:var(--cream);
@@ -1202,7 +1224,7 @@ img[data-blur="loaded"]{filter:blur(0);transform:scale(1);}
 /* hero */
 .hero{
   padding:2.75rem 1.5rem clamp(165px,21vw,255px);text-align:center;position:relative;overflow:hidden;
-  min-height:min(76vh,680px);display:flex;align-items:center;justify-content:center;
+  min-height:min(76vh,680px);min-height:min(76dvh,680px);display:flex;align-items:center;justify-content:center;
 }
 
 /* Ziventa logo lockup */
@@ -2161,7 +2183,18 @@ img[data-blur="loaded"]{filter:blur(0);transform:scale(1);}
    820 leaves room for the nav to reflow a little wider on other platforms. */
 @media (max-width:860px){
   .main-nav{
-    position:fixed;inset:0 0 0 auto;top:64px;width:min(320px,85vw);height:calc(100vh - 64px);
+    position:fixed;inset:0 0 0 auto;top:64px;width:min(320px,85vw);
+    /* 100vh is the viewport with the address bar HIDDEN. On Android Chrome
+       the bar is usually showing, so a 100vh drawer runs off the bottom of
+       the screen and the last item - Reserve a Seat - cannot be reached.
+       iOS behaves differently, which is why this only shows up on Android.
+
+       dvh is the height actually visible right now. The vh line above stays
+       as the fallback for browsers that do not know dvh, and overflow-y
+       guarantees the bottom is reachable either way. */
+    height:calc(100vh - 64px);
+    height:calc(100dvh - 64px);
+    overflow-y:auto;overscroll-behavior:contain;
     background:var(--cream);border-left:1px solid var(--border);flex-direction:column;align-items:flex-start;
     padding:2rem 1.6rem;gap:1.4rem;transform:translateX(100%);
     transition:transform .25s ease, visibility .25s ease;
@@ -3086,7 +3119,7 @@ body.zv-hide-chat .zv-chat{
 
 .zv-chat-panel{
   position:absolute;right:0;bottom:calc(100% + .85rem);width:368px;max-width:88vw;
-  height:min(520px,72vh);background:var(--card-bg);border:1px solid var(--border);
+  height:min(520px,72vh);height:min(520px,72dvh);background:var(--card-bg);border:1px solid var(--border);
   border-radius:var(--radius);box-shadow:var(--shadow);display:flex;flex-direction:column;
   overflow:hidden;transform-origin:bottom right;
   animation:zvPanelIn .22s ease both;
@@ -3149,7 +3182,8 @@ body.zv-hide-chat .zv-chat{
   .zv-chat{right:1rem;bottom:4.9rem;gap:.45rem;}
   .zv-chat-tag{font-size:.7rem;padding:.32rem .6rem;}
   .zv-chat-panel{
-    position:fixed;right:.6rem;left:.6rem;bottom:4.9rem;width:auto;max-width:none;height:min(70vh,540px);
+    position:fixed;right:.6rem;left:.6rem;bottom:4.9rem;width:auto;max-width:none;
+    height:min(70vh,540px);height:min(70dvh,540px);
   }
 }
 @media (prefers-reduced-motion:reduce){
