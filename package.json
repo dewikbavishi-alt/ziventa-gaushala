@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "next build",
+    "build": "node scripts/build-site.mjs && next build",
     "start": "next start",
     "lint": "eslint",
     "typecheck": "tsc --noEmit",
@@ -21,7 +21,8 @@
     "email:render-test": "tsx scripts/email-render-test.ts",
     "test:range": "tsx scripts/range-test.ts",
     "admin:check-queries": "tsx --conditions=react-server scripts/admin-queries-check.ts",
-    "test:owner": "tsx --conditions=react-server scripts/owner-test.ts"
+    "test:owner": "tsx --conditions=react-server scripts/owner-test.ts",
+    "build:site": "node scripts/build-site.mjs"
   },
   "dependencies": {
     "@prisma/adapter-pg": "^7.10.0",
