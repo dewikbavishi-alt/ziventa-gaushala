@@ -155,13 +155,19 @@ whether someone has an account here is private.
 
 ## Checking a deployment
 
-`/api/health` reports which settings a deployment actually has. It reports
-presence only - never a value, never a key, never a connection string - so it
-is safe to leave public:
+`/api/health` reports which settings a deployment actually has. It never
+reports a key, a password or a connection string, so it is safe to leave
+public. Most checks answer "configured" or "set" rather than with the value;
+the exceptions are the mail host, the From address and the site URL, all of
+which already appear publicly on the site anyway.
 
 ```bash
-curl -s https://ziventag.vercel.app/api/health
+curl -s https://girbyziventa.com/api/health
 ```
+
+Use the real domain. `ziventag.vercel.app` still resolves, but every page on
+it now 308s to girbyziventa.com, so checking there tells you about the
+redirect rather than about the deployment.
 
 It is also the quickest way to tell whether new code reached production: the
 route did not exist before September 2026, so a 404 means production is still
