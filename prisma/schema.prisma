@@ -135,6 +135,13 @@ model Membership {
   /// Read-only rupee view, calculated by Postgres. See priceRupees on Product.
   depositRupees Decimal?         @map("deposit_rupees") @db.Decimal(12, 2) @default(dbgenerated("((\"depositPaise\")::numeric / (100)::numeric)")) @ignore
 
+  /// The one-time link emailed when a seat is approved. Cleared the moment
+  /// the deposit lands, so a forwarded email cannot be replayed to pay twice
+  /// or to reopen a settled membership.
+  depositToken     String?   @unique
+  depositTokenAt   DateTime?
+  depositPaidAt    DateTime?
+
   joinedOn DateTime?
   leftOn   DateTime?
   notes    String?

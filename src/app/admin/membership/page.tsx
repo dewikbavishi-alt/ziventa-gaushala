@@ -5,7 +5,7 @@ import { LEAD_STATUSES, LEAD_TONE, type LeadStatusKey } from '@/lib/admin/status
 import { Badge, Card, Empty, PageHeader, StatCard, TableWrap, td, th } from '@/components/admin/ui';
 import { ActionForm } from '@/components/admin/action-form';
 import { IconCheck, IconClock, IconUser, IconVisitors } from '@/components/admin/icons';
-import { updateLeadStatus } from './actions';
+import { approveMembership, updateLeadStatus } from './actions';
 
 export const metadata = { title: 'Gir Gold Club' };
 
@@ -122,6 +122,28 @@ export default async function MembershipPage() {
                           ))}
                         </select>
                       </ActionForm>
+
+                      {/*
+                        Confirming a seat is a different kind of act from moving a
+                        status along: it creates a membership, takes one of the 250
+                        seats, and emails the family a link to pay. Its own button so
+                        it cannot happen by nudging a dropdown, and hidden once the
+                        enquiry is converted or declined so it is never offered twice.
+                      */}
+                      {status !== 'converted' && status !== 'declined' && (
+                        <ActionForm
+                          action={approveMembership}
+                          submitLabel="Confirm seat"
+                          className="mt-2 flex items-center justify-end"
+                          confirm={{
+                            title: 'Confirm this seat?',
+                            body: `${l.fullName} will be given one of the 250 seats and emailed a link to pay the Rs 5,000 refundable deposit.`,
+                            confirmLabel: 'Confirm seat',
+                          }}
+                        >
+                          <input type="hidden" name="leadId" value={l.id} />
+                        </ActionForm>
+                      )}
                     </td>
                   </tr>
                 );

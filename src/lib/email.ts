@@ -473,6 +473,113 @@ export function customerLeadEmail(lead: LeadEmailData): EmailMessage {
   };
 }
 
+/**
+ * Sent when the admin confirms a seat: the deposit is now due.
+ *
+ * The link is the only way to the payment page, so it carries a token rather
+ * than the membership id - an id is guessable and would let anyone settle, or
+ * look at, someone else's seat.
+ */
+export function membershipDepositEmail(params: {
+  to: string;
+  fullName: string;
+  seatNumber: number;
+  depositPaise: number;
+  link: string;
+}): EmailMessage {
+  const amount = `Rs ${(params.depositPaise / 100).toLocaleString('en-IN')}`;
+  return {
+    to: params.to,
+    subject: `Your Gir Gold Club seat is confirmed - seat ${params.seatNumber}`,
+    html: htmlShell(
+      'Your seat is confirmed',
+      `<p style="margin:0 0 12px;font-size:14px;">Dear ${escapeHtml(params.fullName)},</p>
+       <p style="margin:0 0 12px;font-size:14px;">
+         We have confirmed your place in the Ziventa Gir Gold Club. One step remains: the
+         refundable founding deposit.
+       </p>
+       ${field('Your seat', `No. ${params.seatNumber} of 250`)}
+       ${field('Refundable deposit', amount)}
+       <p style="margin:16px 0;">
+         <a href="${escapeHtml(params.link)}"
+            style="display:inline-block;background:#1E4A35;color:#FBF6EC;text-decoration:none;
+                   padding:12px 22px;border-radius:8px;font-size:14px;font-weight:600;">
+           Pay the deposit
+         </a>
+       </p>
+       <p style="margin:0 0 12px;font-size:13px;color:#6b7d72;">
+         Or open this link: ${escapeHtml(params.link)}
+       </p>
+       <p style="margin:12px 0 0;font-size:14px;">
+         The deposit is fully refundable and simply holds your seat. From the moment it is
+         received, 20% comes off every order you place.
+       </p>`,
+      'Ziventa Gaushala',
+    ),
+    text: [
+      `Dear ${params.fullName},`,
+      '',
+      'We have confirmed your place in the Ziventa Gir Gold Club. One step',
+      'remains: the refundable founding deposit.',
+      '',
+      `Your seat: No. ${params.seatNumber} of 250`,
+      `Refundable deposit: ${amount}`,
+      '',
+      'Pay the deposit here:',
+      params.link,
+      '',
+      'The deposit is fully refundable and simply holds your seat. From the',
+      'moment it is received, 20% comes off every order you place.',
+      '',
+      'Ziventa Gaushala',
+    ].join('\n'),
+  };
+}
+
+/** Sent once the deposit lands and the membership goes active. */
+export function membershipActiveEmail(params: {
+  to: string;
+  fullName: string;
+  seatNumber: number;
+}): EmailMessage {
+  return {
+    to: params.to,
+    subject: `You are a member of the Gir Gold Club - seat ${params.seatNumber}`,
+    html: htmlShell(
+      'You are a member of our club',
+      `<p style="margin:0 0 12px;font-size:14px;">Dear ${escapeHtml(params.fullName)},</p>
+       <p style="margin:0 0 12px;font-size:16px;font-weight:600;color:#1E4A35;">
+         Your deposit has been received. You are now a member of the Ziventa Gir Gold Club.
+       </p>
+       ${field('Your seat', `No. ${params.seatNumber} of 250`)}
+       <p style="margin:12px 0;font-size:14px;">
+         From now on, 20% comes off every order automatically - you will see it in your basket
+         when you are signed in. Your deposit stays refundable for as long as you hold the seat.
+       </p>
+       <p style="margin:0;font-size:14px;">
+         Thank you for standing behind our cows. We will be in touch before each batch.
+       </p>`,
+      'Ziventa Gaushala',
+    ),
+    text: [
+      `Dear ${params.fullName},`,
+      '',
+      'Your deposit has been received. You are now a member of the Ziventa Gir',
+      'Gold Club.',
+      '',
+      `Your seat: No. ${params.seatNumber} of 250`,
+      '',
+      'From now on, 20% comes off every order automatically - you will see it',
+      'in your basket when you are signed in. Your deposit stays refundable for',
+      'as long as you hold the seat.',
+      '',
+      'Thank you for standing behind our cows.',
+      '',
+      'Ziventa Gaushala',
+    ].join('\n'),
+  };
+}
+
 export function businessLeadEmail(lead: LeadEmailData): EmailMessage {
   return {
     to: businessInbox(),
