@@ -1,6 +1,86 @@
 import type { NextConfig } from 'next';
 
+/**
+ * The browser's Supabase client calls this origin to sign in, so connect-src
+ * has to allow it or the whole auth flow is blocked by the policy.
+ */
+const SUPABASE_ORIGIN = (() => {
+  const raw = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  try {
+    return raw ? new URL(raw).origin : '';
+  } catch {
+    return '';
+  }
+})();
+
+/**
+ * Content Security Policy.
+ *
+ * 'unsafe-inline' is in script-src and style-src because the landing page is
+ * hand-written HTML with seven inline <script> blocks and its stylesheet
+ * inlined historically - removing them means hashing or nonce-ing every one,
+ * which a static file cannot do. That weakens the XSS half of CSP and is worth
+ * being honest about rather than pretending otherwise.
+ *
+ * The rest still earns its place, and none of it depends on inline scripts:
+ *   frame-ancestors  nobody can put this site in an iframe, so the checkout
+ *                    cannot be framed and clicked through invisibly
+ *   form-action      a form cannot be made to submit to someone else's server
+ *   base-uri         an injected <base> cannot re-point every relative URL
+ *   object-src       no Flash/applet embedding
+ *   default-src      nothing loads from a third party; the page already loads
+ *                    zero external scripts, so this locks that in
+ */
+/**
+ * React uses eval() in development for its debugging tools - reconstructing
+ * stack traces across environments, mainly - and refuses to start without it,
+ * so `next dev` under this policy is a wall of errors. It never uses eval in
+ * production, so the allowance is scoped to development only and the shipped
+ * policy stays strict.
+ */
+const DEV = process.env.NODE_ENV === 'development';
+
+const csp = [
+  "default-src 'self'",
+  `script-src 'self' 'unsafe-inline'${DEV ? " 'unsafe-eval'" : ''}`,
+  "style-src 'self' 'unsafe-inline'",
+  "img-src 'self' data: blob:",
+  "font-src 'self'",
+  `connect-src 'self'${SUPABASE_ORIGIN ? ' ' + SUPABASE_ORIGIN : ''}`,
+  "form-action 'self'",
+  "frame-ancestors 'none'",
+  "base-uri 'self'",
+  "object-src 'none'",
+  'upgrade-insecure-requests',
+].join('; ');
+
 const nextConfig: NextConfig = {
+  async headers() {
+    return [
+      {
+        // Everything, including the static pages served through the rewrites
+        // below, which are what a visitor actually lands on.
+        source: '/:path*',
+        headers: [
+          { key: 'Content-Security-Policy', value: csp },
+          // Older browsers that do not read frame-ancestors.
+          { key: 'X-Frame-Options', value: 'DENY' },
+          // Stops a .txt or .json being sniffed and run as script.
+          { key: 'X-Content-Type-Options', value: 'nosniff' },
+          // Send the origin to other sites, never the full path - so a
+          // /your-account/orders?... URL is not handed to whatever is linked.
+          { key: 'Referrer-Policy', value: 'strict-origin-when-cross-origin' },
+          // Hardware this site never uses. Denying it means an injected
+          // script cannot quietly ask for it either.
+          {
+            key: 'Permissions-Policy',
+            value: 'camera=(), microphone=(), geolocation=(), payment=(), usb=()',
+          },
+        ],
+      },
+    ];
+  },
+
   async rewrites() {
     return {
       /**
