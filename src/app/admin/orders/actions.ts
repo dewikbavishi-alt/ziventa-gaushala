@@ -5,6 +5,7 @@ import { z } from 'zod';
 import { prisma } from '@/lib/prisma';
 import { requireAdmin } from '@/lib/admin';
 import { canMove, ORDER_LABEL, ORDER_STATUSES, type OrderStatusKey } from '@/lib/admin/status';
+import { restoreStock } from '@/lib/orders';
 import type { ActionResult } from '@/components/admin/action-form';
 
 /**
@@ -68,7 +69,14 @@ export async function changeStatus(
 
   const order = await prisma.order.findUnique({
     where: { id: orderId },
-    select: { status: true, orderNumber: true },
+    select: {
+      status: true,
+      orderNumber: true,
+      // Never changes after the order is placed, so it is safe to read out
+      // here. The racy stamp is stockReleasedAt, guarded in the WHERE below.
+      stockReservedAt: true,
+      items: { select: { productId: true, productName: true, quantity: true } },
+    },
   });
   if (!order) return fail('That order no longer exists.');
 
@@ -82,24 +90,59 @@ export async function changeStatus(
   }
 
   const stamp = STAMP[next];
-  const result = await prisma.order.updateMany({
-    // Optimistic concurrency: only succeeds if nobody moved it meanwhile.
-    where: { id: orderId, status: current },
-    data: {
-      status: next,
-      ...(stamp ? { [stamp]: new Date() } : {}),
-      ...(next === 'CANCELLED' && cancelReason ? { cancelReason } : {}),
-      ...(next === 'DISPATCHED' && courier ? { courier } : {}),
-      ...(next === 'DISPATCHED' && trackingNumber ? { trackingNumber } : {}),
-    },
+
+  /**
+   * Cancelling or returning puts the units back on the shelf - but only for an
+   * order that took any in the first place.
+   *
+   * Orders placed before stock was reserved at checkout carry no
+   * stockReservedAt. Handing units back for one of those would invent
+   * inventory out of an old cancellation, so they are left alone.
+   */
+  const releasing =
+    (next === 'CANCELLED' || next === 'RETURNED') && order.stockReservedAt !== null;
+
+  const moved = await prisma.$transaction(async (tx) => {
+    const result = await tx.order.updateMany({
+      // Optimistic concurrency: only succeeds if nobody moved it meanwhile.
+      where: {
+        id: orderId,
+        status: current,
+        // And, for a release, only if it has not already been released. This
+        // is what makes the increment below run exactly once per order even
+        // if two admins press cancel together.
+        ...(releasing ? { stockReleasedAt: null } : {}),
+      },
+      data: {
+        status: next,
+        ...(stamp ? { [stamp]: new Date() } : {}),
+        ...(next === 'CANCELLED' && cancelReason ? { cancelReason } : {}),
+        ...(next === 'DISPATCHED' && courier ? { courier } : {}),
+        ...(next === 'DISPATCHED' && trackingNumber ? { trackingNumber } : {}),
+        ...(releasing ? { stockReleasedAt: new Date() } : {}),
+      },
+    });
+
+    if (result.count === 0) return false;
+
+    // Same transaction as the status move: the order is never left cancelled
+    // with its stock still held, nor the stock returned without the cancel.
+    if (releasing) await restoreStock(tx, order.items);
+
+    return true;
   });
 
-  if (result.count === 0) {
+  if (!moved) {
     return fail('Someone else changed this order a moment ago. Reload to see it.');
   }
 
   refresh(orderId);
-  return { ok: true, message: `${order.orderNumber} marked ${ORDER_LABEL[next].toLowerCase()}.` };
+  return {
+    ok: true,
+    message: releasing
+      ? `${order.orderNumber} marked ${ORDER_LABEL[next].toLowerCase()} and its stock returned.`
+      : `${order.orderNumber} marked ${ORDER_LABEL[next].toLowerCase()}.`,
+  };
 }
 
 /**

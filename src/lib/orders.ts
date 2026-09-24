@@ -1,5 +1,6 @@
 import crypto from 'node:crypto';
 import { prisma } from './prisma';
+import type { Prisma } from '@/generated/prisma/client';
 
 /** Rs 99 delivery, free over Rs 1,500. Stored in paise. */
 export const SHIPPING_PAISE = 9_900;
@@ -75,6 +76,29 @@ export async function priceCart(lines: CartLine[]) {
     throw new CartError(`No longer available: ${missing.join(', ')}`, 409);
   }
 
+  /**
+   * Refuse what we cannot supply, before anything is charged or recorded.
+   *
+   * This is a courtesy, not the guard. It gives the customer a message that
+   * names the product and the number left, which reserveStock cannot do
+   * without a second read. The guard is the conditional UPDATE in
+   * reserveStock, because between this check and that write another order can
+   * always land.
+   */
+  for (const [slug, quantity] of wanted) {
+    const product = bySlug.get(slug)!;
+    if (product.stockCount === null) continue; // Not a counted product.
+    if (product.stockCount === 0) {
+      throw new CartError(`${product.name} has just sold out.`, 409);
+    }
+    if (product.stockCount < quantity) {
+      throw new CartError(
+        `Only ${product.stockCount} left of ${product.name}. Please lower the quantity.`,
+        409,
+      );
+    }
+  }
+
   const items = [...wanted.entries()].map(([slug, quantity]) => {
     const product = bySlug.get(slug)!;
     return {
@@ -85,8 +109,92 @@ export async function priceCart(lines: CartLine[]) {
     };
   });
 
+  /**
+   * Only the products we actually count. Kept apart from `items` because that
+   * array is passed straight to Prisma as the OrderItem rows to create, and
+   * an extra field there would be rejected.
+   */
+  const tracked: StockLine[] = [...wanted.entries()]
+    .filter(([slug]) => bySlug.get(slug)!.stockCount !== null)
+    .map(([slug, quantity]) => {
+      const product = bySlug.get(slug)!;
+      return { productId: product.id, productName: product.name, quantity };
+    });
+
   const subtotalPaise = items.reduce((sum, i) => sum + i.unitPricePaise * i.quantity, 0);
   const shippingPaise = subtotalPaise >= FREE_SHIPPING_OVER_PAISE ? 0 : SHIPPING_PAISE;
 
-  return { items, subtotalPaise, shippingPaise, totalPaise: subtotalPaise + shippingPaise };
+  return {
+    items,
+    tracked,
+    subtotalPaise,
+    shippingPaise,
+    totalPaise: subtotalPaise + shippingPaise,
+  };
+}
+
+export interface StockLine {
+  productId: string;
+  productName: string;
+  quantity: number;
+}
+
+/**
+ * Take the ordered units out of stock.
+ *
+ * MUST be called inside a transaction, alongside the order insert, so the sale
+ * and the stock movement either both happen or neither does. An order recorded
+ * without its decrement oversells; a decrement without its order loses stock
+ * that was never sold.
+ *
+ * The availability test lives in the WHERE clause rather than in a read
+ * beforehand:
+ *
+ *   UPDATE products SET stockCount = stockCount - 2
+ *    WHERE id = ... AND stockCount >= 2
+ *
+ * Postgres locks the row and evaluates that condition itself, so when two
+ * customers reach for the last two jars at the same moment, the second finds
+ * the condition false and matches nothing. Reading the count first and
+ * deciding in JavaScript is the bug this avoids: both requests would read 2,
+ * both would decide it was fine, and one family would get an email for a jar
+ * that does not exist.
+ *
+ * Throwing rolls the transaction back, which is how the whole order is
+ * abandoned rather than half-written.
+ */
+export async function reserveStock(tx: Prisma.TransactionClient, lines: StockLine[]) {
+  for (const line of lines) {
+    const claimed = await tx.product.updateMany({
+      where: { id: line.productId, stockCount: { gte: line.quantity } },
+      data: { stockCount: { decrement: line.quantity } },
+    });
+
+    if (claimed.count === 0) {
+      // Either it sold out in the moment since priceCart looked, or somebody
+      // untracked it. Both mean: do not promise this order.
+      throw new CartError(
+        `${line.productName} sold out while you were checking out. Nothing has been ordered.`,
+        409,
+      );
+    }
+  }
+}
+
+/**
+ * Give the units back, for an order that is cancelled or returned.
+ *
+ * Only ever called for an order that reserved stock in the first place and has
+ * not been released yet - see releaseOrderStock in the admin action, which
+ * checks both stamps inside the same transaction that moves the status.
+ */
+export async function restoreStock(tx: Prisma.TransactionClient, lines: StockLine[]) {
+  for (const line of lines) {
+    // Untracked products are skipped: null + 2 is null, and a product that is
+    // not counted must not suddenly acquire a count from a cancellation.
+    await tx.product.updateMany({
+      where: { id: line.productId, stockCount: { not: null } },
+      data: { stockCount: { increment: line.quantity } },
+    });
+  }
 }

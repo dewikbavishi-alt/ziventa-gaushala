@@ -302,6 +302,17 @@ model Order {
   cancelledAt  DateTime?
   returnedAt   DateTime?
 
+  /// When this order took units out of stock, and when it gave them back.
+  ///
+  /// Two timestamps rather than one boolean, for the same reason as the
+  /// statuses above: "when" answers questions later that "whether" cannot.
+  ///
+  /// Both are null on every order placed before stock was reserved at all.
+  /// That is the point - cancelling one of those must not hand back inventory
+  /// it never took. stockReleasedAt also makes the release idempotent.
+  stockReservedAt DateTime?
+  stockReleasedAt DateTime?
+
   placedAt  DateTime @default(now())
   updatedAt DateTime @updatedAt
 

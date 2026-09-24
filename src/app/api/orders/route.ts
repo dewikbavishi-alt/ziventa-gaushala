@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 import { z } from 'zod';
 import { prisma } from '@/lib/prisma';
-import { CartError, generateOrderNumber, priceCart } from '@/lib/orders';
+import { CartError, generateOrderNumber, priceCart, reserveStock } from '@/lib/orders';
 import { getCurrentUser } from '@/lib/supabase/server';
 import { syncCustomer } from '@/lib/auth';
 import { businessOrderEmail, customerOrderEmail, sendEmail } from '@/lib/email';
@@ -88,31 +88,93 @@ export async function POST(request: Request) {
   const contactEmail = input.customer.email.toLowerCase();
 
   /**
-   * Same customer, same total, within two minutes - almost certainly one order
-   * sent twice rather than two orders.
+   * Taking the stock and recording the sale happen together, or not at all.
    *
-   * The checkout button disables on click, but a retry after a dropped
-   * connection or a replayed request still arrives as a second POST, and the
-   * cost of getting this wrong is a family charged and delivered twice.
-   * Matching on total as well as email keeps a genuine second, different order
-   * from being swallowed. Two minutes is short enough that reordering the same
-   * thing deliberately still works.
+   * Three things have to agree: this is not a replayed submission, the units
+   * are actually available, and the order is written down. Done as three
+   * separate statements, a failure between them leaves the shop lying - stock
+   * gone with no order to show for it, or an order promising jars that were
+   * never claimed. Inside one transaction there is no such in-between state.
+   *
+   * The duplicate check moved in here for the same reason: two copies of one
+   * submission arriving together used to be able to pass the check side by
+   * side and both go on to reserve stock.
    */
-  const duplicate = await prisma.order.findFirst({
-    where: {
-      contactEmail,
-      totalPaise: cart.totalPaise,
-      placedAt: { gte: new Date(Date.now() - 2 * 60 * 1000) },
-    },
-    orderBy: { placedAt: 'desc' },
-  });
+  let result;
+  try {
+    result = await prisma.$transaction(async (tx) => {
+      /**
+       * Same customer, same total, within two minutes - almost certainly one
+       * order sent twice rather than two orders.
+       *
+       * The checkout button disables on click, but a retry after a dropped
+       * connection or a replayed request still arrives as a second POST, and
+       * the cost of getting this wrong is a family charged and delivered
+       * twice. Matching on total as well as email keeps a genuine second,
+       * different order from being swallowed. Two minutes is short enough that
+       * reordering the same thing deliberately still works.
+       */
+      const duplicate = await tx.order.findFirst({
+        where: {
+          contactEmail,
+          totalPaise: cart.totalPaise,
+          placedAt: { gte: new Date(Date.now() - 2 * 60 * 1000) },
+        },
+        orderBy: { placedAt: 'desc' },
+        select: { orderNumber: true, totalPaise: true },
+      });
 
-  if (duplicate) {
+      if (duplicate) {
+        // Returns before reserving anything, so a resend never takes stock a
+        // second time for the same order.
+        return { kind: 'duplicate' as const, duplicate };
+      }
+
+      // Throws a CartError if anything sold out in the meantime, which rolls
+      // this whole transaction back and records no order.
+      await reserveStock(tx, cart.tracked);
+
+      const order = await tx.order.create({
+        data: {
+          orderNumber: generateOrderNumber(),
+          customerId,
+          contactName: input.customer.name,
+          contactEmail,
+          contactPhone: input.customer.phone,
+          shipLine1: input.address.line1,
+          shipLine2: input.address.line2 || null,
+          shipCity: input.address.city,
+          shipState: input.address.state,
+          shipPostcode: input.address.postcode,
+          shipCountry: input.address.country,
+          subtotalPaise: cart.subtotalPaise,
+          shippingPaise: cart.shippingPaise,
+          totalPaise: cart.totalPaise,
+          notes: input.notes || null,
+          // Stamped in the same write as the decrement above, so this can
+          // never claim a reservation that did not happen. Cancelling the
+          // order later reads this to decide whether to give the units back.
+          stockReservedAt: new Date(),
+          items: { create: cart.items },
+        },
+        include: { items: true },
+      });
+
+      return { kind: 'created' as const, order };
+    });
+  } catch (err) {
+    if (err instanceof CartError) {
+      return NextResponse.json({ error: err.message }, { status: err.status });
+    }
+    throw err;
+  }
+
+  if (result.kind === 'duplicate') {
     return NextResponse.json(
       {
         ok: true,
-        orderNumber: duplicate.orderNumber,
-        amountPaise: duplicate.totalPaise,
+        orderNumber: result.duplicate.orderNumber,
+        amountPaise: result.duplicate.totalPaise,
         duplicate: true,
         // Not recorded for the original order, so this branch cannot know.
         // Saying false is honest; saying true would promise an email that may
@@ -124,27 +186,7 @@ export async function POST(request: Request) {
     );
   }
 
-  const order = await prisma.order.create({
-    data: {
-      orderNumber: generateOrderNumber(),
-      customerId,
-      contactName: input.customer.name,
-      contactEmail,
-      contactPhone: input.customer.phone,
-      shipLine1: input.address.line1,
-      shipLine2: input.address.line2 || null,
-      shipCity: input.address.city,
-      shipState: input.address.state,
-      shipPostcode: input.address.postcode,
-      shipCountry: input.address.country,
-      subtotalPaise: cart.subtotalPaise,
-      shippingPaise: cart.shippingPaise,
-      totalPaise: cart.totalPaise,
-      notes: input.notes || null,
-      items: { create: cart.items },
-    },
-    include: { items: true },
-  });
+  const { order } = result;
 
   /**
    * The order is committed before any email is attempted. Email is a
