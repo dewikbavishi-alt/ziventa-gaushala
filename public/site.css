@@ -693,16 +693,6 @@ img[data-blur="loaded"]{filter:blur(0);transform:scale(1);}
 .pricing-cap i{width:16px;height:16px;}
 
 /* instagram */
-.instagram{padding:2.7rem 1.5rem;text-align:center;background:var(--card-bg);}
-.insta-grid{max-width:620px;margin:0 auto 1.4rem;display:grid;grid-template-columns:repeat(6,1fr);gap:.5rem;}
-.insta-tile{
-  aspect-ratio:1;border-radius:11px;background:linear-gradient(150deg,var(--c1),var(--c2));
-  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:.4rem;color:var(--ink);
-  transition:transform .2s ease;
-}
-.insta-tile:hover{transform:scale(1.03);}
-.insta-tile i{width:26px;height:26px;}
-.insta-tile span{font-size:.82rem;font-weight:700;}
 
 /* join */
 .join{padding:2.7rem 1.5rem;background:var(--cream-alt);border-top:1px solid var(--border);}
@@ -1155,7 +1145,7 @@ img[data-blur="loaded"]{filter:blur(0);transform:scale(1);}
 }
 .stat-value{font-weight:700;letter-spacing:-.02em;}
 .cart-total strong,.pricing-row strong{font-weight:700;}
-.cart-row,.pricing-row,.co-summary,.qty span,.ritual-tag,.insta-tile span,.cart-unit{
+.cart-row,.pricing-row,.co-summary,.qty span,.ritual-tag,.cart-unit{
   font-variant-numeric:tabular-nums;
   font-feature-settings:"tnum" 1;
 }
@@ -1180,14 +1170,11 @@ img[data-blur="loaded"]{filter:blur(0);transform:scale(1);}
    percentage padding reserves the height without disturbing it - percentage
    padding resolves against WIDTH, which is what makes the ratio work. The two
    herd boxes have a fixed 94px width, so they can just be told their height.
-   .insta-tile is a flex container, where a pseudo-element would become a flex
-   item and break the centring, so it gets a minimum instead - not a perfect
-   square at every width, but never a collapsed one. */
+   width, so they can just be told their height. */
 @supports not (aspect-ratio: 1 / 1){
   .shop-media::before{content:"";display:block;padding-bottom:66.667%;}
   .herd-avatar{height:94px;}
   .herd-avatar .cell{height:125px;}
-  .insta-tile{min-height:90px;}
 }
 
 /* ===== touch targets =====
@@ -1294,7 +1281,6 @@ img[data-blur="loaded"]{filter:blur(0);transform:scale(1);}
   .gallery-grid{grid-template-columns:repeat(2,1fr);gap:.7rem;}
   .gallery-item img{height:132px;}
   .gallery-item figcaption{font-size:.74rem;padding:1.2rem .7rem .6rem;}
-  .insta-grid{grid-template-columns:repeat(3,1fr);}
   .footer-inner{grid-template-columns:1fr;}
 
   .hero{min-height:auto;padding:2.25rem 1.25rem clamp(210px,55vw,300px);}
