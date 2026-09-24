@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import { getCurrentUser } from '@/lib/supabase/server';
+import { isActiveMember, MEMBER_DISCOUNT_PERCENT } from '@/lib/orders';
 
 /**
  * Who is signed in, if anyone.
@@ -26,8 +27,22 @@ export async function GET() {
     user.phone ??
     'your account';
 
+  /**
+   * Whether the cart should show the member rate.
+   *
+   * For display only. The price charged is worked out again in priceCart from
+   * the same membership record, so a browser that lies about this sees a
+   * discount it does not get - the order comes back at the ordinary price.
+   */
+  const member = await isActiveMember(user.id);
+
   return NextResponse.json(
-    { signedIn: true, label },
+    {
+      signedIn: true,
+      label,
+      member,
+      memberDiscountPercent: member ? MEMBER_DISCOUNT_PERCENT : 0,
+    },
     // Never cache this - a shared cache would show one person's name to another.
     { headers: { 'Cache-Control': 'no-store' } },
   );

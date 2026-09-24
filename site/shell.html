@@ -266,6 +266,7 @@ Color: warm cream ground, deep gaushala-green = trust/tradition, hand-ghee gold 
   <div class="cart-body" id="cartBody"></div>
   <div class="cart-foot" id="cartFoot">
     <div class="cart-row"><span>Subtotal</span><strong id="cartSubtotal">₹0</strong></div>
+    <div class="cart-row cart-member" id="cartMemberRow" hidden><span>Gir Gold Club &minus;20%</span><strong id="cartMemberOff">₹0</strong></div>
     <div class="cart-row"><span>Delivery</span><strong id="cartDelivery">—</strong></div>
     <div class="cart-row cart-total"><span>Total</span><strong id="cartTotal">₹0</strong></div>
     <p class="cart-note" id="cartFreeNote"></p>
@@ -707,7 +708,12 @@ document.addEventListener('DOMContentLoaded', function(){
     fetch('/api/me',{credentials:'same-origin',cache:'no-store'})
       .then(function(r){ return r.ok ? r.json() : {signedIn:false}; })
       ['catch'](function(){ return {signedIn:false}; })
-      .then(renderSigninStrips);
+      .then(function(me){
+        renderSigninStrips(me);
+        /* The cart is built in its own scope and has already rendered by now,
+           so tell it rather than reaching into it. */
+        document.dispatchEvent(new CustomEvent('zv:me',{detail:me}));
+      });
   }
   refreshSigninState();
 
@@ -897,7 +903,15 @@ document.addEventListener('DOMContentLoaded', function(){
 <script>
 (function(){
   function boot(){
-    var KEY='ziventa_cart_v1', FREE_OVER=1500, FEE=79;
+    /* These must match SHIPPING_PAISE and FREE_SHIPPING_OVER_PAISE in
+       src/lib/orders.ts, which is what actually gets charged. FEE was 79
+       here against 99 on the server, so the cart quoted Rs 879 on an
+       Rs 800 order and the customer was billed Rs 899. */
+    var KEY='ziventa_cart_v1', FREE_OVER=1500, FEE=99;
+    /* Gir Gold Club rate. Display only - priceCart works it out again
+       server-side, so editing this in the browser changes what is shown
+       and nothing about what is charged. */
+    var MEMBER_OFF=20, isMember=false;
     var cart={};
     try{ cart=JSON.parse(localStorage.getItem(KEY))||{}; }catch(e){ cart={}; }
 
@@ -906,6 +920,7 @@ document.addEventListener('DOMContentLoaded', function(){
       drawer:document.getElementById('cart'), close:document.getElementById('cartClose'),
       body:document.getElementById('cartBody'), foot:document.getElementById('cartFoot'),
       sub:document.getElementById('cartSubtotal'), del:document.getElementById('cartDelivery'),
+      memRow:document.getElementById('cartMemberRow'), memOff:document.getElementById('cartMemberOff'),
       tot:document.getElementById('cartTotal'), free:document.getElementById('cartFreeNote'),
       scrim:document.getElementById('scrim'), toCheckout:document.getElementById('toCheckout'),
       modal:document.getElementById('checkout'), coClose:document.getElementById('coClose'),
@@ -927,9 +942,23 @@ document.addEventListener('DOMContentLoaded', function(){
     function inr(n){ return '₹'+Math.round(n).toLocaleString('en-IN'); }
     function items(){ return Object.keys(cart); }
     function count(){ var c=0; items().forEach(function(k){ c+=cart[k].qty; }); return c; }
+    document.addEventListener('zv:me', function(e){
+      var me=e.detail||{};
+      var next = me.signedIn===true && me.member===true;
+      if(next===isMember) return;
+      isMember=next;
+      if(me.memberDiscountPercent) MEMBER_OFF=me.memberDiscountPercent;
+      renderCart();
+    });
+
     function subtotal(){ var s=0; items().forEach(function(k){ s+=cart[k].qty*cart[k].price; }); return s; }
+    /* Taken off the basket, not each line, and rounded once - the same way
+       priceCart does it, so the figure here matches the one charged. */
+    function memberOff(){ return isMember ? Math.round(subtotal()*MEMBER_OFF/100) : 0; }
+    /* Judged on what was ordered, before the discount, so a member's benefit
+       can never push them back under the free-delivery threshold. */
     function shipping(){ var s=subtotal(); return (s===0||s>=FREE_OVER)?0:FEE; }
-    function total(){ return subtotal()+shipping(); }
+    function total(){ return subtotal()-memberOff()+shipping(); }
     function icons(){ if(window.lucide){ try{ lucide.createIcons(); }catch(e){} } }
 
     function renderCart(){
@@ -980,6 +1009,11 @@ document.addEventListener('DOMContentLoaded', function(){
       }
       var s=subtotal(), sh=shipping();
       els.sub.textContent=inr(s);
+      if(els.memRow){
+        var off=memberOff();
+        els.memRow.hidden = off<=0;
+        if(els.memOff) els.memOff.textContent='−'+inr(off);
+      }
       els.del.textContent=(s===0)?'—':(sh===0?'Free':inr(sh));
       els.tot.textContent=inr(total());
       els.free.textContent=(s>0&&FREE_OVER>s)?('Add '+inr(FREE_OVER-s)+' more for free delivery.'):(s>0?'Free delivery applied · member rates':'');
@@ -1049,6 +1083,9 @@ document.addEventListener('DOMContentLoaded', function(){
       items().forEach(function(k){
         h+='<div class="cart-row"><span>'+cart[k].qty+'× '+cart[k].name.replace(/[<]/g,'&lt;')+'</span><strong>'+inr(cart[k].qty*cart[k].price)+'</strong></div>';
       });
+      if(memberOff()>0){
+        h+='<div class="cart-row cart-member"><span>Gir Gold Club −20%</span><strong>−'+inr(memberOff())+'</strong></div>';
+      }
       h+='<div class="cart-row"><span>Delivery</span><strong>'+(shipping()===0?'Free':inr(shipping()))+'</strong></div>';
       h+='<div class="cart-row cart-total"><span>Total</span><strong>'+inr(total())+'</strong></div>';
       return h;

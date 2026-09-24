@@ -5,6 +5,28 @@ import { prisma } from './prisma';
 export const SHIPPING_PAISE = 9_900;
 export const FREE_SHIPPING_OVER_PAISE = 150_000;
 
+/** What a Gir Gold Club member comes off the listed price. */
+export const MEMBER_DISCOUNT_PERCENT = 20;
+
+/**
+ * Whether this customer is entitled to the member rate.
+ *
+ * Looked up here, from the database, and never taken from the request. The
+ * browser has no say in it: a page edited to claim membership still gets the
+ * ordinary price, because nothing in the order payload is consulted.
+ *
+ * ACTIVE only. A PENDING seat has not been confirmed, and PAUSED or LEFT are
+ * former members - none of them should be charged as a member today.
+ */
+export async function isActiveMember(customerId: string | null): Promise<boolean> {
+  if (!customerId) return false;
+  const membership = await prisma.membership.findUnique({
+    where: { customerId },
+    select: { status: true },
+  });
+  return membership?.status === 'ACTIVE';
+}
+
 export class CartError extends Error {
   constructor(
     message: string,
@@ -50,7 +72,7 @@ export interface CartLine {
  * their browser cannot change what they get charged, because the request has
  * no price field to tamper with in the first place.
  */
-export async function priceCart(lines: CartLine[]) {
+export async function priceCart(lines: CartLine[], opts: { isMember?: boolean } = {}) {
   if (lines.length === 0) throw new CartError('Your cart is empty');
 
   // Merge duplicate lines rather than trusting the browser to have done it.
@@ -86,8 +108,32 @@ export async function priceCart(lines: CartLine[]) {
   });
 
   const subtotalPaise = items.reduce((sum, i) => sum + i.unitPricePaise * i.quantity, 0);
-  const shippingPaise =
-    subtotalPaise >= FREE_SHIPPING_OVER_PAISE ? 0 : SHIPPING_PAISE;
 
-  return { items, subtotalPaise, shippingPaise, totalPaise: subtotalPaise + shippingPaise };
+  /**
+   * The member discount, taken off the whole basket rather than each line.
+   *
+   * Per line it would round six times instead of once, and the rounding error
+   * would show up as a total that does not match the sum of what is printed
+   * above it - the sort of penny gap a customer notices and nobody can
+   * explain. Rounded to a whole paise because money is an integer here.
+   */
+  const discountPaise = opts.isMember
+    ? Math.round((subtotalPaise * MEMBER_DISCOUNT_PERCENT) / 100)
+    : 0;
+
+  /**
+   * Free delivery is judged on what was ordered, not on what is paid after
+   * the discount. Otherwise a member's benefit could push them back under the
+   * threshold and hand them a delivery charge a non-member spending the same
+   * would not get - a discount that costs you money reads as a bug.
+   */
+  const shippingPaise = subtotalPaise >= FREE_SHIPPING_OVER_PAISE ? 0 : SHIPPING_PAISE;
+
+  return {
+    items,
+    subtotalPaise,
+    discountPaise,
+    shippingPaise,
+    totalPaise: subtotalPaise - discountPaise + shippingPaise,
+  };
 }
