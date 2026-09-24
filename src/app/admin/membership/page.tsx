@@ -5,12 +5,10 @@ import { LEAD_STATUSES, LEAD_TONE, type LeadStatusKey } from '@/lib/admin/status
 import { Badge, Card, Empty, PageHeader, StatCard, TableWrap, td, th } from '@/components/admin/ui';
 import { ActionForm } from '@/components/admin/action-form';
 import { IconCheck, IconClock, IconUser, IconVisitors } from '@/components/admin/icons';
+import { SEATS } from '@/lib/membership';
 import { approveMembership, updateLeadStatus } from './actions';
 
 export const metadata = { title: 'Gir Gold Club' };
-
-/** The founding membership is capped here and by a CHECK in the database. */
-const SEATS = 250;
 
 export default async function MembershipPage() {
   if (!(await getAdminUser())) return null;
@@ -18,7 +16,12 @@ export default async function MembershipPage() {
   const [leads, byStatus, members, seated] = await Promise.all([
     prisma.lead.findMany({ orderBy: { createdAt: 'desc' }, take: 200 }),
     prisma.lead.groupBy({ by: ['status'], _count: { _all: true } }),
-    prisma.membership.count(),
+    /**
+     * Seats actually held. A family who has left has seatNumber NULL and must
+     * not be counted - otherwise the club looks full while seats stand empty,
+     * which is exactly what releasing a seat is meant to prevent.
+     */
+    prisma.membership.count({ where: { seatNumber: { not: null } } }),
     /**
      * Who actually holds a seat, by email.
      *
@@ -29,13 +32,18 @@ export default async function MembershipPage() {
      * labelled converted but never given a seat, which is exactly the state
      * three of these were in.
      */
-    prisma.membership.findMany({ select: { seatNumber: true, customer: { select: { email: true } } } }),
+    prisma.membership.findMany({
+      // Only families who hold a seat right now. One who has left should be
+      // offered "Confirm seat" again, not told they already hold one.
+      where: { seatNumber: { not: null } },
+      select: { seatNumber: true, customer: { select: { email: true } } },
+    }),
   ]);
 
   const seatByEmail = new Map(
     seated
       .filter((m) => m.customer.email)
-      .map((m) => [m.customer.email!.toLowerCase(), m.seatNumber]),
+      .map((m) => [m.customer.email!.toLowerCase(), m.seatNumber!]),
   );
 
   const count = (s: string) => byStatus.find((b) => b.status === s)?._count._all ?? 0;
@@ -50,11 +58,17 @@ export default async function MembershipPage() {
       />
 
       <div className="grid grid-cols-2 gap-3 md:grid-cols-4">
+        {/* The way in to the members list, where a seat can be released. */}
         <StatCard
           label="Seats taken"
           value={`${num(members)} / ${SEATS}`}
-          hint={<span className="text-xs text-a-muted">{num(SEATS - members)} left</span>}
+          hint={
+            <span className="text-xs text-a-gold">
+              {num(SEATS - members)} free &middot; manage seats
+            </span>
+          }
           icon={<IconUser />}
+          href="/admin/membership/seats"
         />
         <StatCard label="Enquiries" value={num(total)} icon={<IconVisitors />} tone="blue" />
         <StatCard

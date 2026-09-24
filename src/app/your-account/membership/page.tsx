@@ -11,12 +11,17 @@ const rs = (paise: number) =>
     maximumFractionDigits: 2,
   })}`;
 
-/** Database words are not customer words. */
+/**
+ * Database words are not customer words.
+ *
+ * LEFT, not CANCELLED - this used to list a status the enum does not have, so
+ * a family who had left would have been shown the raw word "LEFT".
+ */
 const STATUS_TEXT: Record<string, string> = {
   PENDING: 'Awaiting confirmation',
   ACTIVE: 'Active',
   PAUSED: 'Paused',
-  CANCELLED: 'Cancelled',
+  LEFT: 'Ended',
 };
 
 const DEPOSIT_TEXT: Record<string, string> = {
@@ -40,9 +45,31 @@ export default async function MembershipPage() {
     >
       {m ? (
         <div className="rounded-2xl border border-[#2F4A3D]/12 bg-white p-6 sm:p-8">
-          <p className="text-sm text-[#2F4A3D]/60">Your seat</p>
-          <p className="mt-1 text-4xl font-semibold text-[#1E4A35]">Seat {m.seatNumber}</p>
-          <p className="mt-1 text-sm text-[#2F4A3D]/65">One of only 250 founding families.</p>
+          {/*
+            A membership that has ended has no seat number - it went back to
+            the 250 for another family. Saying "Seat" followed by nothing would
+            look like a fault, so the card says plainly that it has ended and
+            which seat it was.
+          */}
+          {m.seatNumber !== null ? (
+            <>
+              <p className="text-sm text-[#2F4A3D]/60">Your seat</p>
+              <p className="mt-1 text-4xl font-semibold text-[#1E4A35]">Seat {m.seatNumber}</p>
+              <p className="mt-1 text-sm text-[#2F4A3D]/65">One of only 250 founding families.</p>
+            </>
+          ) : (
+            <>
+              <p className="text-sm text-[#2F4A3D]/60">Your membership</p>
+              <p className="mt-1 text-2xl font-semibold text-[#2F4A3D]">Ended</p>
+              <p className="mt-1 text-sm text-[#2F4A3D]/65">
+                {m.formerSeatNumber !== null
+                  ? `You held seat ${m.formerSeatNumber}. `
+                  : ''}
+                Thank you for being one of the founding families. You are welcome back whenever you
+                like.
+              </p>
+            </>
+          )}
 
           <dl className="mt-6 grid gap-4 border-t border-[#2F4A3D]/10 pt-5 sm:grid-cols-3">
             <div>

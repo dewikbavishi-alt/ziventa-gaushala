@@ -126,7 +126,19 @@ model Membership {
   customer   Customer @relation(fields: [customerId], references: [id], onDelete: Cascade)
 
   /// 1..250. Unique, so two families can never hold the same seat.
-  seatNumber Int @unique
+  ///
+  /// Null once a family leaves. Postgres allows any number of NULLs in a
+  /// unique index, which is what lets the seat pass to the next family while
+  /// the departed family's record stays exactly where it is. A membership
+  /// with no seatNumber does not count towards the 250.
+  seatNumber Int? @unique
+
+  /// The seat they used to hold, kept when the seat is released.
+  ///
+  /// Their history should not evaporate because they left, and if they come
+  /// back we can tell them which seat was theirs. Not unique: over years, one
+  /// seat number may have been held by several families in turn.
+  formerSeatNumber Int?
 
   status        MembershipStatus @default(PENDING)
   depositStatus DepositStatus    @default(UNPAID)

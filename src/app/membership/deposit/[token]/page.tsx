@@ -88,6 +88,17 @@ export default async function DepositPage({ params }: { params: Promise<{ token:
     );
   }
 
+  if (membership.seatNumber === null) {
+    // The seat was released while this link was in someone's inbox. Releasing
+    // clears the token too, so this is a belt-and-braces branch.
+    return (
+      <Message
+        title="This membership has ended"
+        body="The seat this link was for has been returned to the founding circle. If you think that is a mistake, reply to the email we sent you and we will put it right."
+      />
+    );
+  }
+
   if (membership.depositStatus === 'PAID') {
     return (
       <Message

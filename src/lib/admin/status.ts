@@ -67,6 +67,39 @@ export const PAYMENT_TONE: Record<PaymentStatusKey, Tone> = {
   PARTIALLY_REFUNDED: 'grey',
 };
 
+/** Gir Gold Club seats. LEFT is the one that gives the seat back to the 250. */
+export const MEMBERSHIP_STATUSES = ['PENDING', 'ACTIVE', 'PAUSED', 'LEFT'] as const;
+export type MembershipStatusKey = (typeof MEMBERSHIP_STATUSES)[number];
+
+export const MEMBERSHIP_LABEL: Record<MembershipStatusKey, string> = {
+  PENDING: 'Awaiting deposit',
+  ACTIVE: 'Active',
+  PAUSED: 'Paused',
+  LEFT: 'Left',
+};
+
+export const MEMBERSHIP_TONE: Record<MembershipStatusKey, Tone> = {
+  PENDING: 'amber',
+  ACTIVE: 'green',
+  PAUSED: 'blue',
+  LEFT: 'grey',
+};
+
+export const DEPOSIT_STATUSES = ['UNPAID', 'PAID', 'REFUNDED'] as const;
+export type DepositStatusKey = (typeof DEPOSIT_STATUSES)[number];
+
+export const DEPOSIT_LABEL: Record<DepositStatusKey, string> = {
+  UNPAID: 'Not paid',
+  PAID: 'Paid',
+  REFUNDED: 'Refunded',
+};
+
+export const DEPOSIT_TONE: Record<DepositStatusKey, Tone> = {
+  UNPAID: 'amber',
+  PAID: 'green',
+  REFUNDED: 'grey',
+};
+
 /**
  * Where an order may go next.
  *

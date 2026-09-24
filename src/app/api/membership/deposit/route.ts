@@ -50,6 +50,15 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: 'This link is no longer active.' }, { status: 404 });
   }
 
+  /**
+   * Releasing a seat clears the deposit token, so a departed family's link
+   * stops resolving and this is all but unreachable. Checked anyway, because
+   * the alternative is activating a membership that holds no seat.
+   */
+  if (membership.seatNumber === null) {
+    return NextResponse.json({ error: 'This membership has ended.' }, { status: 409 });
+  }
+
   if (membership.depositStatus === 'PAID') {
     // Someone pressed pay twice, or reopened the page from the email. Not an
     // error worth showing - the seat is settled either way.

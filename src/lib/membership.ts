@@ -1,7 +1,41 @@
 import crypto from 'node:crypto';
+import type { Prisma } from '@/generated/prisma/client';
 
 /** The founding deposit, in paise. Matches the Membership default. */
 export const DEPOSIT_PAISE = 500_000;
+
+/**
+ * The founding circle is capped here, by a CHECK constraint on seatNumber, and
+ * by the unique index on it. Three places, because a cap that only application
+ * code believes in is not a cap.
+ */
+export const SEATS = 250;
+
+/**
+ * The lowest seat nobody is sitting in.
+ *
+ * Only memberships that actually hold a seat are counted. A family who has
+ * left has seatNumber NULL, so their old number is offered to the next family
+ * rather than being lost - which is the whole point of releasing a seat, and
+ * what used to make the club shrink with every departure.
+ *
+ * MUST be called inside the same transaction as the write that takes the seat.
+ * On its own it is a read whose answer another admin can invalidate a
+ * millisecond later; the unique index is what finally refuses a collision, and
+ * this only has to be right often enough that the index rarely has to.
+ */
+export async function lowestFreeSeat(tx: Prisma.TransactionClient): Promise<number> {
+  const held = await tx.membership.findMany({
+    where: { seatNumber: { not: null } },
+    select: { seatNumber: true },
+  });
+
+  const used = new Set(held.map((m) => m.seatNumber));
+  let seat = 1;
+  while (used.has(seat)) seat += 1;
+  if (seat > SEATS) throw new Error('CLUB_FULL');
+  return seat;
+}
 
 /**
  * The token that stands in for a membership in the deposit link.
