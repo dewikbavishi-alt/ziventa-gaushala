@@ -978,9 +978,16 @@ img[data-blur="loaded"]{filter:blur(0);transform:scale(1);}
    rather than height, so nothing below it reflows a frame at a time while the
    animation runs. */
 .receipt{
+  position:relative;
   overflow:hidden;
   max-width:420px;margin:0 auto;
-  padding-top:.5rem;
+  padding-top:.7rem;
+}
+/* The slot the paper feeds out of - a thin shadow across the top that the
+   receipt appears from underneath. */
+.receipt::before{
+  content:"";position:absolute;left:8%;right:8%;top:0;height:3px;border-radius:3px;
+  background:linear-gradient(90deg, transparent, rgba(59,45,30,.18) 18%, rgba(59,45,30,.18) 82%, transparent);
 }
 .receipt-paper{
   position:relative;
@@ -1002,12 +1009,34 @@ img[data-blur="loaded"]{filter:blur(0);transform:scale(1);}
   filter:drop-shadow(0 3px 2px rgba(59,45,30,.07));
 }
 @keyframes receiptRoll{
-  from{ clip-path:inset(0 0 100% 0); transform:translateY(-14px); }
-  to  { clip-path:inset(0 0 0 0);    transform:translateY(0); }
+  0%   { clip-path:inset(0 0 100% 0); transform:translateY(-18px) scaleY(.985); }
+  70%  { clip-path:inset(0 0 4% 0);   transform:translateY(2px)   scaleY(1.004); }
+  100% { clip-path:inset(0 0 0 0);    transform:translateY(0)     scaleY(1); }
+}
+/* Each line appears as the paper reaches it, like text being printed onto it
+   rather than the whole receipt arriving pre-written. */
+@keyframes receiptLine{
+  from{ opacity:0; transform:translateY(6px); }
+  to  { opacity:1; transform:translateY(0); }
+}
+/* A small settle once the check lands, so the tick has a beat of its own. */
+@keyframes rtPop{
+  0%  { transform:scale(1); }
+  45% { transform:scale(1.13); }
+  100%{ transform:scale(1); }
+}
+/* And one soft ring pushing outward from it, then gone. */
+@keyframes rtHalo{
+  from{ opacity:.5; transform:scale(.55); }
+  to  { opacity:0;  transform:scale(1.5); }
 }
 
 /* The tick draws itself: ring first, then the check on top of it. */
-.receipt-tick{width:60px;height:60px;margin:0 auto .9rem;}
+.receipt-tick{position:relative;width:64px;height:64px;margin:0 auto .95rem;}
+.receipt-tick::after{
+  content:"";position:absolute;inset:0;border-radius:50%;
+  border:2px solid var(--green);opacity:0;pointer-events:none;
+}
 .receipt-tick svg{width:100%;height:100%;display:block;}
 .rt-ring{fill:none;stroke:var(--green);stroke-width:3;stroke-dasharray:145;}
 .rt-check{
@@ -1027,9 +1056,48 @@ img[data-blur="loaded"]{filter:blur(0);transform:scale(1);}
    background tab - would leave a customer looking at a blank confirmation for
    an order that really was placed. Motion is the decoration; it can fail. */
 @media (prefers-reduced-motion: no-preference){
-  .receipt-paper{ animation:receiptRoll .85s cubic-bezier(.22,.8,.3,1); }
-  .rt-ring{ animation:rtRing .55s ease-out .45s backwards; }
-  .rt-check{ animation:rtCheck .35s ease-out .95s backwards; }
+  /* Slower than it wants to be. The whole thing runs about 2.4s, which is
+     long for an animation and right for this one - it is the only moment in
+     the flow worth pausing on, and a receipt that snaps into place does not
+     feel like anything was printed. */
+  .receipt.is-printing .receipt-paper{ animation:receiptRoll 1.5s cubic-bezier(.18,.72,.24,1); }
+
+  /* The tick: ring draws, check draws inside it, then both settle together
+     with one ring pushing outward. */
+  .receipt.is-printing .rt-ring { animation:rtRing  .85s ease-out .55s backwards; }
+  .receipt.is-printing .rt-check{ animation:rtCheck .55s ease-out 1.25s backwards; }
+  .receipt.is-printing .receipt-tick      { animation:rtPop  .5s ease-out 1.7s backwards; }
+  .receipt.is-printing .receipt-tick::after{ animation:rtHalo .7s ease-out 1.75s backwards; }
+
+  /* The lines print in order, chasing the paper down the page. Listed rather
+     than looped because the item count varies with the order; ten covers the
+     heading, the four meta rows and a basket bigger than anyone has sent. */
+  .receipt.is-printing .receipt-paper h4,
+  .receipt.is-printing .receipt-lead,
+  .receipt.is-printing .receipt-meta div,
+  .receipt.is-printing .receipt-items .cart-row,
+  .receipt.is-printing .receipt-foot,
+  .receipt.is-printing .demo-note{
+    animation:receiptLine .55s ease-out backwards;
+  }
+  .receipt.is-printing .receipt-paper h4          { animation-delay:.30s; }
+  .receipt.is-printing .receipt-lead              { animation-delay:.42s; }
+  .receipt.is-printing .receipt-meta div:nth-child(1){ animation-delay:.62s; }
+  .receipt.is-printing .receipt-meta div:nth-child(2){ animation-delay:.71s; }
+  .receipt.is-printing .receipt-meta div:nth-child(3){ animation-delay:.80s; }
+  .receipt.is-printing .receipt-meta div:nth-child(4){ animation-delay:.89s; }
+  .receipt.is-printing .receipt-items .cart-row:nth-child(1){ animation-delay:1.02s; }
+  .receipt.is-printing .receipt-items .cart-row:nth-child(2){ animation-delay:1.10s; }
+  .receipt.is-printing .receipt-items .cart-row:nth-child(3){ animation-delay:1.18s; }
+  .receipt.is-printing .receipt-items .cart-row:nth-child(4){ animation-delay:1.26s; }
+  .receipt.is-printing .receipt-items .cart-row:nth-child(5){ animation-delay:1.34s; }
+  .receipt.is-printing .receipt-items .cart-row:nth-child(6){ animation-delay:1.42s; }
+  .receipt.is-printing .receipt-items .cart-row:nth-child(7){ animation-delay:1.50s; }
+  .receipt.is-printing .receipt-items .cart-row:nth-child(8){ animation-delay:1.58s; }
+  .receipt.is-printing .receipt-items .cart-row:nth-child(9){ animation-delay:1.66s; }
+  .receipt.is-printing .receipt-items .cart-row:nth-child(n+10){ animation-delay:1.74s; }
+  .receipt.is-printing .receipt-foot              { animation-delay:1.95s; }
+  .receipt.is-printing .demo-note        { animation-delay:2.08s; }
 }
 
 .receipt-lead{font-size:.9rem;color:var(--ink-soft);margin:0 0 1.1rem;}

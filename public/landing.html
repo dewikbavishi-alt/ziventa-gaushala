@@ -1867,12 +1867,15 @@ document.addEventListener('DOMContentLoaded', function(){
        putting it back is what makes the browser start them again. */
     function replayReceipt(){
       if(!els.receipt) return;
-      var paper=els.receipt.querySelector('.receipt-paper');
-      var marks=els.receipt.querySelectorAll('.rt-ring,.rt-check');
-      var all=[paper].concat(Array.prototype.slice.call(marks));
-      all.forEach(function(el){ if(el) el.style.animation='none'; });
+      /* Every animation is scoped to .is-printing, so dropping the class and
+         putting it back after a forced reflow restarts all of them at once -
+         including the halo, which is a ::after and cannot be reached from
+         here to reset individually. It also means the receipt's resting state
+         carries no animation at all, which is what keeps a failed or disabled
+         animation from hiding an order that really was placed. */
+      els.receipt.classList.remove('is-printing');
       void els.receipt.offsetWidth;
-      all.forEach(function(el){ if(el) el.style.animation=''; });
+      els.receipt.classList.add('is-printing');
     }
 
     els.coNext.addEventListener('click',function(){
