@@ -969,12 +969,93 @@ img[data-blur="loaded"]{filter:blur(0);transform:scale(1);}
 .co-summary{margin-top:1.2rem;border-top:1px solid var(--border);padding-top:.9rem;}
 .co-summary .cart-row{font-size:.88rem;}
 .co-done{text-align:center;padding:1rem 0;}
-.done-mark{
-  width:62px;height:62px;border-radius:50%;background:var(--green);color:#fff;
-  display:flex;align-items:center;justify-content:center;margin:0 auto 1rem;
+.co-done h4{font-size:1.3rem;margin:0 0 .35em;}
+
+/* ===== the printed receipt =====
+
+   The paper unrolls downward out of the top of its container, which is why
+   .receipt clips and .receipt-paper is what moves. clip-path does the reveal
+   rather than height, so nothing below it reflows a frame at a time while the
+   animation runs. */
+.receipt{
+  overflow:hidden;
+  max-width:420px;margin:0 auto;
+  padding-top:.5rem;
 }
-.done-mark i{width:30px;height:30px;}
-.co-done h4{font-size:1.3rem;margin:0 0 .4em;}
+.receipt-paper{
+  position:relative;
+  background:#FFFDF8;
+  border:1px solid var(--border);
+  border-bottom:none;
+  border-radius:10px 10px 0 0;
+  padding:1.6rem 1.4rem 1.8rem;
+  text-align:center;
+  box-shadow:0 14px 30px rgba(59,45,30,.10);
+}
+/* The torn-off bottom edge. Two gradients meeting at a point, tiled - the
+   paper's own colour above the tear, nothing below it. */
+.receipt-paper::after{
+  content:"";position:absolute;left:-1px;right:-1px;bottom:-11px;height:12px;
+  background:
+    linear-gradient(-45deg, transparent 0 8px, #FFFDF8 8px 100%) 0 0/16px 12px repeat-x,
+    linear-gradient( 45deg, transparent 0 8px, #FFFDF8 8px 100%) 0 0/16px 12px repeat-x;
+  filter:drop-shadow(0 3px 2px rgba(59,45,30,.07));
+}
+@keyframes receiptRoll{
+  from{ clip-path:inset(0 0 100% 0); transform:translateY(-14px); }
+  to  { clip-path:inset(0 0 0 0);    transform:translateY(0); }
+}
+
+/* The tick draws itself: ring first, then the check on top of it. */
+.receipt-tick{width:60px;height:60px;margin:0 auto .9rem;}
+.receipt-tick svg{width:100%;height:100%;display:block;}
+.rt-ring{fill:none;stroke:var(--green);stroke-width:3;stroke-dasharray:145;}
+.rt-check{
+  fill:none;stroke:var(--green);stroke-width:4;
+  stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:42;
+}
+@keyframes rtRing{ from{ stroke-dashoffset:145; } to{ stroke-dashoffset:0; } }
+@keyframes rtCheck{ from{ stroke-dashoffset:42; } to{ stroke-dashoffset:0; } }
+
+/* The animations are added here rather than being the default, and none of
+   them uses a fill mode. That means the finished receipt - paper unrolled,
+   tick drawn - is what the element looks like with no animation running at
+   all. It matters because the alternative is what this first did: hide the
+   paper with clip-path and hide the tick with a dash offset, then rely on the
+   animation to reveal them. Anything that stops those animations - a reduced
+   motion setting, a browser that does not know clip-path animation, a frozen
+   background tab - would leave a customer looking at a blank confirmation for
+   an order that really was placed. Motion is the decoration; it can fail. */
+@media (prefers-reduced-motion: no-preference){
+  .receipt-paper{ animation:receiptRoll .85s cubic-bezier(.22,.8,.3,1); }
+  .rt-ring{ animation:rtRing .55s ease-out .45s backwards; }
+  .rt-check{ animation:rtCheck .35s ease-out .95s backwards; }
+}
+
+.receipt-lead{font-size:.9rem;color:var(--ink-soft);margin:0 0 1.1rem;}
+
+/* Order number, date, method: label left, value right, dot leaders between,
+   the way a till receipt sets them. */
+.receipt-meta{
+  margin:0 0 1rem;padding:.8rem 0;text-align:left;
+  border-top:1px dashed var(--border);border-bottom:1px dashed var(--border);
+  font-size:.82rem;
+}
+.receipt-meta div{display:flex;justify-content:space-between;gap:1em;padding:.16rem 0;}
+.receipt-meta dt{color:var(--ink-soft);margin:0;}
+.receipt-meta dd{margin:0;font-weight:600;font-variant-numeric:tabular-nums;text-align:right;}
+
+.receipt-items{text-align:left;}
+.receipt-items .cart-row{font-size:.88rem;}
+.receipt-items .cart-total{
+  border-top:1px dashed var(--border);margin-top:.5rem;padding-top:.5rem;
+}
+.receipt-foot{
+  margin:1.1rem 0 0;font-family:var(--font-display);font-size:.9rem;color:var(--green-deep);
+}
+.co-done .demo-note{margin:1rem 0 0;text-align:left;}
+
+
 .modal-foot{
   display:flex;gap:.7rem;justify-content:flex-end;
   padding:1.4rem 0 0;margin-top:1.6rem;border-top:1px solid var(--border);

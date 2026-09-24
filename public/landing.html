@@ -1042,11 +1042,33 @@ Color: warm cream ground, deep gaushala-green = trust/tradition, hand-ghee gold 
       </section>
 
       <section class="co-pane co-done" id="pane3" hidden>
-        <div class="done-mark"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5" key="1gmf2c"/></svg></div>
-        <h4>Order placed</h4>
-        <p id="doneMsg">Thank you — we'll call you to confirm your delivery slot.</p>
-        <div class="co-summary" id="doneSummary"></div>
-        <p class="demo-note"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10" key="1mglay"/><path d="M12 16v-4" key="1dtifu"/><path d="M12 8h.01" key="e9boi3"/></svg> <span>This is a demonstration order. Nothing was charged.</span></p>
+        <!--
+          The receipt prints on arrival: the paper unrolls downward and the
+          tick draws itself. Everything below is filled in by the success
+          handler from the order that was just placed, so the figures here are
+          the ones the customer agreed to rather than a re-read of the cart -
+          the cart is emptied a line later.
+        -->
+        <div class="receipt" id="receipt">
+          <div class="receipt-paper">
+            <div class="receipt-tick" aria-hidden="true">
+              <svg viewBox="0 0 52 52">
+                <circle class="rt-ring" cx="26" cy="26" r="23"/>
+                <path class="rt-check" d="M15 27.5 L22.5 35 L37.5 19"/>
+              </svg>
+            </div>
+
+            <h4>Order placed</h4>
+            <p class="receipt-lead" id="doneMsg"></p>
+
+            <dl class="receipt-meta" id="doneMeta"></dl>
+
+            <div class="receipt-items" id="doneSummary"></div>
+
+            <p class="receipt-foot">Thank you for standing behind our cows.</p>
+            <p class="demo-note"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg> <span>This is a demonstration order. Nothing was charged.</span></p>
+          </div>
+        </div>
       </section>
     </div>
 
@@ -1567,7 +1589,9 @@ document.addEventListener('DOMContentLoaded', function(){
       modal:document.getElementById('checkout'), coClose:document.getElementById('coClose'),
       coBack:document.getElementById('coBack'), coNext:document.getElementById('coNext'),
       summary:document.getElementById('coSummary'), doneSummary:document.getElementById('doneSummary'),
-      doneMsg:document.getElementById('doneMsg')
+      doneMsg:document.getElementById('doneMsg'),
+      doneMeta:document.getElementById('doneMeta'),
+      receipt:document.getElementById('receipt')
     };
     if(!els.btn||!els.drawer) return;
 
@@ -1837,6 +1861,20 @@ document.addEventListener('DOMContentLoaded', function(){
       sync();   // the first option ships checked
     })();
 
+    /* Re-run the print. CSS animations fire once per element, so without
+       this a second order in the same visit arrives already unrolled with the
+       tick drawn. Removing the node's animation and forcing a reflow before
+       putting it back is what makes the browser start them again. */
+    function replayReceipt(){
+      if(!els.receipt) return;
+      var paper=els.receipt.querySelector('.receipt-paper');
+      var marks=els.receipt.querySelectorAll('.rt-ring,.rt-check');
+      var all=[paper].concat(Array.prototype.slice.call(marks));
+      all.forEach(function(el){ if(el) el.style.animation='none'; });
+      void els.receipt.offsetWidth;
+      all.forEach(function(el){ if(el) el.style.animation=''; });
+    }
+
     els.coNext.addEventListener('click',function(){
       if(step===1){
         if(!validate()) return;
@@ -1850,11 +1888,24 @@ document.addEventListener('DOMContentLoaded', function(){
         els.coNext.disabled=true;
         els.coNext.textContent='Placing order...';
         placeOrder(method).then(function(res){
+          var first=(document.getElementById('coName').value.trim().split(' ')[0]||'you');
+          var esc=function(t){ return String(t).replace(/[<>&]/g, function(c){
+            return {'<':'&lt;','>':'&gt;','&':'&amp;'}[c]; }); };
+
+          /* Built before the cart is emptied two lines down, so the receipt
+             shows what was actually ordered rather than an empty basket. */
           els.doneSummary.innerHTML=summaryHtml();
-          els.doneMsg.textContent='Order '+res.orderNumber+' · '+method+'. We’ll call '+
-            (document.getElementById('coName').value.trim().split(' ')[0]||'you')+' to confirm the delivery slot.';
+          els.doneMsg.textContent='We’ll call '+first+' to confirm the delivery slot.';
+          els.doneMeta.innerHTML=
+            '<div><dt>Order</dt><dd>'+esc(res.orderNumber)+'</dd></div>'+
+            '<div><dt>Date</dt><dd>'+new Date().toLocaleDateString('en-IN',
+                {day:'numeric',month:'short',year:'numeric'})+'</dd></div>'+
+            '<div><dt>Payment</dt><dd>'+esc(method)+'</dd></div>'+
+            '<div><dt>Name</dt><dd>'+esc(document.getElementById('coName').value.trim())+'</dd></div>';
+
           cart={}; save(); renderCart();
           setStep(3);
+          replayReceipt();
         })['catch'](function(err){
           box.textContent=err.message;
           els.coNext.textContent='Place Order';
