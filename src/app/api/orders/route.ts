@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 import { z } from 'zod';
 import { prisma } from '@/lib/prisma';
-import { CartError, generateOrderNumber, isActiveMember, priceCart } from '@/lib/orders';
+import { CartError, generateOrderNumber, priceCart } from '@/lib/orders';
 import { getCurrentUser } from '@/lib/supabase/server';
 import { syncCustomer } from '@/lib/auth';
 import { businessOrderEmail, customerOrderEmail, sendEmail } from '@/lib/email';
@@ -63,12 +63,10 @@ export async function POST(request: Request) {
   const input = parsed.data;
 
   /**
-   * Who is ordering, worked out before anything is priced.
+   * Who is ordering, if they happen to be signed in.
    *
-   * The member discount depends on it, and it has to be established from the
-   * session rather than from the request - the body has no say in what
-   * someone is charged. Guest checkout still works; customerId stays null and
-   * isMember comes back false.
+   * Guest checkout still works - customerId is simply left null and the order
+   * is not attached to an account.
    */
   let customerId: string | null = null;
   const user = await getCurrentUser();
@@ -76,12 +74,10 @@ export async function POST(request: Request) {
     await syncCustomer(user);
     customerId = user.id;
   }
-  const isMember = await isActiveMember(customerId);
-
   // Prices always come from the database, never from the request.
   let cart;
   try {
-    cart = await priceCart(input.items, { isMember });
+    cart = await priceCart(input.items);
   } catch (err) {
     if (err instanceof CartError) {
       return NextResponse.json({ error: err.message }, { status: err.status });
@@ -142,7 +138,6 @@ export async function POST(request: Request) {
       shipPostcode: input.address.postcode,
       shipCountry: input.address.country,
       subtotalPaise: cart.subtotalPaise,
-      discountPaise: cart.discountPaise,
       shippingPaise: cart.shippingPaise,
       totalPaise: cart.totalPaise,
       notes: input.notes || null,

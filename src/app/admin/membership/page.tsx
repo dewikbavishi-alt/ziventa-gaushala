@@ -15,11 +15,28 @@ const SEATS = 250;
 export default async function MembershipPage() {
   if (!(await getAdminUser())) return null;
 
-  const [leads, byStatus, members] = await Promise.all([
+  const [leads, byStatus, members, seated] = await Promise.all([
     prisma.lead.findMany({ orderBy: { createdAt: 'desc' }, take: 200 }),
     prisma.lead.groupBy({ by: ['status'], _count: { _all: true } }),
     prisma.membership.count(),
+    /**
+     * Who actually holds a seat, by email.
+     *
+     * Whether to offer "Confirm seat" is decided on this rather than on the
+     * lead's status. Status is a label someone sets by hand, and marking an
+     * enquiry "converted" was how seats were recorded before this button
+     * existed - so gating on it hid the button from families who had been
+     * labelled converted but never given a seat, which is exactly the state
+     * three of these were in.
+     */
+    prisma.membership.findMany({ select: { seatNumber: true, customer: { select: { email: true } } } }),
   ]);
+
+  const seatByEmail = new Map(
+    seated
+      .filter((m) => m.customer.email)
+      .map((m) => [m.customer.email!.toLowerCase(), m.seatNumber]),
+  );
 
   const count = (s: string) => byStatus.find((b) => b.status === s)?._count._all ?? 0;
   const total = byStatus.reduce((n, b) => n + b._count._all, 0);
@@ -130,7 +147,13 @@ export default async function MembershipPage() {
                         it cannot happen by nudging a dropdown, and hidden once the
                         enquiry is converted or declined so it is never offered twice.
                       */}
-                      {status !== 'converted' && status !== 'declined' && (
+                      {seatByEmail.has(l.email.toLowerCase()) ? (
+                        // Say which seat, rather than showing nothing. A button
+                        // that is simply absent looks like a fault.
+                        <p className="mt-2 text-right text-xs text-a-muted">
+                          Holds seat {seatByEmail.get(l.email.toLowerCase())}
+                        </p>
+                      ) : status === 'declined' ? null : (
                         <ActionForm
                           action={approveMembership}
                           submitLabel="Confirm seat"

@@ -122,8 +122,7 @@ export default async function DepositPage({ params }: { params: Promise<{ token:
         <DepositForm token={token} amountLabel={rs(amount)} />
 
         <p className="mt-4 text-xs text-[#2F4A3D]/60">
-          The deposit is fully refundable and simply holds your seat. From the moment it is
-          received, 20% comes off every order you place.
+          The deposit is fully refundable and simply holds your seat in the founding circle.
         </p>
       </div>
     </Shell>

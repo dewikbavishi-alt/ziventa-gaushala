@@ -511,8 +511,7 @@ export function membershipDepositEmail(params: {
          Or open this link: ${escapeHtml(params.link)}
        </p>
        <p style="margin:12px 0 0;font-size:14px;">
-         The deposit is fully refundable and simply holds your seat. From the moment it is
-         received, 20% comes off every order you place.
+         The deposit is fully refundable and simply holds your seat in the founding circle.
        </p>`,
       'Ziventa Gaushala',
     ),
@@ -528,8 +527,8 @@ export function membershipDepositEmail(params: {
       'Pay the deposit here:',
       params.link,
       '',
-      'The deposit is fully refundable and simply holds your seat. From the',
-      'moment it is received, 20% comes off every order you place.',
+      'The deposit is fully refundable and simply holds your seat in the',
+      'founding circle.',
       '',
       'Ziventa Gaushala',
     ].join('\n'),
@@ -553,8 +552,8 @@ export function membershipActiveEmail(params: {
        </p>
        ${field('Your seat', `No. ${params.seatNumber} of 250`)}
        <p style="margin:12px 0;font-size:14px;">
-         From now on, 20% comes off every order automatically - you will see it in your basket
-         when you are signed in. Your deposit stays refundable for as long as you hold the seat.
+         Your deposit stays refundable for as long as you hold the seat, and your place in the
+         founding 250 is now yours.
        </p>
        <p style="margin:0;font-size:14px;">
          Thank you for standing behind our cows. We will be in touch before each batch.
@@ -569,9 +568,8 @@ export function membershipActiveEmail(params: {
       '',
       `Your seat: No. ${params.seatNumber} of 250`,
       '',
-      'From now on, 20% comes off every order automatically - you will see it',
-      'in your basket when you are signed in. Your deposit stays refundable for',
-      'as long as you hold the seat.',
+      'Your deposit stays refundable for as long as you hold the seat, and',
+      'your place in the founding 250 is now yours.',
       '',
       'Thank you for standing behind our cows.',
       '',
