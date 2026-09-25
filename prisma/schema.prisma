@@ -447,6 +447,16 @@ model PageView {
   referrerHost String?
   device       String
   browser      String
+  /// Major version only - 152, not "152.0.7977.130".
+  ///
+  /// Enough to answer "is anyone below what the site supports", which is the
+  /// only question it exists for, without keeping a string specific enough to
+  /// help identify one person alongside their city and referrer.
+  ///
+  /// Null where the user agent did not state one, and on every view recorded
+  /// before this column existed - the version was never kept, so there is
+  /// nothing to backfill from.
+  browserVersion Int?
   createdAt    DateTime @default(now())
 
   @@index([createdAt])

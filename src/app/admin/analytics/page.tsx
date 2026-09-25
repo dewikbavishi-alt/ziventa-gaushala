@@ -208,6 +208,59 @@ export default async function AnalyticsPage({ searchParams }: PageProps<'/admin/
         </Card>
       </div>
 
+      <div className="mt-4 grid gap-4 md:grid-cols-2">
+        <Card title="Browsers">
+          <Ranked
+            rows={breakdown.browsers.map((b) => ({
+              label: b.label.charAt(0).toUpperCase() + b.label.slice(1),
+              count: b.count,
+            }))}
+            empty="No visits yet"
+          />
+        </Card>
+
+        {/*
+          The point of recording the version. Two floors because the site has
+          two: the shop is hand-written CSS that reaches back to Chrome 84,
+          the account and sign-in pages are Tailwind v4 and need Chrome 111.
+          Someone in between can buy as a guest but would find their account
+          page missing most of its colour.
+        */}
+        <Card title="Can everyone use the site?">
+          <Breakdown
+            rows={[
+              {
+                label: `Cannot use the shop (below Chrome ${q.SUPPORT_FLOOR.shop.chrome} / Safari ${q.SUPPORT_FLOOR.shop.safari})`,
+                value: num(breakdown.support.belowShop),
+                tone: breakdown.support.belowShop ? 'red' : 'green',
+                strong: breakdown.support.belowShop > 0,
+              },
+              {
+                label: `Cannot use sign-in or account (below Chrome ${q.SUPPORT_FLOOR.account.chrome} / Safari ${q.SUPPORT_FLOOR.account.safari})`,
+                value: num(breakdown.support.belowAccount),
+                tone: breakdown.support.belowAccount ? 'amber' : 'green',
+                strong: breakdown.support.belowAccount > 0,
+              },
+              {
+                label: 'Oldest browser seen',
+                value: breakdown.support.oldest
+                  ? `${breakdown.support.oldest.label} ${breakdown.support.oldest.version}`
+                  : '—',
+              },
+              {
+                label: 'Version not reported',
+                value: num(breakdown.support.unknownVersion),
+                tone: 'grey',
+              },
+            ]}
+          />
+          <p className="mt-3 text-xs text-a-muted">
+            Counted by visitor, not by visit. Views recorded before version tracking was added
+            show as not reported — the version was never kept, so there is nothing to backfill.
+          </p>
+        </Card>
+      </div>
+
       {/* =================================================== cancellations */}
       <h2 className="mb-3 mt-10 font-display text-xl">Cancellations</h2>
       <div className="grid grid-cols-2 gap-3 md:grid-cols-3">

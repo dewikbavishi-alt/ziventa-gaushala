@@ -81,7 +81,27 @@ img[data-blur="loaded"]{filter:blur(0);transform:scale(1);}
 .section-sub{max-width:560px;margin:0 auto;}
 
 .js .reveal{opacity:0;transform:translateY(24px);}
-.js .reveal.in-view{animation:revealIn .7s ease forwards;}
+/* The finished state is DECLARED, not just animated to.
+ *
+ * This rule used to be the animation alone, which made every section's
+ * visibility depend on that animation actually running. Anything that stops
+ * it - a suspended tab, a restored back/forward page, a browser that skips
+ * animations on a hidden or throttled document - left the element at the
+ * opacity:0 above with nothing to move it, and the section stayed blank with
+ * no error to explain why.
+ *
+ * Declared first, animated second: a running animation still overrides these
+ * values, so the fade plays exactly as before, and if it never runs the
+ * content is simply there. The same inversion the order receipt already uses,
+ * for the same reason. */
+/* `both`, not `forwards`, and that is load-bearing now that opacity:1 is
+ * declared above. These elements get an animation-delay of up to 420ms to
+ * stagger them. With `forwards` the animation applies nothing during that
+ * delay, so the declared opacity:1 would show the element, and the animation
+ * would then snap it back to 0 and fade it in - a visible flash on every
+ * staggered card. `both` fills the 0% keyframe backwards through the delay,
+ * so it stays hidden until its turn, exactly as before. */
+.js .reveal.in-view{opacity:1;transform:none;animation:revealIn .7s ease both;}
 /* No IntersectionObserver means nothing will ever add .in-view, so show
    everything at once. Same rules as the <noscript> block near the top - that
    one covers JS being off, this one covers JS being on without the API. */
@@ -470,7 +490,9 @@ img[data-blur="loaded"]{filter:blur(0);transform:scale(1);}
   box-shadow:var(--shadow);border:1px solid var(--border);background:var(--cream-alt);
 }
 .gallery-item.reveal{opacity:1;transform:none;clip-path:inset(0 100% 0 0);}
-.gallery-item.reveal.in-view{animation:galleryWipe .9s cubic-bezier(.65,0,.35,1) forwards;}
+/* Finished state declared here too - a gallery photograph hidden behind an
+   unplayed wipe is as blank as a hidden section. */
+.gallery-item.reveal.in-view{clip-path:inset(0 0 0 0);animation:galleryWipe .9s cubic-bezier(.65,0,.35,1) forwards;}
 .gallery-grid .gallery-item:nth-child(2){animation-delay:.08s;}
 .gallery-grid .gallery-item:nth-child(3){animation-delay:.16s;}
 .gallery-grid .gallery-item:nth-child(4){animation-delay:.24s;}
@@ -1260,6 +1282,26 @@ body.zv-member .price-hint-member{display:block;text-decoration:line-through;}
   .cart-remove::before{
     content:"";position:absolute;left:50%;top:50%;
     width:max(100%,44px);height:44px;transform:translate(-50%,-50%);
+  }
+
+  /* ----- iOS zooms into any field smaller than 16px -----
+
+     Safari on iPhone zooms the whole page in when a text field with a
+     computed font-size under 16px receives focus, and because the viewport
+     meta sets no maximum-scale it does NOT zoom back out afterwards. The
+     visitor is left on a magnified page that now scrolls sideways, which
+     reads as the site being broken rather than as a zoom.
+
+     Measured at 390x844: every checkout and pre-registration field was
+     15.2px and the assistant's box 14.08px, so every form on the site did
+     this - on the two screens where it costs the most, checkout and the
+     membership form.
+
+     16px exactly, and only on touch, so nothing about the desktop layout
+     moves. select is included: iOS zooms for those too. */
+  input[type="text"],input[type="tel"],input[type="email"],input[type="number"],
+  input[type="search"],input[type="password"],textarea,select{
+    font-size:16px;
   }
 
   /* ----- the mobile menu -----

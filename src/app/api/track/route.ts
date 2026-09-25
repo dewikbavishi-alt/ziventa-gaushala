@@ -6,9 +6,9 @@ import { createClient } from '@/lib/supabase/server';
  * First-party page-view beacon.
  *
  * Deliberately collects as little as the dashboard needs. The user-agent is
- * reduced to two category words and then thrown away; the IP address is never
- * read at all; the referrer is cut down to its domain. See PageView in
- * schema.prisma for the full list of what is kept.
+ * reduced to two category words and a major version number and then thrown
+ * away; the IP address is never read at all; the referrer is cut down to its
+ * domain. See PageView in schema.prisma for the full list of what is kept.
  *
  * Always answers 204 with no body, whatever happened. A beacon has nothing to
  * do with a reply, and a different answer for "rejected" would only tell a
@@ -44,6 +44,40 @@ function browser(ua: string): string {
   if (/firefox|fxios/i.test(ua)) return 'firefox';
   if (/safari/i.test(ua)) return 'safari';
   return 'other';
+}
+
+/**
+ * The major version, for the family already decided above.
+ *
+ * Each family announces its own version under a different token, and several
+ * announce each other's - a Chrome user agent contains "Safari/537.36", and
+ * Edge contains both. So this is keyed on the family rather than trying one
+ * pattern against the whole string, which is what would read Edge 152 as
+ * Chrome 152.
+ *
+ * Safari is the odd one: Safari/605.1.15 is the engine build, not the browser,
+ * so the number that matters is in Version/17.0. An iOS in-app browser often
+ * omits Version entirely, which is why null is an ordinary answer here rather
+ * than a failure.
+ */
+const VERSION: Record<string, RegExp> = {
+  edge: /\bedg(?:e|a|ios)?\/(\d{1,3})/i,
+  opera: /\b(?:opr|opera)\/(\d{1,3})/i,
+  samsung: /\bsamsungbrowser\/(\d{1,3})/i,
+  chrome: /\b(?:chrome|crios)\/(\d{1,3})/i,
+  firefox: /\b(?:firefox|fxios)\/(\d{1,3})/i,
+  safari: /\bversion\/(\d{1,3})/i,
+};
+
+function browserVersion(ua: string, family: string): number | null {
+  const pattern = VERSION[family];
+  if (!pattern) return null;
+  const found = pattern.exec(ua);
+  if (!found) return null;
+  const major = Number.parseInt(found[1], 10);
+  // The same range the CHECK constraint enforces, so a strange user agent is
+  // dropped here rather than failing the insert and losing the whole view.
+  return Number.isInteger(major) && major > 0 && major < 1000 ? major : null;
 }
 
 export async function POST(request: Request) {
@@ -118,6 +152,8 @@ export async function POST(request: Request) {
     customerId = null;
   }
 
+  const family = browser(ua);
+
   try {
     await prisma.pageView.create({
       data: {
@@ -127,7 +163,8 @@ export async function POST(request: Request) {
         path: path.slice(0, 300),
         referrerHost,
         device: device(ua),
-        browser: browser(ua),
+        browser: family,
+        browserVersion: browserVersion(ua, family),
       },
     });
   } catch (err) {

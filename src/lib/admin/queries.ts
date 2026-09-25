@@ -663,8 +663,31 @@ export async function visitorSeries(range: DateRange) {
   return fill(range, rows);
 }
 
+/**
+ * The oldest browser each part of the site works on.
+ *
+ * The shop and everything else on the landing page is hand-written CSS whose
+ * binding constraint is `gap` on flex containers - used in 47 rules, so it
+ * cannot be dropped. Every feature newer than that carries a fallback, so
+ * nothing else raises the floor.
+ *
+ * The account, sign-in and admin pages are Tailwind v4, which emits
+ * @property and color-mix() with no fallbacks beneath them. That is Tailwind's
+ * own floor and cannot be lowered without leaving Tailwind.
+ *
+ * Safari numbers are rounded UP a whole major on purpose. The real floors are
+ * 14.1 and 16.4, and only the major version is stored - so treating Safari 14
+ * and 16 as below the line calls a 14.1 visitor unsupported rather than
+ * telling you a 14.0 visitor is fine. Wrong in the direction that gets
+ * noticed.
+ */
+export const SUPPORT_FLOOR = {
+  shop: { chrome: 84, edge: 84, firefox: 63, safari: 15, samsung: 14, opera: 70 },
+  account: { chrome: 111, edge: 111, firefox: 128, safari: 17, samsung: 22, opera: 97 },
+} as const;
+
 export async function visitorBreakdown(start: Date, end: Date) {
-  const [devices, pages, referrers] = await Promise.all([
+  const [devices, pages, referrers, browsers] = await Promise.all([
     prisma.$queryRaw<{ k: string; c: unknown }[]>`
       SELECT "device" AS k, COUNT(DISTINCT "visitorId")::int AS c
       FROM page_views WHERE "createdAt" >= ${start} AND "createdAt" < ${end}
@@ -680,7 +703,61 @@ export async function visitorBreakdown(start: Date, end: Date) {
       FROM page_views WHERE "createdAt" >= ${start} AND "createdAt" < ${end}
       GROUP BY 1 ORDER BY 2 DESC LIMIT 8
     `,
+    /**
+     * Counted by visitor, not by view, because the question is "how many
+     * PEOPLE cannot use this" - one person reloading twenty times is still
+     * one person to fix the site for.
+     */
+    prisma.$queryRaw<{ family: string; version: unknown; c: unknown }[]>`
+      SELECT "browser" AS family, "browserVersion" AS version,
+             COUNT(DISTINCT "visitorId")::int AS c
+      FROM page_views WHERE "createdAt" >= ${start} AND "createdAt" < ${end}
+      GROUP BY 1, 2 ORDER BY 3 DESC, 1 ASC
+    `,
   ]);
+
   const map = (rows: { k: string; c: unknown }[]) => rows.map((r) => ({ label: r.k, count: n(r.c) }));
-  return { devices: map(devices), pages: map(pages), referrers: map(referrers) };
+
+  /**
+   * Below either floor, and how far back the oldest browser seen goes.
+   *
+   * A view with no version - every one recorded before the column existed, and
+   * anything whose user agent did not say - is counted as unknown rather than
+   * assumed to be fine. Silence is not evidence of support.
+   */
+  const rows = browsers.map((r) => {
+    const family = r.family;
+    const version = r.version === null ? null : n(r.version);
+    return {
+      label: version === null ? `${family} (version unknown)` : `${family} ${version}`,
+      count: n(r.c),
+      family,
+      version,
+    };
+  });
+
+  const below = (floors: Record<string, number>) =>
+    rows.reduce((sum, r) => {
+      if (r.version === null) return sum;
+      const floor = floors[r.family];
+      return floor !== undefined && r.version < floor ? sum + r.count : sum;
+    }, 0);
+
+  const versioned = rows.filter((r) => r.version !== null);
+  const oldest = versioned.length
+    ? versioned.reduce((lo, r) => (r.version! < lo.version! ? r : lo))
+    : null;
+
+  return {
+    devices: map(devices),
+    pages: map(pages),
+    referrers: map(referrers),
+    browsers: rows,
+    support: {
+      belowShop: below(SUPPORT_FLOOR.shop),
+      belowAccount: below(SUPPORT_FLOOR.account),
+      unknownVersion: rows.reduce((s, r) => (r.version === null ? s + r.count : s), 0),
+      oldest: oldest ? { label: oldest.family, version: oldest.version! } : null,
+    },
+  };
 }

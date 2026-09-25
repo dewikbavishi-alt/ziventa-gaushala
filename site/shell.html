@@ -723,6 +723,42 @@ document.addEventListener('DOMContentLoaded', function(){
   }
   refreshSigninState();
 
+  /* ===== locking the page behind an overlay =====
+
+     overflow:hidden on <body> does nothing in iOS Safari. The page keeps
+     scrolling under the cart drawer and the checkout, so on an iPhone the
+     content slides away behind the panel while the panel sits still - which
+     looks like the site has come apart.
+
+     Pinning the body with position:fixed at a negative offset is what
+     actually holds it. The offset is where they were, so nothing appears to
+     jump when it goes on, and unlocking scrolls back to exactly that point.
+
+     Depth-counted because the cart hands over to the checkout: the drawer
+     closes and the checkout opens, and a plain boolean would let the first
+     unlock release a lock the second one still needs. */
+  var scrollLockY=0, scrollLockDepth=0;
+  window.zvLockScroll=function(){
+    if(scrollLockDepth++ > 0) return;
+    scrollLockY=window.pageYOffset||document.documentElement.scrollTop||0;
+    var b=document.body;
+    b.style.position='fixed';
+    b.style.top=(-scrollLockY)+'px';
+    b.style.left='0'; b.style.right='0'; b.style.width='100%';
+    b.style.overflow='hidden';
+  };
+  window.zvUnlockScroll=function(restore){
+    if(scrollLockDepth===0) return;
+    if(--scrollLockDepth > 0) return;
+    var b=document.body;
+    b.style.position=''; b.style.top=''; b.style.left='';
+    b.style.right=''; b.style.width=''; b.style.overflow='';
+    // Removing position:fixed drops the page back to offset 0, so the scroll
+    // has to be put back explicitly or every overlay would dump the visitor
+    // at the top of the page.
+    if(restore!==false) window.scrollTo(0,scrollLockY);
+  };
+
   /* Confirmation popup, shown the moment a place is reserved.
      Built in JS rather than sitting in the markup so it can never flash on
      page load, and so it can carry the reference the server just issued. */
@@ -757,11 +793,11 @@ document.addEventListener('DOMContentLoaded', function(){
       '</div>';
 
     document.body.appendChild(wrap);
-    document.body.style.overflow='hidden';
+    window.zvLockScroll();
 
     function close(){
       if(wrap.parentNode) wrap.parentNode.removeChild(wrap);
-      document.body.style.overflow='';
+      window.zvUnlockScroll();
       document.removeEventListener('keydown',onKey);
     }
     function onKey(e){ if(e.key==='Escape') close(); }
@@ -842,13 +878,86 @@ document.addEventListener('DOMContentLoaded', function(){
   },{threshold:0.15, rootMargin:'0px 0px -60px 0px'});
   if(revealObserver) revealEls.forEach(function(el){ revealObserver.observe(el); });
 
+  /* ===== the safety net under the reveal =====
+
+     These 36 elements start at opacity:0 and are made visible ONLY by the
+     observer callback above. That is one dependency holding up most of the
+     page, and when it does not fire the section is not subtly wrong, it is
+     blank - with no error in the console to say why.
+
+     The net used to run once at 2.5s and only for elements already above the
+     fold, so anything further down stayed entirely at the observer's mercy.
+     Now the same check runs again whenever it could have been missed:
+
+       scroll          an observer that never fires cannot hide anything that
+                       has been scrolled to, whatever the reason
+       visibilitychange  iOS suspends observer callbacks for a backgrounded
+                       tab; coming back re-checks rather than trusting that
+                       nothing was missed while away
+       pageshow        iOS Safari restores this page from its back/forward
+                       cache aggressively, and a restored page may never get
+                       a fresh callback
+
+     sweep() reveals what is actually on screen, so the animation still plays
+     normally on the way down - this only ever catches what was left behind. */
+  function sweep(){
+    var missed=false;
+    for(var i=0;i<revealEls.length;i++){
+      var el=revealEls[i];
+      if(el.classList.contains('in-view')) continue;
+      var box=el.getBoundingClientRect();
+      if(box.top < window.innerHeight && box.bottom > 0) el.classList.add('in-view');
+      else missed=true;
+    }
+    return missed;
+  }
+
+  setTimeout(sweep,2500);
+
+  /* The backstop: after 8 seconds, everything still hidden is shown, wherever
+     it is on the page.
+
+     The gallery has always had exactly this - its own timeout reveals every
+     figure unconditionally - which is why gallery photographs turn up even
+     when other sections do not. The reveal net was the conditional one, and
+     that asymmetry is the difference between a section that self-heals and a
+     section that stays blank forever.
+
+     Eight seconds is past any normal reading of the top of the page, so
+     someone scrolling still gets the animation on the way down. It costs the
+     effect only for a visitor who sat still for eight seconds first, and buys
+     the guarantee that no section is ever permanently blank - which is worth
+     far more than a fade. */
   setTimeout(function(){
     revealEls.forEach(function(el){
-      if(!el.classList.contains('in-view') && el.getBoundingClientRect().top < window.innerHeight){
-        el.classList.add('in-view');
-      }
+      el.classList.add('in-view');
+      /* animation:none FIRST, and that order matters.
+         A CSS animation outranks every author declaration, inline ones
+         included, so an animation that has begun and then stopped
+         progressing - a suspended tab, a throttled document - pins the
+         element at its 0% keyframe and opacity:1 cannot win. Taking the
+         animation away is the only thing that releases it; the two lines
+         after are then simply obeyed. */
+      el.style.animation='none';
+      el.style.opacity='1';
+      el.style.transform='none';
     });
-  },2500);
+  },8000);
+
+  /* Throttled with a flag rather than a timer: this runs on every scroll
+     event and must cost nothing on the ones where there is nothing to do. */
+  var sweepQueued=false;
+  function queueSweep(){
+    if(sweepQueued) return;
+    sweepQueued=true;
+    setTimeout(function(){ sweepQueued=false; sweep(); },200);
+  }
+  window.addEventListener('scroll',queueSweep,{passive:true});
+  window.addEventListener('resize',queueSweep,{passive:true});
+  window.addEventListener('pageshow',queueSweep);
+  document.addEventListener('visibilitychange',function(){
+    if(document.visibilityState==='visible') queueSweep();
+  });
 
   /* gallery: start loading early, wipe in only once the photo is ready */
   var galleryItems=Array.prototype.slice.call(document.querySelectorAll('.gallery-item'));
@@ -876,6 +985,9 @@ document.addEventListener('DOMContentLoaded', function(){
     setTimeout(function(){
       galleryItems.forEach(function(fig){
         fig.classList.add('in-view');
+        // Same order as the reveal backstop: the wipe animation outranks an
+        // inline clip-path, so it has to go before the clip-path will hold.
+        fig.style.animation='none';
         fig.style.clipPath='inset(0 0 0 0)';
       });
     },6000);
@@ -1067,8 +1179,8 @@ document.addEventListener('DOMContentLoaded', function(){
       document.body.classList.toggle('zv-hide-chat', busy);
     }
 
-    function openDrawer(){ els.drawer.classList.add('open'); els.drawer.setAttribute('aria-hidden','false'); els.scrim.hidden=false; document.body.style.overflow='hidden'; syncChatVisibility(); }
-    function closeDrawer(){ els.drawer.classList.remove('open'); els.drawer.setAttribute('aria-hidden','true'); if(els.modal.hidden){ els.scrim.hidden=true; document.body.style.overflow=''; } syncChatVisibility(); }
+    function openDrawer(){ els.drawer.classList.add('open'); els.drawer.setAttribute('aria-hidden','false'); els.scrim.hidden=false; window.zvLockScroll(); syncChatVisibility(); }
+    function closeDrawer(){ els.drawer.classList.remove('open'); els.drawer.setAttribute('aria-hidden','true'); if(els.modal.hidden){ els.scrim.hidden=true; window.zvUnlockScroll(); } syncChatVisibility(); }
 
     document.querySelectorAll('.btn-add').forEach(function(b){
       b.addEventListener('click',function(){
@@ -1128,14 +1240,15 @@ document.addEventListener('DOMContentLoaded', function(){
       h+='<div class="cart-row cart-total"><span>Total</span><strong>'+inr(total())+'</strong></div>';
       return h;
     }
-    var returnY=0;
     function baseUrl(){ return location.pathname+location.search; }
     function showCheckout(){
-      returnY=window.pageYOffset||document.documentElement.scrollTop||0;
+      // Where to come back to is remembered by zvLockScroll, which has to
+      // know it anyway to pin the body. Keeping a second copy here meant two
+      // places could disagree about it.
       closeDrawer();
       els.scrim.hidden=true;
       els.modal.hidden=false;
-      document.body.style.overflow='hidden';
+      window.zvLockScroll();
       els.modal.scrollTop=0;
       setStep(1);
       els.summary.innerHTML=summaryHtml();
@@ -1144,8 +1257,9 @@ document.addEventListener('DOMContentLoaded', function(){
     function hideCheckout(restoreScroll){
       els.modal.hidden=true;
       syncChatVisibility();
-      document.body.style.overflow='';
-      if(restoreScroll) window.scrollTo(0,returnY);
+      // zvUnlockScroll puts the scroll back itself; passing false leaves
+      // the page where it is, which is what a completed order wants.
+      window.zvUnlockScroll(restoreScroll !== false);
     }
     function syncRoute(){
       var wants=(location.hash==='#checkout');
