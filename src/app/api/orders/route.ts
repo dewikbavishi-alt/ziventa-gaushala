@@ -1,7 +1,13 @@
 import { NextResponse } from 'next/server';
 import { z } from 'zod';
 import { prisma } from '@/lib/prisma';
-import { CartError, generateOrderNumber, priceCart, reserveStock } from '@/lib/orders';
+import {
+  CartError,
+  generateOrderNumber,
+  memberRateApplies,
+  priceCart,
+  reserveStock,
+} from '@/lib/orders';
 import { getCurrentUser } from '@/lib/supabase/server';
 import { syncCustomer } from '@/lib/auth';
 import { businessOrderEmail, customerOrderEmail, sendEmail } from '@/lib/email';
@@ -74,10 +80,17 @@ export async function POST(request: Request) {
     await syncCustomer(user);
     customerId = user.id;
   }
+  /**
+   * Whether the member rate applies is read from the session, never from the
+   * request. The body has no field for it, exactly as it has no field for a
+   * price - both would be free money to anyone with dev tools open.
+   */
+  const isMember = await memberRateApplies(customerId);
+
   // Prices always come from the database, never from the request.
   let cart;
   try {
-    cart = await priceCart(input.items);
+    cart = await priceCart(input.items, { isMember });
   } catch (err) {
     if (err instanceof CartError) {
       return NextResponse.json({ error: err.message }, { status: err.status });
@@ -229,6 +242,10 @@ export async function POST(request: Request) {
       orderNumber: order.orderNumber,
       amountPaise: order.totalPaise,
       confirmationSent: toCustomer.delivered,
+      // What the server actually charged at, so the receipt can say so rather
+      // than guessing from whatever the browser believed.
+      memberRate: cart.isMember,
+      savedPaise: cart.savedPaise,
       // No payment gateway connected yet, so nothing is charged.
       payment: { provider: 'none' },
     },

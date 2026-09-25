@@ -634,6 +634,24 @@ img[data-blur="loaded"]{filter:blur(0);transform:scale(1);}
 .price{font-family:var(--font-display);font-size:1.3rem;color:var(--green);}
 .price em{display:block;font-style:normal;font-size:.68rem;text-transform:uppercase;letter-spacing:.08em;color:var(--ink-soft);margin-top:.15em;}
 
+/* ===== the two prices =====
+
+   Every card ships both, and CSS decides which one is the headline. Done
+   this way rather than by rewriting the cards in JS so that the price is
+   never blank while /api/me is in flight, and so the page still shows a
+   correct, complete price if that request never comes back at all.
+
+   The guest price is the default for the same reason the database column is:
+   if the member state never arrives, the visitor sees - and is charged - the
+   regular price. The failure is a missing discount, which someone will tell
+   us about, rather than a free one, which nobody ever will. */
+.price-member,.price-hint-member{display:none;}
+.price-hint-guest{color:var(--gold-deep);}
+
+body.zv-member .price-regular,body.zv-member .price-hint-guest{display:none;}
+body.zv-member .price-member{display:inline;}
+body.zv-member .price-hint-member{display:block;text-decoration:line-through;}
+
 /* reviews */
 .reviews{padding:2.7rem 1.5rem;background:var(--cream-alt);}
 .carousel{max-width:680px;margin:0 auto;}

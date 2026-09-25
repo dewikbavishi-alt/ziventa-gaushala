@@ -24,6 +24,7 @@ export default async function InventoryPage() {
         name: true,
         sizeLabel: true,
         pricePaise: true,
+        memberPricePaise: true,
         stockCount: true,
         lowStockThreshold: true,
         isActive: true,
@@ -70,6 +71,12 @@ export default async function InventoryPage() {
                   <span className="mt-0.5 block font-sans text-xs text-a-muted">
                     {p.sizeLabel ? `${p.sizeLabel} · ` : ''}
                     {rupees(p.pricePaise)}
+                    {/* Both, because they are two different things to get
+                        wrong and only one of them is on the shop card a
+                        guest sees. */}
+                    {p.memberPricePaise < p.pricePaise && (
+                      <span className="text-a-gold"> · {rupees(p.memberPricePaise)} member</span>
+                    )}
                   </span>
                 </span>
               }

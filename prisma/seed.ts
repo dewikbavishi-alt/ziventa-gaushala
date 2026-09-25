@@ -26,7 +26,8 @@ const products = [
     name: 'Bilona Ghee - 250g',
     description: 'Small-batch A2 Gir ghee, curd-churned the Bilona way, for everyday cooking.',
     sizeLabel: '250g',
-    pricePaise: 80_000,
+    pricePaise: 100_000,
+    memberPricePaise: 80_000,
     sortOrder: 1,
   },
   {
@@ -34,7 +35,8 @@ const products = [
     name: 'Bilona Ghee - 500g',
     description: 'The household size. Same Bilona batch, better value.',
     sizeLabel: '500g',
-    pricePaise: 160_000,
+    pricePaise: 200_000,
+    memberPricePaise: 160_000,
     sortOrder: 2,
   },
   {
@@ -42,7 +44,8 @@ const products = [
     name: 'Bilona Ghee - 1kg',
     description: 'For families who cook with ghee daily.',
     sizeLabel: '1kg',
-    pricePaise: 315_000,
+    pricePaise: 400_000,
+    memberPricePaise: 315_000,
     sortOrder: 3,
   },
   {
@@ -50,7 +53,8 @@ const products = [
     name: 'Panchgavya Dhoop',
     description: 'Hand-rolled dhoop made from our own Panchgavya.',
     sizeLabel: 'Pack of 20',
-    pricePaise: 25_000,
+    pricePaise: 31_000,
+    memberPricePaise: 25_000,
     sortOrder: 4,
   },
   {
@@ -58,7 +62,8 @@ const products = [
     name: 'Gau Mutra Ark',
     description: 'Distilled and filtered, bottled in small batches.',
     sizeLabel: '500ml',
-    pricePaise: 35_000,
+    pricePaise: 44_000,
+    memberPricePaise: 35_000,
     sortOrder: 5,
   },
   {
@@ -66,7 +71,8 @@ const products = [
     name: 'Festive Gift Box',
     description: 'Ghee, dhoop and ark presented in a hand-packed box.',
     sizeLabel: 'Gift set',
-    pricePaise: 420_000,
+    pricePaise: 525_000,
+    memberPricePaise: 420_000,
     sortOrder: 6,
   },
 ];

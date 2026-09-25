@@ -50,8 +50,13 @@ export interface CartLine {
  * total and the grand total are calculated here. Someone editing the page in
  * their browser cannot change what they get charged, because the request has
  * no price field to tamper with in the first place.
+ *
+ * `isMember` is the same kind of fact and follows the same rule: the CALLER
+ * establishes it from the session, never from the request body. If it ever
+ * arrives from the browser, anyone can pay the member rate by editing one
+ * boolean - see memberRateApplies() for where it is actually decided.
  */
-export async function priceCart(lines: CartLine[]) {
+export async function priceCart(lines: CartLine[], { isMember = false } = {}) {
   if (lines.length === 0) throw new CartError('Your cart is empty');
 
   // Merge duplicate lines rather than trusting the browser to have done it.
@@ -104,10 +109,27 @@ export async function priceCart(lines: CartLine[]) {
     return {
       productId: product.id,
       productName: product.name,
-      unitPricePaise: product.pricePaise,
+      // The one place the member rate is chosen. Snapshotted onto the order
+      // line, so what was charged stays readable years later even if either
+      // price changes or the family later leaves the club.
+      unitPricePaise: isMember ? product.memberPricePaise : product.pricePaise,
       quantity,
     };
   });
+
+  /**
+   * What the member rate saved on this cart, for showing back to them.
+   *
+   * Zero for a guest. Worth returning rather than recomputing in the route,
+   * because it must be the difference between the SAME two numbers the lines
+   * above were built from.
+   */
+  const savedPaise = isMember
+    ? [...wanted.entries()].reduce((sum, [slug, quantity]) => {
+        const p = bySlug.get(slug)!;
+        return sum + (p.pricePaise - p.memberPricePaise) * quantity;
+      }, 0)
+    : 0;
 
   /**
    * Only the products we actually count. Kept apart from `items` because that
@@ -130,7 +152,29 @@ export async function priceCart(lines: CartLine[]) {
     subtotalPaise,
     shippingPaise,
     totalPaise: subtotalPaise + shippingPaise,
+    isMember,
+    savedPaise,
   };
+}
+
+/**
+ * Whether this customer gets the member rate right now.
+ *
+ * ACTIVE only. PENDING means a seat was confirmed but the refundable deposit
+ * has not arrived, and the deposit is the thing the rate is in return for -
+ * so PENDING pays the regular price until it lands, at which point the seat
+ * becomes ACTIVE on its own. PAUSED and LEFT are not current members either.
+ *
+ * A guest is never a member: there is no id to look up, and taking the claim
+ * from the browser is what would make the whole two-tier scheme free.
+ */
+export async function memberRateApplies(customerId: string | null): Promise<boolean> {
+  if (!customerId) return false;
+  const membership = await prisma.membership.findUnique({
+    where: { customerId },
+    select: { status: true },
+  });
+  return membership?.status === 'ACTIVE';
 }
 
 export interface StockLine {

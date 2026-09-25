@@ -77,13 +77,23 @@ model Product {
   name        String
   description String?
   sizeLabel   String?
-  /// Integer paise. Never store money as a float.
+  /// What anyone pays. Integer paise; never store money as a float.
+  ///
+  /// This is the REGULAR price, not the member one, and that direction is
+  /// deliberate: code that reads a price without thinking about membership
+  /// then charges full price, which is a billing question. If this held the
+  /// member price instead, the same slip would hand the discount to every
+  /// guest - which is exactly the bug this column pair was added to fix.
   pricePaise  Int
-  /// Read-only rupee view of pricePaise, calculated by Postgres.
-  /// @ignore keeps it out of the client so nothing can try to write it, while
-  /// still telling Prisma the column exists - without this, `migrate dev`
-  /// would see it as drift and drop it.
-  priceRupees Decimal? @map("price_rupees") @db.Decimal(12, 2) @default(dbgenerated("((\"pricePaise\")::numeric / (100)::numeric)")) @ignore
+  /// What a member with a paid deposit pays. Always at or below pricePaise,
+  /// enforced by a CHECK constraint.
+  memberPricePaise Int
+  /// Read-only rupee views of the two prices, calculated by Postgres.
+  /// @ignore keeps them out of the client so nothing can try to write them,
+  /// while still telling Prisma the columns exist - without this, `migrate
+  /// dev` would see them as drift and drop them.
+  priceRupees       Decimal? @map("price_rupees") @db.Decimal(12, 2) @default(dbgenerated("((\"pricePaise\")::numeric / (100)::numeric)")) @ignore
+  memberPriceRupees Decimal? @map("member_price_rupees") @db.Decimal(12, 2) @default(dbgenerated("((\"memberPricePaise\")::numeric / (100)::numeric)")) @ignore
   imagePath   String?
   isActive    Boolean @default(true)
   sortOrder   Int     @default(0)
