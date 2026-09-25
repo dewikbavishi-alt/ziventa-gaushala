@@ -97,14 +97,14 @@ img[data-blur="loaded"]{filter:blur(0);transform:scale(1);}
   transition:transform .18s ease, box-shadow .18s ease, background .18s ease;
   font-family:var(--font-body);
 }
-.btn i{width:18px;height:18px;}
+.btn svg{width:18px;height:18px;}
 .btn-primary{background:var(--gold);color:#fff;box-shadow:0 8px 20px rgba(191,143,58,.28);}
 .btn-primary:hover{transform:translateY(-2px);box-shadow:0 12px 24px rgba(191,143,58,.35);}
 .btn-ghost{background:transparent;border-color:var(--border);color:var(--ink);}
 .btn-ghost:hover{border-color:var(--gold);color:var(--gold-deep);}
 .btn-block{width:100%;justify-content:center;}
 .text-link{display:inline-flex;align-items:center;gap:.4em;color:var(--gold-deep);font-weight:600;text-decoration:none;}
-.text-link i{width:16px;height:16px;}
+.text-link svg{width:16px;height:16px;}
 .text-link:hover{text-decoration:underline;}
 
 /* header */
@@ -173,7 +173,7 @@ img[data-blur="loaded"]{filter:blur(0);transform:scale(1);}
   display:none;background:none;border:1px solid var(--border);border-radius:10px;
   width:42px;height:42px;align-items:center;justify-content:center;cursor:pointer;color:var(--ink);position:relative;
 }
-.nav-toggle i{width:20px;height:20px;position:absolute;transition:opacity .15s ease,transform .15s ease;}
+.nav-toggle svg{width:20px;height:20px;position:absolute;transition:opacity .15s ease,transform .15s ease;}
 .nav-toggle .icon-close{opacity:0;transform:scale(.7);}
 .nav-toggle[aria-expanded="true"] .icon-open{opacity:0;transform:scale(.7);}
 .nav-toggle[aria-expanded="true"] .icon-close{opacity:1;transform:scale(1);}
@@ -374,7 +374,7 @@ img[data-blur="loaded"]{filter:blur(0);transform:scale(1);}
   padding:.5em 1.1em;border-radius:999px;font-size:.82rem;font-weight:700;letter-spacing:.03em;
   box-shadow:var(--shadow);margin-bottom:1.6rem;
 }
-.eyebrow i{width:15px;height:15px;}
+.eyebrow svg{width:15px;height:15px;}
 .hero h1{font-size:clamp(2.1rem,4.9vw,3.3rem);margin-bottom:.42em;}
 .hero-lede{font-size:1.08rem;max-width:600px;margin:0 auto 1.5rem;}
 .hero-actions{display:flex;gap:1rem;justify-content:center;flex-wrap:wrap;margin-bottom:1.2rem;}
@@ -418,7 +418,7 @@ img[data-blur="loaded"]{filter:blur(0);transform:scale(1);}
 }
 .benefit-card:hover{box-shadow:var(--shadow);transform:translateY(-3px);border-color:rgba(191,143,58,.45);border-color:color-mix(in srgb, var(--gold) 40%, var(--border));}
 .benefit-top{display:flex;align-items:center;justify-content:space-between;color:var(--gold-deep);}
-.benefit-top i{width:24px;height:24px;}
+.benefit-top svg{width:24px;height:24px;}
 .benefit-num{font-family:var(--font-display);font-size:.85rem;color:var(--ink-soft);}
 .benefit-title{font-weight:600;font-size:1.02rem;position:relative;padding-right:1.4em;}
 .benefit-title::after{
@@ -601,7 +601,7 @@ img[data-blur="loaded"]{filter:blur(0);transform:scale(1);}
   background:var(--card-bg);border:2px solid var(--border);display:flex;align-items:center;justify-content:center;
   color:var(--ink-soft);transition:all .3s ease;
 }
-.ritual-icon i{width:20px;height:20px;}
+.ritual-icon svg{width:20px;height:20px;}
 .ritual-step.active .ritual-icon{border-color:var(--gold);color:var(--gold-deep);background:#F7EEDC;background:color-mix(in srgb, var(--gold) 12%, var(--card-bg));box-shadow:0 6px 16px rgba(191,143,58,.2);}
 .ritual-tag{display:block;font-size:.78rem;text-transform:uppercase;letter-spacing:.1em;color:var(--gold-deep);font-weight:700;margin-bottom:.3em;}
 .ritual-step h3{font-size:1.3rem;margin-bottom:.3em;}
@@ -628,7 +628,7 @@ img[data-blur="loaded"]{filter:blur(0);transform:scale(1);}
 .shop-media img{transition:transform .6s cubic-bezier(.2,.7,.3,1);}
 .shop-card:hover .shop-media img{transform:scale(1.07);}
 .shop-media-icon{display:flex;align-items:center;justify-content:center;background:linear-gradient(150deg,#F3E4C4,#E0C68F);}
-.shop-media-icon i{width:46px;height:46px;color:var(--gold-deep);}
+.shop-media-icon svg{width:46px;height:46px;color:var(--gold-deep);}
 .shop-card h3{font-size:1.08rem;margin-bottom:.3em;}
 .shop-card p{font-size:.9rem;margin-bottom:1rem;}
 .price{font-family:var(--font-display);font-size:1.3rem;color:var(--green);}
@@ -658,7 +658,7 @@ img[data-blur="loaded"]{filter:blur(0);transform:scale(1);}
   display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--ink);
 }
 .carousel-btn:hover{border-color:var(--gold);color:var(--gold-deep);}
-.carousel-btn i{width:18px;height:18px;}
+.carousel-btn svg{width:18px;height:18px;}
 .carousel-dots{display:flex;gap:.5em;}
 .carousel-dots button{
   width:8px;height:8px;border-radius:50%;background:var(--border);border:none;cursor:pointer;padding:0;
@@ -690,7 +690,7 @@ img[data-blur="loaded"]{filter:blur(0);transform:scale(1);}
 .savings-row .savings-highlight{color:var(--gold-deep);}
 .pricing-fine{font-size:.82rem;margin:1rem 0 1.2rem;}
 .pricing-cap{display:flex;align-items:center;gap:.5em;justify-content:center;font-size:.85rem;color:var(--ink-soft);margin:1rem 0 0;}
-.pricing-cap i{width:16px;height:16px;}
+.pricing-cap svg{width:16px;height:16px;}
 
 /* instagram */
 
@@ -706,7 +706,7 @@ img[data-blur="loaded"]{filter:blur(0);transform:scale(1);}
 .join-text h2{font-size:2rem;}
 .join-list{list-style:none;margin:1.5rem 0 0;padding:0;display:flex;flex-direction:column;gap:.8rem;}
 .join-list li{display:flex;align-items:center;gap:.6em;font-weight:500;color:var(--ink);}
-.join-list i{width:18px;height:18px;color:var(--green);flex-shrink:0;}
+.join-list svg{width:18px;height:18px;color:var(--green);flex-shrink:0;}
 .form-alert{
   display:block;margin:.9rem 0 0;padding:.8em 1em;
   background:rgba(192,57,43,.08);border:1px solid rgba(192,57,43,.3);
@@ -765,7 +765,7 @@ img[data-blur="loaded"]{filter:blur(0);transform:scale(1);}
   display:flex;align-items:center;gap:.5em;margin:1rem 0 0;padding:.9em 1em;background:rgba(63,107,82,0.08);
   color:var(--green-deep);border-radius:10px;font-size:.9rem;font-weight:600;
 }
-.form-success i{width:18px;height:18px;flex-shrink:0;}
+.form-success svg{width:18px;height:18px;flex-shrink:0;}
 
 /* footer */
 .site-footer{background:var(--maroon);color:rgba(251,246,236,.75);padding:4rem 1.5rem 1.5rem;border-top:1px solid rgba(255,255,255,.1);}
@@ -791,7 +791,7 @@ img[data-blur="loaded"]{filter:blur(0);transform:scale(1);}
 .footer-col h4{font-family:var(--font-body);font-size:.82rem;text-transform:uppercase;letter-spacing:.08em;color:var(--gold);margin-bottom:1rem;}
 .footer-col a{display:flex;align-items:center;gap:.5em;text-decoration:none;color:rgba(251,246,236,.78);font-size:.92rem;margin-bottom:.7em;}
 .footer-col a:hover{color:var(--cream);}
-.footer-col a i{width:15px;height:15px;}
+.footer-col a svg{width:15px;height:15px;}
 .footer-bottom{max-width:1060px;margin:2.5rem auto 0;padding-top:1.5rem;border-top:1px solid rgba(255,255,255,.12);font-size:.82rem;color:rgba(251,246,236,.55);}
 
 /* back to top */
@@ -805,7 +805,7 @@ img[data-blur="loaded"]{filter:blur(0);transform:scale(1);}
 /* Same box as the cart button, but it is a link, so the underline has to go. */
 .acct-btn{text-decoration:none;}
 .acct-btn svg{width:20px;height:20px;}
-.cart-btn i{width:20px;height:20px;}
+.cart-btn svg{width:20px;height:20px;}
 .cart-count{
   position:absolute;top:-7px;right:-7px;min-width:21px;height:21px;padding:0 5px;
   background:var(--gold);color:#fff;border-radius:999px;
@@ -832,7 +832,7 @@ img[data-blur="loaded"]{filter:blur(0);transform:scale(1);}
   font-family:var(--font-body);font-weight:600;font-size:.92rem;
   transition:background .18s ease,color .18s ease,transform .18s ease;
 }
-.btn-add i{width:16px;height:16px;}
+.btn-add svg{width:16px;height:16px;}
 .btn-add:hover{background:var(--gold);color:#fff;transform:translateY(-1px);}
 .btn-add.added{background:var(--green);border-color:var(--green);color:#fff;}
 
@@ -851,20 +851,20 @@ img[data-blur="loaded"]{filter:blur(0);transform:scale(1);}
   padding:1.15rem 1.25rem;border-bottom:1px solid var(--border);
 }
 .cart-head h3{margin:0;font-size:1.12rem;display:flex;align-items:center;gap:.5em;}
-.cart-head h3 i{width:19px;height:19px;color:var(--gold-deep);}
+.cart-head h3 svg{width:19px;height:19px;color:var(--gold-deep);}
 .icon-btn{
   background:none;border:none;cursor:pointer;color:var(--ink-soft);
   width:36px;height:36px;border-radius:9px;display:flex;align-items:center;justify-content:center;
 }
 .icon-btn:hover{background:rgba(43,38,32,.07);color:var(--ink);}
-.icon-btn i{width:19px;height:19px;}
+.icon-btn svg{width:19px;height:19px;}
 .cart-body{flex:1;overflow-y:auto;padding:1rem 1.25rem;}
 .cart-line{display:flex;gap:.85rem;padding:.9rem 0;border-bottom:1px solid var(--border);}
 .cart-line:last-child{border-bottom:none;}
 .cart-thumb{width:64px;height:52px;border-radius:10px;overflow:hidden;position:relative;flex-shrink:0;background:var(--cream-alt);}
 .cart-thumb .cell{top:0;right:0;bottom:0;left:0;width:100%;height:100%;}
 .cart-thumb.shop-media-icon{display:flex;align-items:center;justify-content:center;}
-.cart-thumb.shop-media-icon i{width:24px;height:24px;}
+.cart-thumb.shop-media-icon svg{width:24px;height:24px;}
 .cart-info{flex:1;min-width:0;}
 .cart-name{font-weight:600;font-size:.93rem;display:block;margin-bottom:.15em;}
 .cart-unit{font-size:.8rem;color:var(--ink-soft);}
@@ -874,14 +874,14 @@ img[data-blur="loaded"]{filter:blur(0);transform:scale(1);}
   display:flex;align-items:center;justify-content:center;color:var(--ink);
 }
 .qty button:hover{background:rgba(43,38,32,.07);}
-.qty button i{width:14px;height:14px;}
+.qty button svg{width:14px;height:14px;}
 .qty span{min-width:24px;text-align:center;font-weight:600;font-size:.88rem;}
 .cart-right{text-align:right;display:flex;flex-direction:column;justify-content:space-between;align-items:flex-end;}
 .cart-lineprice{font-family:var(--font-display);font-size:1.02rem;color:var(--green);}
 .cart-remove{background:none;border:none;cursor:pointer;color:var(--ink-soft);font-size:.76rem;text-decoration:underline;padding:0;}
 .cart-remove:hover{color:#b3402f;}
 .cart-empty{text-align:center;padding:3rem 1rem;color:var(--ink-soft);}
-.cart-empty i{width:42px;height:42px;color:var(--border);margin-bottom:.8rem;}
+.cart-empty svg{width:42px;height:42px;color:var(--border);margin-bottom:.8rem;}
 .cart-foot{padding:1.1rem 1.25rem 1.3rem;border-top:1px solid var(--border);background:var(--card-bg);}
 .cart-row{display:flex;justify-content:space-between;align-items:center;padding:.3rem 0;font-size:.93rem;color:var(--ink-soft);}
 .cart-row strong{color:var(--ink);font-weight:600;}
@@ -933,7 +933,7 @@ img[data-blur="loaded"]{filter:blur(0);transform:scale(1);}
   background:rgba(191,143,58,.12);border:1px solid rgba(191,143,58,.3);
   border-radius:12px;padding:.8em 1em;font-size:.84rem;color:var(--ink);margin:0 0 1.1rem;
 }
-.demo-note i{width:17px;height:17px;color:var(--gold-deep);flex-shrink:0;margin-top:.1em;}
+.demo-note svg{width:17px;height:17px;color:var(--gold-deep);flex-shrink:0;margin-top:.1em;}
 
 .pay-list{display:flex;flex-direction:column;gap:.6rem;}
 .pay{
@@ -951,7 +951,7 @@ img[data-blur="loaded"]{filter:blur(0);transform:scale(1);}
 .pay:has(input:checked),
 .pay.selected{border-color:var(--gold);background:rgba(191,143,58,.08);}
 .pay-ic{width:38px;height:38px;border-radius:10px;background:var(--cream-alt);display:flex;align-items:center;justify-content:center;flex-shrink:0;}
-.pay-ic i{width:19px;height:19px;color:var(--gold-deep);}
+.pay-ic svg{width:19px;height:19px;color:var(--gold-deep);}
 .pay-txt{display:flex;flex-direction:column;gap:.1em;}
 .pay-txt strong{font-size:.94rem;}
 .pay-txt em{font-style:normal;font-size:.78rem;color:var(--ink-soft);}
@@ -1157,7 +1157,7 @@ img[data-blur="loaded"]{filter:blur(0);transform:scale(1);}
   transform:translateY(10px);transition:opacity .25s ease, transform .25s ease;z-index:90;
 }
 .back-to-top.visible{opacity:1;pointer-events:auto;transform:translateY(0);}
-.back-to-top i{width:20px;height:20px;}
+.back-to-top svg{width:20px;height:20px;}
 
 /* ===== aspect-ratio fallback (Chrome < 88) =====
 
@@ -1219,6 +1219,44 @@ img[data-blur="loaded"]{filter:blur(0);transform:scale(1);}
   }
   .carousel-dots button.active{width:44px;background:none;}
   .carousel-dots button.active::before{width:22px;border-radius:4px;background:var(--gold);}
+
+  /* ----- the cart drawer, which the first pass over this missed -----
+
+     Measured on a 375px phone: the quantity − and + were 28x28, Remove was
+     45x14 and Close cart 36x36. Remove sits directly beside the minus, so
+     someone lowering a quantity by one taps a 14px-tall target next to a
+     28px one and deletes the line instead. This is the most expensive miss
+     on the site - it happens with a full cart, one tap from paying.
+
+     The buttons grow to 44px. The pill they sit in is inline-flex, so the
+     row grows with them and nothing needs repositioning. */
+  .qty button{min-width:44px;min-height:44px;}
+  .qty span{min-width:32px;}
+  .icon-btn{min-width:44px;min-height:44px;}
+
+  /* Remove is a text link, and making the text 44px tall would push it away
+     from the line it belongs to. Instead the visible underlined word stays
+     exactly as it is and an invisible ::before stretches the tap area around
+     it - the same trick the carousel dots above use. */
+  .cart-remove{position:relative;}
+  .cart-remove::before{
+    content:"";position:absolute;left:50%;top:50%;
+    width:max(100%,44px);height:44px;transform:translate(-50%,-50%);
+  }
+
+  /* ----- the mobile menu -----
+
+     The links were 66x33. Their gold underline is an ::after pinned to the
+     bottom of the link box, so adding height or padding would drag the
+     underline away from the word it marks. Same solution: the link is left
+     alone and ::before does the reaching.
+
+     left/right 0 keeps the area inside the link's own width, so in the
+     horizontal desktop nav neighbouring links cannot overlap either. */
+  .nav-link::before{
+    content:"";position:absolute;left:0;right:0;top:50%;
+    height:44px;transform:translateY(-50%);
+  }
 }
 
 /* responsive */
@@ -1353,7 +1391,7 @@ body.zv-hide-chat .zv-chat{
   transition:transform .2s ease,background .2s ease;
 }
 .zv-chat-toggle:hover{transform:translateY(-2px);background:var(--green-deep);}
-.zv-chat-toggle i{width:24px;height:24px;}
+.zv-chat-toggle svg{width:24px;height:24px;}
 .zv-chat-toggle .zv-ic-close{position:absolute;}
 .zv-chat.open .zv-ic-open{display:none;}
 .zv-chat:not(.open) .zv-ic-close{display:none;}
@@ -1374,13 +1412,13 @@ body.zv-hide-chat .zv-chat{
 
 .zv-chat-head{display:flex;align-items:center;gap:.7rem;padding:.9rem 1rem;background:var(--green-deep);color:var(--cream);}
 .zv-chat-avatar{width:34px;height:34px;border-radius:50%;background:rgba(251,246,236,.14);display:flex;align-items:center;justify-content:center;flex:none;}
-.zv-chat-avatar i{width:18px;height:18px;}
+.zv-chat-avatar svg{width:18px;height:18px;}
 .zv-chat-head-text{display:flex;flex-direction:column;line-height:1.25;flex:1;min-width:0;}
 .zv-chat-head-text strong{font-family:var(--font-display);font-size:1rem;}
 .zv-chat-head-text span{font-size:.76rem;opacity:.8;}
 .zv-chat-close{background:none;border:none;color:var(--cream);opacity:.85;cursor:pointer;padding:.3rem;line-height:0;flex:none;}
 .zv-chat-close:hover{opacity:1;}
-.zv-chat-close i{width:18px;height:18px;}
+.zv-chat-close svg{width:18px;height:18px;}
 
 .zv-chat-body{flex:1;overflow-y:auto;padding:1rem;display:flex;flex-direction:column;gap:.6rem;background:var(--cream-alt);}
 .zv-msg{max-width:86%;padding:.62rem .85rem;border-radius:14px;font-size:.9rem;line-height:1.45;}
@@ -1393,7 +1431,7 @@ body.zv-hide-chat .zv-chat{
 .zv-msg a{color:inherit;font-weight:600;text-decoration:underline;text-underline-offset:2px;}
 .zv-msg-bot a{color:var(--green-deep);}
 .zv-cta{display:inline-flex;align-items:center;gap:.3em;margin-top:.4em;font-size:.83rem;font-weight:600;color:var(--gold-deep);text-decoration:none;}
-.zv-cta i{width:14px;height:14px;}
+.zv-cta svg{width:14px;height:14px;}
 .zv-typing{align-self:flex-start;display:flex;gap:4px;padding:.7rem .9rem;background:var(--card-bg);border:1px solid var(--border);border-radius:14px;border-bottom-left-radius:4px;}
 .zv-typing span{width:6px;height:6px;border-radius:50%;background:var(--ink-soft);opacity:.5;animation:zvBlink 1s infinite ease-in-out;}
 .zv-typing span:nth-child(2){animation-delay:.15s;}
@@ -1419,14 +1457,23 @@ body.zv-hide-chat .zv-chat{
   display:flex;align-items:center;justify-content:center;cursor:pointer;flex:none;
 }
 .zv-chat-form button:hover{background:var(--gold-deep);}
-.zv-chat-form button i{width:17px;height:17px;}
+.zv-chat-form button svg{width:17px;height:17px;}
 
 .zv-chat-foot{margin:0;padding:.5rem 1rem .7rem;font-size:.68rem;color:var(--ink-soft);text-align:center;background:var(--card-bg);}
 .zv-chat-foot a{color:var(--ink-soft);}
 
 @media (max-width:640px){
   .zv-chat{right:1rem;bottom:4.9rem;gap:.45rem;}
-  .zv-chat-tag{font-size:.7rem;padding:.32rem .6rem;}
+
+  /* The "AI Assistant" pill sits to the left of the round button, and on a
+     375px screen it reached 82px across the hero's "See How It's Made"
+     button - so a tap meant for that button opened the chat instead.
+
+     Hidden rather than moved, because there is nowhere on a phone it can sit
+     without covering something, and it explains a button whose own
+     aria-label already says the same thing. The pill is aria-hidden, so
+     nothing is lost to a screen reader either. */
+  .zv-chat-tag{display:none;}
   .zv-chat-panel{
     position:fixed;right:.6rem;left:.6rem;bottom:4.9rem;width:auto;max-width:none;
     height:min(70vh,540px);height:min(70dvh,540px);
