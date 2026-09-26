@@ -130,6 +130,26 @@ export function businessInbox(): string {
   return process.env.MAIL_TO ?? 'dewikbavishi4@gmail.com';
 }
 
+/**
+ * Where a customer's reply should land.
+ *
+ * Every message to a customer carries this, because From and Reply-To answer
+ * two different questions. From has to be an address the sending service is
+ * authorised for - once these go out as orders@girbyziventa.com, that is what
+ * From must say, whether or not anybody is reading it. Reply-To is where a
+ * person pressing Reply actually reaches someone.
+ *
+ * Without it, replies go to From. girbyziventa.com currently publishes no MX
+ * record, so the domain cannot receive mail at all: the day From changes to
+ * the domain, every "can I change my delivery day?" would bounce into
+ * nothing, and nobody would find out. MAIL_REPLY_TO exists so this can point
+ * at a real inbox before that happens, and be moved to a domain address
+ * afterwards without touching code.
+ */
+export function replyToInbox(): string {
+  return process.env.MAIL_REPLY_TO?.trim() || businessInbox();
+}
+
 /** Whether this deployment can send at all. Used by /api/health too. */
 export function smtpConfigured(): boolean {
   return Boolean(
@@ -279,6 +299,7 @@ function itemsTable(order: OrderEmailData): string {
 export function customerOrderEmail(order: OrderEmailData): EmailMessage {
   return {
     to: order.contactEmail,
+    replyTo: replyToInbox(),
     subject: `Your Ziventa order ${order.orderNumber}`,
     html: htmlShell(
       `Thank you for your order`,
@@ -375,6 +396,9 @@ export function authCodeEmail(params: {
 
   return {
     to,
+    // Someone who cannot get in will reply to this message rather than go
+    // looking for an address, so it reaches a person like the others.
+    replyTo: replyToInbox(),
     // In the subject so a phone shows it in the notification without opening
     // anything - and therefore marked sensitive, so it never reaches the log.
     subject: `${code} is your Ziventa ${isSignup ? 'sign-up' : 'sign-in'} code`,
@@ -440,6 +464,7 @@ export interface LeadEmailData {
 export function customerLeadEmail(lead: LeadEmailData): EmailMessage {
   return {
     to: lead.email,
+    replyTo: replyToInbox(),
     subject: `Membership reserved - Gir Gold Club${lead.reference ? ` (${lead.reference})` : ''}`,
     html: htmlShell(
       'Your place is reserved',
@@ -490,6 +515,7 @@ export function membershipDepositEmail(params: {
   const amount = `Rs ${(params.depositPaise / 100).toLocaleString('en-IN')}`;
   return {
     to: params.to,
+    replyTo: replyToInbox(),
     subject: `Your Gir Gold Club seat is confirmed - seat ${params.seatNumber}`,
     html: htmlShell(
       'Your seat is confirmed',
@@ -543,6 +569,7 @@ export function membershipActiveEmail(params: {
 }): EmailMessage {
   return {
     to: params.to,
+    replyTo: replyToInbox(),
     subject: `You are a member of the Gir Gold Club - seat ${params.seatNumber}`,
     html: htmlShell(
       'You are a member of our club',
