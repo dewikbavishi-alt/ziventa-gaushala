@@ -22,7 +22,8 @@
     "test:range": "tsx scripts/range-test.ts",
     "admin:check-queries": "tsx --conditions=react-server scripts/admin-queries-check.ts",
     "test:owner": "tsx --conditions=react-server scripts/owner-test.ts",
-    "build:site": "node scripts/build-site.mjs"
+    "build:site": "node scripts/build-site.mjs",
+    "backup": "node --env-file=.env.local scripts/backup-db.mjs"
   },
   "dependencies": {
     "@prisma/adapter-pg": "^7.10.0",

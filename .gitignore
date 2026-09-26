@@ -53,3 +53,6 @@ next-env.d.ts
 # Local database backups. They hold customer names, emails, phone numbers and
 # delivery addresses, so they must never be committed.
 backup-*.json
+
+# Database dumps from scripts/backup-db.mjs. Real customer data - never commit.
+/backups
