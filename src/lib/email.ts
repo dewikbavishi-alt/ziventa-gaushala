@@ -119,10 +119,30 @@ export interface EmailResult {
 }
 
 function fromAddress(): string {
-  // Must be an address the SMTP server is willing to send as. Most providers
-  // reject a From that does not belong to the account, so this normally needs
-  // to match SMTP_USER or a verified alias on the same domain.
-  return process.env.MAIL_FROM ?? 'Ziventa Gaushala <orders@girbyziventa.com>';
+  const configured = process.env.MAIL_FROM?.trim();
+  if (configured) return configured;
+
+  /**
+   * Fall back to the account actually doing the sending.
+   *
+   * A From has to be an address the SMTP server is willing to send as: the
+   * authenticated account, or an alias verified on it. This used to fall back
+   * to a literal "orders@girbyziventa.com", which is an address that has
+   * never existed - no mailbox, and no MX record on the domain to hold one.
+   * If MAIL_FROM ever went missing, every message would have been handed to
+   * Gmail with a From it has no right to use, and Gmail would either reject
+   * the send outright or silently rewrite the header. Neither is something
+   * anybody would notice until customers stopped receiving confirmations.
+   *
+   * SMTP_USER is always authorised to send as itself, and smtpConfigured()
+   * already refuses to send without it, so by the time this runs it is there.
+   */
+  const account = process.env.SMTP_USER?.trim();
+  if (account) return `Ziventa Gaushala <${account}>`;
+
+  // Unreachable through sendEmail, which checks smtpConfigured() first. Kept
+  // honest rather than inventing an address that cannot work.
+  throw new Error('Cannot build a From address: neither MAIL_FROM nor SMTP_USER is set.');
 }
 
 /** Where order and enquiry alerts go. */
