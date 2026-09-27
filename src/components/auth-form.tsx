@@ -261,7 +261,15 @@ export function AuthForm({
     router.refresh();
   }
 
-  const nextQuery = next !== '/your-account' ? `?next=${encodeURIComponent(next)}` : '';
+  /**
+   * Carried across to the other form only when it was actually asked for.
+   * Both defaults mean "nowhere in particular", and passing one along would
+   * put a destination in the URL that nobody chose.
+   */
+  const nextQuery =
+    next === '/your-account' || next === '/auth/after-signin'
+      ? ''
+      : `?next=${encodeURIComponent(next)}`;
 
   return (
     <main className="min-h-screen bg-[#FBF6EC] flex items-center justify-center px-4 py-12">
@@ -313,6 +321,15 @@ export function AuthForm({
                 key={m}
                 type="button"
                 onClick={() => {
+                  /**
+                   * Password mode IS email sign-in, so this tab is already the
+                   * lit one. Tapping a lit tab has to do nothing, because
+                   * setMode('email') here would swap the password form for the
+                   * code form with no control anywhere to get back - and the
+                   * password form is the way in precisely when codes cannot
+                   * arrive. Reloading the URL was the only recovery.
+                   */
+                  if (m === 'email' && mode === 'password') return;
                   setMode(m);
                   setMessage(null);
                   setCodeSent(false);

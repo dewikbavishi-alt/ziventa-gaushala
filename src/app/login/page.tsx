@@ -40,10 +40,19 @@ export default async function LoginPage({ searchParams }: PageProps<'/login'>) {
   const modeRaw = Array.isArray(params.mode) ? params.mode[0] : params.mode;
   const initialMode = modeRaw === 'password' ? 'password' : 'email';
 
+  /**
+   * Somewhere specific was asked for, or let /auth/after-signin decide.
+   *
+   * Only the absence of ?next is redirected - an explicit one is honoured as
+   * before, so /login?next=/admin and /login?next=/your-account both still go
+   * exactly where they say.
+   */
+  const next = params.next ? safeNext(params.next) : '/auth/after-signin';
+
   return (
     <AuthForm
       intent="signin"
-      next={safeNext(params.next)}
+      next={next}
       initialEmail={initialEmail}
       initialMode={initialMode}
     />
