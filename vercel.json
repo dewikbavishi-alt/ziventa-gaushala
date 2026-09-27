@@ -17,8 +17,12 @@
     "One region, not a list: a list deploys to ALL of them, and a second",
     "region would only move functions further from the one database.",
     "",
-    "If a deploy is rejected for this, it is a plan restriction rather than a",
-    "mistake in the file - region selection is limited on the Hobby plan."
+    "NOTE: setting this here was observed NOT to move the functions - the",
+    "header stayed bom1::iad1 across deploys with this key present. For a",
+    "Next.js project the region that actually applies is the one in the Vercel",
+    "dashboard, under Settings > Functions > Function Region, and it only",
+    "takes effect on deployments made AFTER it is changed. Kept here so the",
+    "two agree and nobody later sets one without the other."
   ],
   "regions": ["bom1"]
 }
