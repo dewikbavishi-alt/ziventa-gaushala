@@ -307,8 +307,19 @@ model Order {
 
   status           OrderStatus   @default(PENDING)
   paymentStatus    PaymentStatus @default(PENDING)
+  /// "razorpay", or "cod" for cash on delivery. Null before a method is chosen.
   paymentProvider  String?
-  paymentReference String?
+  /// The gateway's ORDER id - Razorpay's order_xxx, created before the
+  /// customer pays and never changed afterwards. Unique, because two of our
+  /// orders pointing at one gateway order would mean a single payment could
+  /// mark both as paid. It is also what the webhook matches on, which is why
+  /// it has to stay stable rather than being overwritten at capture.
+  paymentReference String? @unique
+  /// The gateway's PAYMENT id - Razorpay's pay_xxx, known only once money has
+  /// actually moved. Kept apart from the order id above because a refund is
+  /// issued against this one, and because holding both in a single column
+  /// means neither can be looked up reliably.
+  paymentId        String?
   notes            String?
 
   /// Optional free text, recorded when an order is cancelled.
@@ -343,6 +354,9 @@ model Order {
   @@index([customerId])
   @@index([status, placedAt])
   @@index([paymentStatus, placedAt])
+  /// Every refund and every support question that starts with a Razorpay
+  /// dashboard screenshot begins by looking an order up from its payment id.
+  @@index([paymentId])
   /// Every dashboard figure is filtered by date first.
   @@index([placedAt])
   @@map("orders")

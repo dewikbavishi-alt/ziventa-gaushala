@@ -10,7 +10,14 @@ import {
 } from '@/lib/orders';
 import { getCurrentUser } from '@/lib/supabase/server';
 import { syncCustomer } from '@/lib/auth';
-import { businessOrderEmail, customerOrderEmail, sendEmail } from '@/lib/email';
+import { releaseAbandonedOrder, sendOrderEmails } from '@/lib/payments/confirm';
+import {
+  PaymentError,
+  createRazorpayOrder,
+  razorpayConfigured,
+  razorpayIsLive,
+  razorpayKeyId,
+} from '@/lib/payments/razorpay';
 
 const orderSchema = z.object({
   customer: z.object({
@@ -43,6 +50,13 @@ const orderSchema = z.object({
     .min(1, 'Your cart is empty')
     .max(40),
   notes: z.string().trim().max(1000).optional().or(z.literal('')),
+  /**
+   * How they intend to pay. Absent means the older checkout that predates the
+   * gateway, which is treated as cash on delivery - so a browser holding a
+   * cached copy of the page keeps working rather than failing at the last
+   * step. It selects a ROUTE, never a price.
+   */
+  payment: z.enum(['online', 'cod']).optional(),
 });
 
 export async function POST(request: Request) {
@@ -99,6 +113,17 @@ export async function POST(request: Request) {
   }
 
   const contactEmail = input.customer.email.toLowerCase();
+
+  /**
+   * Whether this order goes through the gateway.
+   *
+   * Both halves have to be true. Asking to pay online when no keys are
+   * configured falls back to the old behaviour rather than failing, which is
+   * what keeps this whole change inert until Razorpay is actually set up -
+   * the site behaves exactly as it did before, and starts taking payments the
+   * moment the keys exist, with no second deploy.
+   */
+  const payingOnline = input.payment === 'online' && razorpayConfigured();
 
   /**
    * Taking the stock and recording the sale happen together, or not at all.
@@ -168,6 +193,7 @@ export async function POST(request: Request) {
           // never claim a reservation that did not happen. Cancelling the
           // order later reads this to decide whether to give the units back.
           stockReservedAt: new Date(),
+          paymentProvider: payingOnline ? 'razorpay' : 'cod',
           items: { create: cart.items },
         },
         include: { items: true },
@@ -202,52 +228,95 @@ export async function POST(request: Request) {
   const { order } = result;
 
   /**
-   * The order is committed before any email is attempted. Email is a
-   * notification, not part of the sale - a mail outage must never cost a
-   * customer their order or show them an error for something that worked.
+   * Paying online: register the amount with Razorpay and hand the browser an
+   * order id to open the widget with.
+   *
+   * The browser never receives an amount to pass on. It gets an id for a sum
+   * already fixed here from priceCart, so the figure the customer is asked
+   * for cannot be edited into something else on the way.
    */
-  const emailData = {
-    orderNumber: order.orderNumber,
-    contactName: order.contactName,
-    contactEmail: order.contactEmail,
-    contactPhone: order.contactPhone,
-    shipLine1: order.shipLine1,
-    shipLine2: order.shipLine2,
-    shipCity: order.shipCity,
-    shipState: order.shipState,
-    shipPostcode: order.shipPostcode,
-    subtotalPaise: order.subtotalPaise,
-    shippingPaise: order.shippingPaise,
-    totalPaise: order.totalPaise,
-    notes: order.notes,
-    items: order.items.map((i) => ({
-      productName: i.productName,
-      unitPricePaise: i.unitPricePaise,
-      quantity: i.quantity,
-    })),
-  };
+  if (payingOnline) {
+    try {
+      const gatewayOrder = await createRazorpayOrder({
+        amountPaise: order.totalPaise,
+        receipt: order.orderNumber,
+        notes: { orderNumber: order.orderNumber, customer: order.contactName.slice(0, 60) },
+      });
 
-  const [toCustomer, toBusiness] = await Promise.all([
-    sendEmail(customerOrderEmail(emailData)),
-    sendEmail(businessOrderEmail(emailData)),
-  ]);
+      await prisma.order.update({
+        where: { id: order.id },
+        data: { paymentReference: gatewayOrder.id },
+      });
 
-  if (!toBusiness.delivered) {
-    console.warn(`[order ${order.orderNumber}] alert not sent: ${toBusiness.reason}`);
+      /**
+       * No email yet. Nothing has been paid, and "thank you for your order"
+       * before the money moves is a message half these customers should
+       * never receive - the ones who close the widget. Both emails are sent
+       * by confirmPaidOrder once payment actually lands.
+       */
+      return NextResponse.json(
+        {
+          ok: true,
+          orderNumber: order.orderNumber,
+          amountPaise: order.totalPaise,
+          confirmationSent: false,
+          memberRate: cart.isMember,
+          savedPaise: cart.savedPaise,
+          payment: {
+            provider: 'razorpay',
+            orderId: gatewayOrder.id,
+            // Publishable half of the key pair; it is in the widget anyway.
+            keyId: razorpayKeyId(),
+            amountPaise: order.totalPaise,
+            live: razorpayIsLive(),
+          },
+        },
+        { status: 201 },
+      );
+    } catch (err) {
+      /**
+       * The gateway refused or was unreachable. The order exists and is
+       * holding stock, so the stock goes back rather than being held for a
+       * checkout that can never complete.
+       */
+      await releaseAbandonedOrder(order.paymentReference ?? '').catch(() => {});
+      await prisma.order
+        .update({
+          where: { id: order.id },
+          data: {
+            status: 'CANCELLED',
+            cancelledAt: new Date(),
+            paymentStatus: 'FAILED',
+            cancelReason: 'Could not reach the payment provider.',
+          },
+        })
+        .catch(() => {});
+
+      const message =
+        err instanceof PaymentError ? err.message : 'We could not start the payment.';
+      console.error(`[order ${order.orderNumber}] gateway order failed: ${(err as Error).message}`);
+      return NextResponse.json({ error: message }, { status: 502 });
+    }
   }
+
+  /**
+   * Cash on delivery, or no gateway configured. The order IS the commitment,
+   * so it is confirmed now and both emails go immediately - which is exactly
+   * what happened before the gateway existed.
+   */
+  await sendOrderEmails(order.id);
 
   return NextResponse.json(
     {
       ok: true,
       orderNumber: order.orderNumber,
       amountPaise: order.totalPaise,
-      confirmationSent: toCustomer.delivered,
+      confirmationSent: true,
       // What the server actually charged at, so the receipt can say so rather
       // than guessing from whatever the browser believed.
       memberRate: cart.isMember,
       savedPaise: cart.savedPaise,
-      // No payment gateway connected yet, so nothing is charged.
-      payment: { provider: 'none' },
+      payment: { provider: razorpayConfigured() ? 'cod' : 'none' },
     },
     { status: 201 },
   );
