@@ -22,7 +22,19 @@
     "Next.js project the region that actually applies is the one in the Vercel",
     "dashboard, under Settings > Functions > Function Region, and it only",
     "takes effect on deployments made AFTER it is changed. Kept here so the",
-    "two agree and nobody later sets one without the other."
+    "two agree and nobody later sets one without the other.",
+    "",
+    "Finding it is harder than it sounds, so: open the PROJECT settings, not",
+    "the team ones, then Functions in the left sidebar. Function Regions is a",
+    "collapsed accordion, and the regions inside it are grouped by continent -",
+    "also collapsed. Mumbai is invisible until both it and the Asia Pacific",
+    "group are opened. The CDN page has a Function Regions panel too, but that",
+    "one only reports where functions ran; it changes nothing.",
+    "",
+    "Hobby allows exactly one region, so Washington has to come off in the",
+    "same edit or the deployment fails before it builds. And redeploying an",
+    "existing build is refused - 'try again from a fresh commit' - so a new",
+    "commit is what actually picks the saved setting up."
   ],
   "regions": ["bom1"]
 }
