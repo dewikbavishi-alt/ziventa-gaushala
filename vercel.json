@@ -1,40 +1,4 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
-  "framework": "nextjs",
-
-  "//regions": [
-    "bom1 is Mumbai. Requests already ARRIVE at the Mumbai edge, but the",
-    "functions were executing in iad1 (Washington DC) - the Vercel default -",
-    "while the database sits in ap-south-1, which is also Mumbai. So every",
-    "query a page made travelled India -> US -> India and back, measured at",
-    "roughly 300ms of avoidable latency on every dynamic request, compounding",
-    "on pages that run several queries in sequence.",
-    "",
-    "Set here rather than with Next's preferredRegion export, which is",
-    "deprecated in this version of Next and now only accepts auto/global/home",
-    "on Vercel - none of which can name Mumbai.",
-    "",
-    "One region, not a list: a list deploys to ALL of them, and a second",
-    "region would only move functions further from the one database.",
-    "",
-    "NOTE: setting this here was observed NOT to move the functions - the",
-    "header stayed bom1::iad1 across deploys with this key present. For a",
-    "Next.js project the region that actually applies is the one in the Vercel",
-    "dashboard, under Settings > Functions > Function Region, and it only",
-    "takes effect on deployments made AFTER it is changed. Kept here so the",
-    "two agree and nobody later sets one without the other.",
-    "",
-    "Finding it is harder than it sounds, so: open the PROJECT settings, not",
-    "the team ones, then Functions in the left sidebar. Function Regions is a",
-    "collapsed accordion, and the regions inside it are grouped by continent -",
-    "also collapsed. Mumbai is invisible until both it and the Asia Pacific",
-    "group are opened. The CDN page has a Function Regions panel too, but that",
-    "one only reports where functions ran; it changes nothing.",
-    "",
-    "Hobby allows exactly one region, so Washington has to come off in the",
-    "same edit or the deployment fails before it builds. And redeploying an",
-    "existing build is refused - 'try again from a fresh commit' - so a new",
-    "commit is what actually picks the saved setting up."
-  ],
-  "regions": ["bom1"]
+  "framework": "nextjs"
 }

@@ -26,9 +26,9 @@ What is deliberately NOT here:
 
 - `buildCommand: "next build"` - already the default for a Next project
 - `regions: ["bom1"]` - Mumbai, worth roughly 200ms per request for an Indian
-  customer, but region choice is restricted on Hobby plans and a rejected
-  value fails the entire build instead of being ignored. Set it in the
-  dashboard under Project Settings > Functions.
+  customer. Set it in the dashboard instead, under Project Settings >
+  Functions; see "Function region" below. Keeping it in one place only means
+  there is nothing to disagree with the dashboard.
 
 ## Never put comments in `vercel.json`
 
@@ -48,6 +48,49 @@ misleading - the live site kept working (an older, valid deployment was still
 being served), so it looked like the pushes were not arriving at all.
 
 Anything explanatory goes in this file instead.
+
+**It happened a second time.** Commit `8d36368` reintroduced the same mistake
+under a different name, `"//regions"`, and every build from there to `60c87ee`
+failed on it - including the Reply-To fix, the invalid From address fix and
+the Razorpay groundwork, all of which sat unshipped while the site served an
+older deployment. The rule is the key itself, not the word after the slashes:
+**`vercel.json` may contain only keys Vercel's schema defines.**
+
+Two things make this hard to notice, so check for both:
+
+- A failed build leaves the previous deployment serving, so the live site
+  looks healthy and nothing about it hints that a push was thrown away.
+- Vercel refuses to redeploy a failed deployment - "This deployment can not be
+  redeployed. Please try again from a fresh commit." Hitting that message is
+  itself a sign the last build errored, not a quirk of the Redeploy button.
+
+After any push that matters, confirm the deployment went green rather than
+assuming it did. See "Checking a deployment" at the end of this file.
+
+## Function region
+
+Functions default to Washington DC (`iad1`) while the database is in Mumbai
+(`ap-south-1`), so every query crosses the planet twice. `X-Vercel-Id` reads
+`<edge>::<function region>::<id>`, so `bom1::iad1` means a request arrived in
+Mumbai and was executed in Washington.
+
+Set it in the dashboard, not in code:
+
+1. Open the **project** settings, not the team settings
+2. **Functions** in the left sidebar
+3. Expand the **Function Regions** accordion, then the **Asia Pacific** group
+   inside it - Mumbai is invisible until both are open
+4. Tick Mumbai `bom1` and untick Washington. Hobby allows exactly one region,
+   and asking for more fails the deployment before the build step
+5. Push a commit. The setting only applies to deployments made after it is
+   saved, and Redeploy on an existing build is refused
+
+Next's `preferredRegion` export cannot do this - it is deprecated in this
+version of Next and accepts only `auto`, `global` and `home` on Vercel.
+
+The Function Regions panel under CDN is a report of where functions ran over
+the last 12 hours, not a setting. It keeps saying Washington for hours after a
+successful change.
 
 ## Migrations are deliberately out of the build command
 
