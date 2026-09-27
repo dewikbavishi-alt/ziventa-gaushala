@@ -159,6 +159,31 @@ export function SiteFooter() {
             Gujarat, 365456, India
           </address>
           <div className="flex flex-col gap-[0.7em]">
+            {/*
+              The address was the one contact detail that did nothing, so it
+              now opens a map like the phone dials and the mail opens.
+
+              The query is the ADDRESS ONLY, and must stay that way. Leading it
+              with "Aarya Gir Nutriments" was tried and sent people to a hotel:
+              the business is not on Google Maps, so Google matched "Gir" to
+              tourism and returned Gir resorts instead. Address alone resolves
+              to Khari, Bagasara, which is the right village.
+
+              Kept identical to the same link in site/shell.html - two footers
+              that drift are worse than one.
+            */}
+            <a
+              href="https://www.google.com/maps/search/?api=1&query=Plot+No+21%2C+Khari%2C+Bagasara%2C+Amreli%2C+Gujarat+365456"
+              target="_blank"
+              rel="noopener noreferrer"
+              className={COL_LINK}
+            >
+              <svg {...ICON}>
+                <path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0z" />
+                <circle cx="12" cy="10" r="3" />
+              </svg>
+              Get directions
+            </a>
             {/* tel: and mailto: so a phone dials or opens mail on one tap. The
                 number is spaced for reading; the href keeps it unbroken. */}
             <a href="tel:+919033525352" className={COL_LINK}>
