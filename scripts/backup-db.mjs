@@ -131,8 +131,16 @@ async function main() {
     // grants referencing roles that do not exist there abort the restore.
     '--no-owner',
     '--no-privileges',
-    // Supabase manages extensions itself; dumping them collides on restore.
-    '--extension', 'none',
+    /*
+     * Supabase manages extensions itself; dumping them collides on restore.
+     *
+     * --exclude-extension, not --extension. -e/--extension is an INCLUDE
+     * filter - "dump only the extensions matching this pattern" - so asking
+     * for 'none' asked for an extension literally named none, found nothing,
+     * and pg_dump stopped with "no matching extensions were found" before
+     * writing a byte. It looked like a connection problem and was not.
+     */
+    '--exclude-extension', '*',
     '--quote-all-identifiers',
     '--verbose',
     ...SCHEMAS.flatMap((s) => ['--schema', s]),
