@@ -1669,9 +1669,73 @@ document.addEventListener('DOMContentLoaded', function(){
       test:/\b(recommend|suggest|help me choose|help me pick|what should i (buy|get)|not sure what to (buy|get|choose|pick)|what do you suggest|what do you recommend)\b|which\b.{0,30}\bshould i (buy|get|choose|pick)\b/i,
       reply:'<p>Happy to help you choose. Are you looking for ghee for everyday cooking, something for puja or a havan, a gift for someone, or just want to try us for the first time?</p>'
     },
+    /* ---- the practical questions, after the product ones so "how much is
+       the 500g" still gets a price, but before the broad membership and
+       pricing catch-alls further down, which would otherwise swallow them.
+       First match wins, so position here is the behaviour. ---- */
+    {
+      test:/\b(where(\s|')?s my order|where is my order|track(ing)?|order status|status of my order|has my order|when will (it|my order|my delivery|my parcel|they) (arrive|come|reach|be delivered)|delivered yet)\b/i,
+      reply:'<p>Sign in and open <strong>Your Account → My Orders</strong> — every order is there with its current stage, from placed through to delivered.</p><p>We also phone you to confirm the delivery slot before anything leaves the gaushala, so you will hear from us either way.</p><a class="zv-cta" href="/your-account/orders">See my orders <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14" key="1ays0h"/><path d="m12 5 7 7-7 7" key="xquz4c"/></svg></a>'
+    },
+    {
+      test:/\b(cancel|change my order|edit my order|amend|wrong address|mistake in my order|remove an item|add to my order)\b/i,
+      reply:'<p>Nothing is charged when you order, and we call to confirm before anything is dispatched — so the simplest thing is to tell us on that call.</p><p>Sooner is better either way: email <a href="mailto:girbyziventagaushala@gmail.com">girbyziventagaushala@gmail.com</a> or call <a href="tel:+919033525352">+91 90335 25352</a> with your order number and we will sort it out.</p>'
+    },
+    {
+      test:/\b(return it|returns?\b|refund|money back|send it back|damaged|leaked|spoilt|broken|wrong item|wrong product)\b/i,
+      reply:'<p>If something reaches you damaged, leaking or simply not what you ordered, tell us straight away with your order number — email <a href="mailto:girbyziventagaushala@gmail.com">girbyziventagaushala@gmail.com</a> or call <a href="tel:+919033525352">+91 90335 25352</a> — and we will put it right.</p><p>Payment is taken on delivery, so an order that has not arrived yet has nothing to refund; just tell us and we will cancel it.</p>'
+    },
+    /* Payment sits ahead of the stock answer on purpose: "is cash on delivery
+       available?" contains "available", and without this it was answered with
+       shelf availability. */
+    {
+      test:/\b(payment|checkout|pay|paying|upi|card|net ?banking|cod|cash on delivery|order|cart)\b/i,
+      reply:'<p>Orders placed here are real orders — they reach the gaushala and we act on them.</p><p><strong>You pay on delivery.</strong> Nothing is charged when you place the order, and we phone you to confirm the delivery slot before anything is dispatched. Online payment is not switched on yet.</p><p>Delivery is ₹99, free over ₹1,500. Sign in first if you would like the order kept in your account, with your address saved for next time.</p><a class="zv-cta" href="#shop" data-zv-nav="1">Open the shop <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14" key="1ays0h"/><path d="m12 5 7 7-7 7" key="xquz4c"/></svg></a>'
+    },
+    /* Where-we-deliver before what-delivery-costs, because the cost pattern
+       matches the bare word "deliver" and would otherwise answer "do you
+       deliver to Mumbai?" with a price. Both sit ahead of the general pricing
+       answer further down, which matches "how much" and was swallowing
+       "how much is delivery?". */
+    {
+      test:/\b(deliver to|ship to|do you deliver|do you ship|delivery area|which cities|my city|outside india|international|abroad|overseas)\b/i,
+      reply:'<p>We deliver anywhere in India. Checkout asks for your city, state and a 6-digit PIN code, and we phone to confirm the slot before dispatch.</p><p>We are not set up for deliveries outside India.</p>'
+    },
+    {
+      test:/\b(deliver(y|ies)?|shipping|dispatch|courier|when will i (get|receive))\b/i,
+      reply:'<p>Delivery is <strong>₹99</strong>, and <strong>free on orders over ₹1,500</strong>.</p><p>We phone you to confirm the slot before anything leaves the gaushala. Gir Gold Club members are served first — small batches move fast — with a consistent year-round supply rather than a seasonal rush.</p>'
+    },
+    {
+      test:/\b(out of stock|sold out|in stock|availab(le|ility)|restock|back in stock|do you have any)\b/i,
+      reply:'<p>The shop shows it live. Anything that has run out is greyed out, marked <strong>Out of stock</strong>, and cannot be added to the cart — so whatever you can add is genuinely on the shelf.</p><p>We work in small batches, so things do sell out. Gir Gold Club members are served first from each batch.</p><a class="zv-cta" href="#shop" data-zv-nav="1">See what is available <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14" key="1ays0h"/><path d="m12 5 7 7-7 7" key="xquz4c"/></svg></a>'
+    },
+    {
+      test:/\b(sign ?in|sign ?up|log ?in|log ?out|my account|account|create an account|password|forgot|otp|one[- ]time code|verification code)\b/i,
+      reply:'<p>You sign in with your email address — we send a one-time code, so there is no password to remember or lose.</p><p><strong>Your Account</strong> keeps your orders, your saved delivery addresses and your membership in one place. Addresses save themselves from checkout, so your next order fills itself in.</p><p>Signing in by mobile number is not available yet; please use email for now.</p><a class="zv-cta" href="/login">Sign in <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14" key="1ays0h"/><path d="m12 5 7 7-7 7" key="xquz4c"/></svg></a>'
+    },
+    {
+      test:/\b(a2|a-2|beta[- ]?casein|a1)\b/i,
+      reply:'<p>A2 refers to the type of beta-casein protein in the milk. India\'s native breeds, Gir among them, give A2 milk, while most high-yield crossbreeds give A1.</p><p>Our ghee is made only from the milk of our own Gir cows, so it is A2 by virtue of the herd rather than by any blending. I am not able to make health claims about that difference — for anything medical, please ask a doctor.</p>'
+    },
+    {
+      test:/\b(shelf ?life|best before|storage|store it|keep it|fridge|goes? bad|spoils?)\b|\b(expir|refrigerat)\w*|\bhow long (does|do|will|can)\b[^?]{0,30}\b(last|keep|stay)\b/i,
+      reply:'<p>Ghee keeps well at normal room temperature — a cool, dark cupboard away from direct sunlight is ideal, and it does not need refrigerating. Always use a clean, dry spoon; water is the one thing that spoils a jar.</p><p>The exact best-before date is printed on your jar, since it is set per batch.</p>'
+    },
+    {
+      test:/\b(pure|purity)\b|\badulterat\w*|\b(certif(ied|icate|ication)?|fssai|lab (test|report)|tested|organic|authentic|genuine|real ghee|trust you)\b/i,
+      reply:'<p>Fair question to ask, so here is how it is answerable rather than just asserted. Every jar comes from our own small herd — the cows are named and individually cared for. The ghee is curd-churned the Bilona way and never cream-separated, in small batches.</p><p>Gir Gold Club members get regular veterinary reports for every cow and can visit the gaushala in person, which is the part most claims cannot offer.</p><p>For paperwork or specific certification questions, email <a href="mailto:girbyziventagaushala@gmail.com">girbyziventagaushala@gmail.com</a> and we will answer you directly.</p>'
+    },
+    {
+      test:/\b(wholesale|bulk order|reseller|distributor|retailer|stock your|corporate|b2b|franchise)\b/i,
+      reply:'<p>We are not really set up for wholesale — small batches and a founding circle capped at 250 families are the point of what we do, rather than volume.</p><p>If you have something specific in mind, email <a href="mailto:girbyziventagaushala@gmail.com">girbyziventagaushala@gmail.com</a> or call <a href="tel:+919033525352">+91 90335 25352</a> and we will talk it through honestly.</p>'
+    },
+    {
+      test:/\b(seats? (left|remaining|available|open|free)|how many (seats|members|families|spots|people)|spots? (left|remaining)|is it full|is the club full|full yet|all taken|any (seats|left)|still open)\b/i,
+      reply:'<p>The founding circle is capped at <strong>250 families</strong>, and that cap is real.</p><p>We do not publish a live counter — pre-register with your city and we will tell you honestly whether a seat is open for your area. As the site says: if a seat is open, it is open; if it is not, we will say so.</p><a class="zv-cta" href="#join" data-zv-nav="1">Pre-register <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14" key="1ays0h"/><path d="m12 5 7 7-7 7" key="xquz4c"/></svg></a>'
+    },
     {
       test:/\b(deposit|refund(able)?|₹?\s?5,?000)\b/i,
-      reply:'<p>Joining needs a refundable deposit of <strong>₹5,000</strong>. It simply reserves your seat in the Gir Gold Club and unlocks the member ghee rate of ₹3,150–3,200/kg — about 20% off. Nothing is hidden or inflated.</p><a class="zv-cta" href="#pricing" data-zv-nav="1">See membership terms <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14" key="1ays0h"/><path d="m12 5 7 7-7 7" key="xquz4c"/></svg></a>'
+      reply:'<p>Joining needs a fully refundable deposit of <strong>₹5,000</strong>. It reserves your seat in the Gir Gold Club and unlocks the member ghee rate of ₹3,150–3,200/kg — about 20% off. Nothing is hidden or inflated.</p><p>How it goes: you pre-register (no payment at that stage), we check whether a seat is open for your area, and if it is we email you a private link to pay the deposit. Once it is paid your seat is confirmed and the member rate applies from then on.</p><a class="zv-cta" href="#pricing" data-zv-nav="1">See membership terms <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14" key="1ays0h"/><path d="m12 5 7 7-7 7" key="xquz4c"/></svg></a>'
     },
     {
       test:/\b(membership|gir gold club|member(ship)?s?\b|benefit|what do i get|perks)\b/i,
@@ -1690,21 +1754,13 @@ document.addEventListener('DOMContentLoaded', function(){
       reply:'<p>Every jar traces back to our small, well-cared-for herd of Gir cows — each one named and looked after individually: <strong>Kamdhenu</strong> (the eldest, gentle and unhurried), <strong>Radha</strong> (calm-eyed, a caretaker favourite), <strong>Ganga</strong> (the youngest, full of morning energy) and <strong>Nandini</strong> (a steady producer, mother of two calves).</p><a class="zv-cta" href="#herd" data-zv-nav="1">Meet the herd <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14" key="1ays0h"/><path d="m12 5 7 7-7 7" key="xquz4c"/></svg></a>'
     },
     {
-      test:/\b(deliver(y|ies)?|shipping|dispatch|when will i (get|receive))\b/i,
-      reply:'<p>Members are served first — small batches move fast, straight to your doorstep, with a consistent year-round supply rather than a seasonal rush.</p>'
-    },
-    {
       test:/\b(join|sign up|pre[- ]?register|apply|waiting list|seat|how do i become)\b/i,
       reply:'<p>To join, you pre-register with your name, email, phone and city — <strong>no payment is required</strong> to pre-register. We reach out directly, not through a mailing list, once a seat is open for your area. The founding circle is honestly capped at 250 families.</p><a class="zv-cta" href="#join" data-zv-nav="1">Pre-register now <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14" key="1ays0h"/><path d="m12 5 7 7-7 7" key="xquz4c"/></svg></a>'
     },
     {
-      test:/\b(contact|email|instagram|reach you|phone number|address|visit|location|talk to)\b/i,
-      reply:'<p>You can reach us at <a href="mailto:girbyziventagaushala@gmail.com">girbyziventagaushala@gmail.com</a> or follow <a href="https://instagram.com/ziventagaushala" target="_blank" rel="noopener noreferrer">@ziventagaushala</a> on Instagram for daily glimpses of the gaushala. Physical visits to the gaushala are reserved for Gir Gold Club members.</p>'
+      test:/\b(contact|e-?mail|instagram|reach (you|us)|phone( number)?|call you|address|visit|location|directions|where are you|how to reach|talk to (someone|a human|you))\b/i,
+      reply:'<p><strong>Call or WhatsApp</strong> <a href="tel:+919033525352">+91 90335 25352</a><br><strong>Email</strong> <a href="mailto:girbyziventagaushala@gmail.com">girbyziventagaushala@gmail.com</a><br><strong>Instagram</strong> <a href="https://instagram.com/ziventagaushala" target="_blank" rel="noopener noreferrer">@ziventagaushala</a>, for daily glimpses of the herd</p><p><strong>The gaushala</strong><br>Aarya Gir Nutriments<br>Plot No 21, Village: Khari<br>Taluka: Bagasara, Dist. Amreli<br>Gujarat 365456</p><p>Visiting in person is one of the Gir Gold Club benefits — members are welcome to come and see the herd. Do call before setting off so someone is there to show you round.</p><a class="zv-cta" href="https://www.google.com/maps/search/?api=1&amp;query=Plot+No+21%2C+Khari%2C+Bagasara%2C+Amreli%2C+Gujarat+365456" target="_blank" rel="noopener noreferrer">Get directions <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14" key="1ays0h"/><path d="m12 5 7 7-7 7" key="xquz4c"/></svg></a>'
     },
-    {
-      test:/\b(payment|checkout|pay|upi|card|cod|cash on delivery|order|cart)\b/i,
-      reply:'<p>The shop\'s "Add to Cart" / checkout flow on this page is currently a <strong>demo</strong> — no real payment is taken. To actually become part of the Gir Gold Club, the honest path is the pre-registration form; we\'ll reach out directly from there.</p><a class="zv-cta" href="#join" data-zv-nav="1">Go to pre-registration <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14" key="1ays0h"/><path d="m12 5 7 7-7 7" key="xquz4c"/></svg></a>'
-    }
   ];
   var FALLBACK = '<p>I can only help with questions about Ziventa Gaushala — the Gir Gold Club membership, our ghee &amp; Panchgavya products, or the gaushala itself — and I don\'t have an answer for that one within what\'s on this site. For anything else, please email <a href="mailto:girbyziventagaushala@gmail.com">girbyziventagaushala@gmail.com</a> or message <a href="https://instagram.com/ziventagaushala" target="_blank" rel="noopener noreferrer">@ziventagaushala</a> on Instagram.</p>';
 
@@ -1715,7 +1771,9 @@ document.addEventListener('DOMContentLoaded', function(){
     {label:'How the ghee is made', q:'How is the ghee made?'},
     {label:'Meet the herd', q:'Tell me about the cows'},
     {label:'How do I join?', q:'How do I join?'},
-    {label:'Contact us', q:'How can I contact you?'}
+    {label:'Delivery & payment', q:'How much is delivery and how do I pay?'},
+    {label:'Where is my order?', q:'Where is my order?'},
+    {label:'Contact & visit us', q:'How can I contact you?'}
   ];
 
   function answerFor(q){
