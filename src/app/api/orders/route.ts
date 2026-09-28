@@ -10,6 +10,7 @@ import {
 } from '@/lib/orders';
 import { getCurrentUser } from '@/lib/supabase/server';
 import { syncCustomer } from '@/lib/auth';
+import { attachAddressToCustomer } from '@/lib/addresses';
 import { releaseAbandonedOrder, sendOrderEmails } from '@/lib/payments/confirm';
 import {
   PaymentError,
@@ -172,10 +173,28 @@ export async function POST(request: Request) {
       // this whole transaction back and records no order.
       await reserveStock(tx, cart.tracked);
 
+      /**
+       * Keep the address on the account, for a signed-in customer.
+       *
+       * This is what makes Your Addresses real: until now checkout collected
+       * an address for the order and threw it away, so the page had nothing
+       * to list and said so. Ordering twice to the same house reuses the one
+       * entry rather than stacking duplicates.
+       *
+       * Guests get null and lose nothing - the order carries its own copy of
+       * the address in the ship* fields either way, which is what the packing
+       * slip reads and what must stay correct even if the account later edits
+       * or deletes the saved one.
+       */
+      const addressId = customerId
+        ? await attachAddressToCustomer(tx, customerId, input.address)
+        : null;
+
       const order = await tx.order.create({
         data: {
           orderNumber: generateOrderNumber(),
           customerId,
+          addressId,
           contactName: input.customer.name,
           contactEmail,
           contactPhone: input.customer.phone,

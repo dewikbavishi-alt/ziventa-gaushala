@@ -1372,8 +1372,39 @@ document.addEventListener('DOMContentLoaded', function(){
     if(typeof window.zvSetMemberRate==='function') window.zvSetMemberRate(!!isMember);
   }
 
+  /* Fill the checkout from the address saved on the account.
+
+     Only ever into a field that is still empty. Somebody who has started
+     typing has said more about where they want this order than their default
+     address has, and overwriting that mid-sentence is worse than not helping
+     at all - which is also why this runs once, on load, rather than every
+     time the checkout panel opens.
+
+     Nothing here is trusted. The order route reads the fields that are
+     actually submitted and prices from the database, so the worst an edited
+     response can do is fill the form in wrong for the person who edited it. */
+  function prefillCheckout(address){
+    if(!address) return;
+    var street=[address.line1,address.line2].filter(Boolean).join(', ');
+    var pairs=[['coAddr',street],['coCity',address.city],['coPin',address.postcode]];
+    for(var i=0;i<pairs.length;i++){
+      var el=document.getElementById(pairs[i][0]);
+      if(el && !el.value && pairs[i][1]) el.value=pairs[i][1];
+    }
+    /* The state is a <select>, so it only takes a value that is really one of
+       the options - a stale or misspelt one leaves it on "Select state"
+       rather than silently submitting something the server would reject. */
+    var sel=document.getElementById('coState');
+    if(sel && !sel.value && address.state){
+      for(var j=0;j<sel.options.length;j++){
+        if(sel.options[j].value===address.state){ sel.value=address.state; break; }
+      }
+    }
+  }
+
   function renderSigninStrips(state){
     applyMemberRate(state && state.member);
+    if(state && state.signedIn) prefillCheckout(state.address);
     var strips=[
       {el:document.getElementById('signinStripJoin'),   next:'/#join'},
       {el:document.getElementById('signinStripCheckout'),next:'/#checkout'}

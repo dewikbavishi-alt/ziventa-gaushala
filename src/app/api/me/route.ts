@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { getCurrentUser } from '@/lib/supabase/server';
 import { memberRateApplies } from '@/lib/orders';
+import { prisma } from '@/lib/prisma';
 
 /**
  * Who is signed in, if anyone.
@@ -32,10 +33,27 @@ export async function GET() {
     user.phone ??
     'your account';
 
+  /**
+   * The address checkout should offer back, if they have saved one.
+   *
+   * Only ever the signed-in person's own default, read from the session -
+   * there is no id in the request to point somewhere else. It is a
+   * convenience for filling a form they are about to fill anyway, and the
+   * order route re-reads whatever is actually submitted, so editing this in
+   * the browser changes the typing saved and nothing else.
+   */
+  const [member, address] = await Promise.all([
+    memberRateApplies(user.id),
+    prisma.address.findFirst({
+      where: { customerId: user.id, isDefault: true },
+      select: { line1: true, line2: true, city: true, state: true, postcode: true },
+    }),
+  ]);
+
   return NextResponse.json(
-    { signedIn: true, label, member: await memberRateApplies(user.id) },
-    // Never cache this - a shared cache would show one person's name, and now
-    // one person's prices, to another.
+    { signedIn: true, label, member, address },
+    // Never cache this - a shared cache would show one person's name, their
+    // prices, and now their home address, to another.
     { headers: { 'Cache-Control': 'no-store' } },
   );
 }
