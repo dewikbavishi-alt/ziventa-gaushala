@@ -876,6 +876,31 @@ body.zv-member .price-hint-member{display:block;text-decoration:line-through;}
 .btn-add:hover{background:var(--gold);color:#fff;transform:translateY(-1px);}
 .btn-add.added{background:var(--green);border-color:var(--green);color:#fff;}
 
+/* ===== out of stock =====
+   Applied by script once /api/products answers, never in the built HTML: the
+   page is static and the shelf is not, so the only honest source is the
+   database at the moment someone looks. */
+.shop-card.is-soldout{opacity:.75;}
+/* The lift on hover reads as "you can click this". Nothing here is clickable. */
+.shop-card.is-soldout:hover{transform:none;box-shadow:var(--shadow);}
+.shop-card.is-soldout .shop-media img{filter:grayscale(1);}
+/* "Most Loved" and "Out of stock" share the same corner, and a product can be
+   both. The sold-out one wins, because it is the one that changes a decision. */
+.shop-card.is-soldout .shop-badge{display:none;}
+.soldout-badge{
+  position:absolute;top:-11px;right:1.2rem;background:var(--ink);color:#fff;
+  font-size:.72rem;font-weight:700;padding:.3em .8em;border-radius:999px;letter-spacing:.03em;
+}
+/* Disabled rather than hidden. A missing button looks like a broken card;
+   a greyed one that says why does not. */
+.shop-card.is-soldout .btn-add[disabled]{
+  background:transparent;border-color:var(--border);color:var(--ink-soft);
+  cursor:not-allowed;transform:none;
+}
+.shop-card.is-soldout .btn-add[disabled]:hover{
+  background:transparent;color:var(--ink-soft);transform:none;
+}
+
 .scrim{position:fixed;top:0;right:0;bottom:0;left:0;background:rgba(26,34,28,.5);z-index:190;-webkit-backdrop-filter:blur(2px);backdrop-filter:blur(2px);}
 
 .cart{

@@ -743,6 +743,60 @@ document.addEventListener('DOMContentLoaded', function(){
   }
   refreshSigninState();
 
+  /* ===== out of stock =====
+
+     The shop cards are built into the page, so the page ships believing
+     everything is available. The shelf lives in the database and the owner
+     edits it from the admin, so the only honest answer is the one fetched
+     when somebody actually looks.
+
+     `soldOut` comes from /api/products, which is served no-store so an edit
+     shows up on the next page load rather than a minute later.
+
+     A product missing from the response counts as unavailable too: switching
+     one off in the admin drops it from the catalogue entirely, and priceCart
+     already refuses to sell it, so the card must not keep offering it.
+
+     If the fetch fails the page is left exactly as built - buyable. That is
+     the safe way round: the server refuses a sold-out order on its own, so
+     the worst case is a clear message at checkout instead of a shop that
+     looks shut because a request timed out. */
+  function zvMarkSoldOut(card){
+    card.classList.add('is-soldout');
+    if(!card.querySelector('.soldout-badge')){
+      var badge=document.createElement('span');
+      badge.className='soldout-badge';
+      badge.textContent='Out of stock';
+      card.insertBefore(badge, card.firstChild);
+    }
+    /* Both buttons go, replaced by one that says why. `disabled` is what
+       actually stops it - the click handlers are delegated and would not know
+       to skip a card that merely looks greyed out. */
+    var actions=card.querySelector('.shop-actions');
+    if(actions){
+      actions.innerHTML='<button class="btn-add" type="button" disabled aria-disabled="true"><span>Out of stock</span></button>';
+    }
+  }
+
+  (function(){
+    var cards=document.querySelectorAll('.shop-card[data-id]');
+    if(!cards.length || !window.fetch) return;
+    fetch('/api/products',{cache:'no-store'})
+      .then(function(r){ return r.ok ? r.json() : null; })
+      .then(function(data){
+        if(!data || !data.products) return;
+        var sellable={};
+        for(var i=0;i<data.products.length;i++){
+          var p=data.products[i];
+          if(!p.soldOut) sellable[p.slug]=true;
+        }
+        Array.prototype.forEach.call(cards,function(card){
+          if(!sellable[card.getAttribute('data-id')]) zvMarkSoldOut(card);
+        });
+      })
+      .catch(function(){ /* Leave the page as built. */ });
+  })();
+
   /* ===== locking the page behind an overlay =====
 
      overflow:hidden on <body> does nothing in iOS Safari. The page keeps

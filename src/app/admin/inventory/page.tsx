@@ -53,9 +53,17 @@ export default async function InventoryPage() {
         <StatCard label="Out of stock" value={num(counts.outOfStock)} icon={<IconAlert />} tone={counts.outOfStock ? 'red' : 'grey'} />
       </div>
 
+      {/*
+        This used to say checkout did not touch stock. That stopped being true
+        once reserveStock landed, and a note that lies about inventory is worse
+        than no note - it invites double-selling the last jar.
+      */}
       <p className="mt-4 rounded-xl border border-a-line bg-a-surface px-4 py-3 text-sm text-a-muted">
-        Stock is <strong className="text-a-text">not yet reduced automatically</strong> when an order is
-        placed - checkout does not touch it. Update counts here after packing, until that is connected.
+        Counted products are reduced <strong className="text-a-text">automatically</strong> when an order
+        is placed, and put back if you cancel it. A product reading{' '}
+        <strong className="text-a-text">Not tracked</strong> is never counted and never sells out - give it
+        a number here to start counting it. Anything at zero shows as{' '}
+        <strong className="text-a-text">Out of stock</strong> on the website and cannot be ordered.
       </p>
 
       <div className="mt-4 grid gap-4 md:grid-cols-2 xl:grid-cols-3">

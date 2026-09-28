@@ -11,7 +11,7 @@ import { prisma } from '@/lib/prisma';
  * never here.
  */
 export async function GET() {
-  const products = await prisma.product.findMany({
+  const rows = await prisma.product.findMany({
     where: { isActive: true },
     orderBy: [{ sortOrder: 'asc' }, { name: 'asc' }],
     select: {
@@ -22,11 +22,36 @@ export async function GET() {
       pricePaise: true,
       memberPricePaise: true,
       imagePath: true,
+      stockCount: true,
     },
   });
 
+  /**
+   * `soldOut` rather than the raw count.
+   *
+   * The shop only needs to know whether it can be bought, and deciding that
+   * here keeps the rule in one place - null means the product is not counted
+   * at all and is always available, which is easy to get backwards in a
+   * template. It also means the exact number on the shelf is not published.
+   *
+   * A product switched off in the admin never appears in this list at all, so
+   * the page has to treat "absent" as unavailable too, exactly as priceCart
+   * already does when it refuses an order for one.
+   */
+  const products = rows.map(({ stockCount, ...p }) => ({ ...p, soldOut: stockCount === 0 }));
+
   return NextResponse.json(
     { products },
-    { headers: { 'Cache-Control': 'public, max-age=60, stale-while-revalidate=300' } },
+    {
+      /**
+       * Not cached. This was public/max-age=60, which was right when the
+       * response was only names and prices, but stock has to be able to
+       * change the shop the moment it is edited in the admin - a minute of a
+       * CDN insisting a sold-out jar is buyable is a minute of orders that
+       * have to be apologised for. The query is tiny and now runs in the same
+       * region as the database.
+       */
+      headers: { 'Cache-Control': 'no-store' },
+    },
   );
 }
