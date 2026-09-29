@@ -1,6 +1,21 @@
 import { NextResponse } from 'next/server';
 import { getCurrentUser } from '@/lib/supabase/server';
 import { memberRateApplies } from '@/lib/orders';
+import { razorpayConfigured, razorpayIsLive } from '@/lib/payments/razorpay';
+
+/**
+ * Whether the checkout can take money, and whether it is real money.
+ *
+ * Global rather than per-visitor, but it rides along here because the static
+ * landing page already calls this on load and a second request for two
+ * booleans would be worse. Neither is a secret: the first is obvious from
+ * trying to pay, and the second is something a customer is entitled to know
+ * before typing a card number.
+ */
+function paymentState() {
+  const configured = razorpayConfigured();
+  return { payments: configured, paymentsLive: configured && razorpayIsLive() };
+}
 import { prisma } from '@/lib/prisma';
 
 /**
@@ -22,7 +37,7 @@ export async function GET() {
 
   if (!user) {
     return NextResponse.json(
-      { signedIn: false, member: false },
+      { signedIn: false, member: false, ...paymentState() },
       { headers: { 'Cache-Control': 'no-store' } },
     );
   }
@@ -51,7 +66,7 @@ export async function GET() {
   ]);
 
   return NextResponse.json(
-    { signedIn: true, label, member, address },
+    { signedIn: true, label, member, address, ...paymentState() },
     // Never cache this - a shared cache would show one person's name, their
     // prices, and now their home address, to another.
     { headers: { 'Cache-Control': 'no-store' } },

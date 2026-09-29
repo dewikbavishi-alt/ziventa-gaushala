@@ -11,7 +11,7 @@ import {
 import { getCurrentUser } from '@/lib/supabase/server';
 import { syncCustomer } from '@/lib/auth';
 import { attachAddressToCustomer } from '@/lib/addresses';
-import { releaseAbandonedOrder, sendOrderEmails } from '@/lib/payments/confirm';
+import { releaseOrderById, sendOrderEmails } from '@/lib/payments/confirm';
 import {
   PaymentError,
   createRazorpayOrder,
@@ -160,7 +160,15 @@ export async function POST(request: Request) {
           placedAt: { gte: new Date(Date.now() - 2 * 60 * 1000) },
         },
         orderBy: { placedAt: 'desc' },
-        select: { orderNumber: true, totalPaise: true },
+        select: {
+          orderNumber: true,
+          totalPaise: true,
+          // Needed to tell a finished order from one still waiting to be
+          // paid - see the duplicate branch below.
+          paymentStatus: true,
+          paymentProvider: true,
+          paymentReference: true,
+        },
       });
 
       if (duplicate) {
@@ -228,17 +236,44 @@ export async function POST(request: Request) {
   }
 
   if (result.kind === 'duplicate') {
+    const dupe = result.duplicate;
+
+    /**
+     * Somebody closed the payment window and pressed Place Order again.
+     *
+     * The duplicate guard is right to refuse a second order - they want to
+     * buy one thing - but the first one is sitting there unpaid, and telling
+     * the browser there is no payment to make would show them a receipt for
+     * an order nobody has paid for. Its existing gateway order comes back
+     * instead, so the second attempt pays the first order rather than
+     * creating another.
+     */
+    const awaitingPayment =
+      dupe.paymentProvider === 'razorpay' &&
+      dupe.paymentStatus !== 'PAID' &&
+      Boolean(dupe.paymentReference) &&
+      razorpayConfigured();
+
     return NextResponse.json(
       {
         ok: true,
-        orderNumber: result.duplicate.orderNumber,
-        amountPaise: result.duplicate.totalPaise,
+        orderNumber: dupe.orderNumber,
+        amountPaise: dupe.totalPaise,
         duplicate: true,
         // Not recorded for the original order, so this branch cannot know.
         // Saying false is honest; saying true would promise an email that may
         // never have been sent.
         confirmationSent: false,
-        payment: { provider: 'none' },
+        payment: awaitingPayment
+          ? {
+              provider: 'razorpay',
+              orderId: dupe.paymentReference,
+              keyId: razorpayKeyId(),
+              amountPaise: dupe.totalPaise,
+              live: razorpayIsLive(),
+              retry: true,
+            }
+          : { provider: 'none' },
       },
       { status: 200 },
     );
@@ -295,21 +330,15 @@ export async function POST(request: Request) {
     } catch (err) {
       /**
        * The gateway refused or was unreachable. The order exists and is
-       * holding stock, so the stock goes back rather than being held for a
-       * checkout that can never complete.
+       * holding stock, so it is cancelled AND the units go back - a checkout
+       * that can never complete must not keep them.
+       *
+       * Addressed by our order id, not by a gateway reference: the failure
+       * happened before there was one. Doing this by reference cancelled the
+       * order and silently kept the stock, which is how ghee-250 ended up
+       * sitting at zero and unbuyable.
        */
-      await releaseAbandonedOrder(order.paymentReference ?? '').catch(() => {});
-      await prisma.order
-        .update({
-          where: { id: order.id },
-          data: {
-            status: 'CANCELLED',
-            cancelledAt: new Date(),
-            paymentStatus: 'FAILED',
-            cancelReason: 'Could not reach the payment provider.',
-          },
-        })
-        .catch(() => {});
+      await releaseOrderById(order.id, 'Could not reach the payment provider.').catch(() => {});
 
       const message =
         err instanceof PaymentError ? err.message : 'We could not start the payment.';

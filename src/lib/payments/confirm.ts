@@ -150,8 +150,28 @@ export async function sendOrderEmails(orderId: string): Promise<void> {
  * fails twice and retries must not return the units twice.
  */
 export async function releaseAbandonedOrder(gatewayOrderId: string): Promise<void> {
-  const order = await prisma.order.findUnique({
+  if (!gatewayOrderId) return;
+  const found = await prisma.order.findUnique({
     where: { paymentReference: gatewayOrderId },
+    select: { id: true },
+  });
+  if (!found) return;
+  await releaseOrderById(found.id, 'Payment was not completed.');
+}
+
+/**
+ * The same release, addressed by our own order id.
+ *
+ * Needed because an order can fail BEFORE it has a gateway reference - the
+ * provider was unreachable, or refused the request - and at that moment there
+ * is no gateway id to look it up by. The first version of the error path
+ * called the function above with an empty string, matched nothing, and
+ * cancelled the order while quietly leaving its stock reserved. Exactly the
+ * leak this function exists to prevent.
+ */
+export async function releaseOrderById(orderId: string, reason: string): Promise<void> {
+  const order = await prisma.order.findUnique({
+    where: { id: orderId },
     select: {
       id: true,
       orderNumber: true,
@@ -191,7 +211,7 @@ export async function releaseAbandonedOrder(gatewayOrderId: string): Promise<voi
         paymentStatus: 'FAILED',
         status: 'CANCELLED',
         cancelledAt: new Date(),
-        cancelReason: 'Payment was not completed.',
+        cancelReason: reason,
         ...(canRelease ? { stockReleasedAt: new Date() } : {}),
       },
     });

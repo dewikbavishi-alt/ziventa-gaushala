@@ -448,12 +448,10 @@ img[data-blur="loaded"]{filter:blur(0);transform:scale(1);}
 .benefit-top{display:flex;align-items:center;justify-content:space-between;color:var(--gold-deep);}
 .benefit-top svg{width:24px;height:24px;}
 .benefit-num{font-family:var(--font-display);font-size:.85rem;color:var(--ink-soft);}
-.benefit-title{font-weight:600;font-size:1.02rem;position:relative;padding-right:1.4em;}
-.benefit-title::after{
-  content:"";position:absolute;right:.2em;top:.36em;width:.4em;height:.4em;
-  border-right:2px solid var(--gold-deep);border-bottom:2px solid var(--gold-deep);
-  transform:rotate(45deg);transition:transform .25s ease;
-}
+/* No chevron. It pointed down because the card used to open downwards; on a
+   card that turns over it promised the wrong movement. The padding-right it
+   needed goes with it, so the titles now use the full width. */
+.benefit-title{font-weight:600;font-size:1.02rem;}
 /* ===== the flip =====
 
    Both faces sit in the SAME grid cell, which is what lets the card size

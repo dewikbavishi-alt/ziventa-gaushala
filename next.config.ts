@@ -40,13 +40,38 @@ const SUPABASE_ORIGIN = (() => {
  */
 const DEV = process.env.NODE_ENV === 'development';
 
+/**
+ * Razorpay's checkout is a script and an iframe from their domain, so the
+ * policy above - which allows no third party at all - blocks it outright.
+ *
+ * Added only when a key is configured. With payments switched off the policy
+ * stays exactly as strict as it was, rather than standing permanently open
+ * for a provider the site is not yet using. The same rule the rest of the
+ * gateway follows: nothing changes until the keys exist.
+ *
+ * checkout.razorpay.com  serves checkout.js and the widget's own frame
+ * api.razorpay.com       the frame's calls, and bank redirects during 3-D Secure
+ * lumberjack.razorpay.com  their telemetry; without it the widget logs errors
+ */
+const RAZORPAY = process.env.RAZORPAY_KEY_ID?.trim()
+  ? {
+      script: ' https://checkout.razorpay.com',
+      frame: ' https://checkout.razorpay.com https://api.razorpay.com',
+      connect: ' https://checkout.razorpay.com https://api.razorpay.com https://lumberjack.razorpay.com',
+      img: ' https://checkout.razorpay.com https://cdn.razorpay.com',
+    }
+  : { script: '', frame: '', connect: '', img: '' };
+
 const csp = [
   "default-src 'self'",
-  `script-src 'self' 'unsafe-inline'${DEV ? " 'unsafe-eval'" : ''}`,
+  `script-src 'self' 'unsafe-inline'${DEV ? " 'unsafe-eval'" : ''}${RAZORPAY.script}`,
   "style-src 'self' 'unsafe-inline'",
-  "img-src 'self' data: blob:",
+  `img-src 'self' data: blob:${RAZORPAY.img}`,
   "font-src 'self'",
-  `connect-src 'self'${SUPABASE_ORIGIN ? ' ' + SUPABASE_ORIGIN : ''}`,
+  `connect-src 'self'${SUPABASE_ORIGIN ? ' ' + SUPABASE_ORIGIN : ''}${RAZORPAY.connect}`,
+  // Without an explicit frame-src the widget's iframe falls back to
+  // default-src 'self' and never opens.
+  `frame-src 'self'${RAZORPAY.frame}`,
   "form-action 'self'",
   "frame-ancestors 'none'",
   "base-uri 'self'",
