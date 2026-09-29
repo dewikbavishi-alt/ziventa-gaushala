@@ -526,12 +526,20 @@ document.addEventListener('DOMContentLoaded', function(){
   },{threshold:0.5});
   if(countObserver) counters.forEach(function(el){ countObserver.observe(el); });
 
-  /* benefit cards expand */
+  /* benefit cards flip to show the description on the back */
   document.querySelectorAll('.benefit-card').forEach(function(card){
     card.setAttribute('aria-expanded','false');
+    var back=card.querySelector('.benefit-back');
     card.addEventListener('click',function(){
       var isOpen=card.getAttribute('aria-expanded')==='true';
       card.setAttribute('aria-expanded', isOpen? 'false':'true');
+      /* The visual side of this is a CSS rotation, which a screen reader
+         cannot see. backface-visibility hides the far face from the eye but
+         leaves it in the accessibility tree, so without this the description
+         is announced while the card still reads "collapsed". Only the back
+         is toggled: the front holds the title, which is the button's
+         accessible name, and hiding that would leave it nameless. */
+      if(back) back.setAttribute('aria-hidden', isOpen? 'true':'false');
     });
   });
 

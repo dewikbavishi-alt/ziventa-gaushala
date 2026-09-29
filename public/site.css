@@ -429,12 +429,20 @@ img[data-blur="loaded"]{filter:blur(0);transform:scale(1);}
 .benefits{padding:2.7rem 1.5rem;background:var(--cream-alt);}
 .benefit-grid{
   max-width:1060px;margin:0 auto;display:grid;grid-template-columns:repeat(3,1fr);gap:.85rem;
-  align-items:start;
+  /* Every card the same height, so one flipping does not leave the row
+     ragged - and so each card is already tall enough for whichever of its
+     two faces is longer. align-items:start was right for an accordion that
+     pushed the card open; a flip needs the space reserved up front. */
+  grid-auto-rows:1fr;
 }
 .benefit-card{
   text-align:left;background:var(--card-bg);border:1px solid var(--border);border-radius:var(--radius);
   padding:1.15rem;cursor:pointer;font-family:var(--font-body);color:var(--ink);
-  display:flex;flex-direction:column;gap:.45rem;transition:box-shadow .2s ease, transform .2s ease, border-color .2s ease;
+  transition:box-shadow .2s ease, transform .2s ease, border-color .2s ease;
+  /* The depth the rotation is seen through. On the card rather than the grid
+     so each one flips about its own centre; on the grid, cards at the edges
+     would swing through a shared vanishing point and look skewed. */
+  perspective:900px;
 }
 .benefit-card:hover{box-shadow:var(--shadow);transform:translateY(-3px);border-color:rgba(191,143,58,.45);border-color:color-mix(in srgb, var(--gold) 40%, var(--border));}
 .benefit-top{display:flex;align-items:center;justify-content:space-between;color:var(--gold-deep);}
@@ -446,15 +454,57 @@ img[data-blur="loaded"]{filter:blur(0);transform:scale(1);}
   border-right:2px solid var(--gold-deep);border-bottom:2px solid var(--gold-deep);
   transform:rotate(45deg);transition:transform .25s ease;
 }
-.benefit-card[aria-expanded="true"] .benefit-title::after{transform:rotate(-135deg);top:.5em;}
+/* ===== the flip =====
 
-/* The description text must sit inside an element child. A bare text node lands
-   in an implicit grid row that grid-template-rows:0fr cannot collapse - that is
-   why the original expand never worked and every card stayed open. */
-.benefit-desc{display:grid;grid-template-rows:0fr;transition:grid-template-rows .3s ease;}
-.benefit-desc-in{overflow:hidden;font-size:.92rem;line-height:1.5;color:var(--ink-soft);}
-.benefit-card[aria-expanded="true"] .benefit-desc{grid-template-rows:1fr;}
-.benefit-card[aria-expanded="true"] .benefit-desc-in{padding-top:.45rem;}
+   Both faces sit in the SAME grid cell, which is what lets the card size
+   itself to whichever of the two is taller. The alternative is a fixed
+   height, and a fixed height is a number that is wrong the first time
+   somebody edits a description.
+
+   Absolute positioning would do the same stacking but takes both faces out
+   of flow, so the card would collapse to nothing and need that height after
+   all. grid-area on both children keeps them measured. */
+.benefit-flip{
+  display:grid;
+  min-height:100%;
+  transform-style:preserve-3d;
+  -webkit-transform-style:preserve-3d;
+  transition:transform .55s cubic-bezier(.2,.75,.3,1);
+}
+.benefit-face{
+  grid-area:1/1;
+  display:flex;flex-direction:column;gap:.45rem;
+  /* Without this the reversed face shows through as mirror writing. The
+     -webkit- line is for older iOS, which needs it and is the reason the
+     unprefixed one alone is not enough here. */
+  backface-visibility:hidden;
+  -webkit-backface-visibility:hidden;
+}
+/* Pre-rotated, so the parent turning 180deg brings it to face the reader. */
+.benefit-back{
+  transform:rotateY(180deg);
+  justify-content:center;
+}
+.benefit-card[aria-expanded="true"] .benefit-flip{transform:rotateY(180deg);}
+
+.benefit-desc-in{font-size:.92rem;line-height:1.5;color:var(--ink-soft);}
+
+/* A card mid-turn should not also be lifting towards the reader. */
+.benefit-card[aria-expanded="true"]{transform:none;}
+
+/* ===== without the rotation =====
+
+   prefers-reduced-motion means no 3D turn at all - not a slower one. The two
+   faces swap outright, which is the same disclosure without the movement.
+   visibility rather than display so the grid cell keeps its size and the card
+   does not resize as it changes. */
+@media (prefers-reduced-motion: reduce){
+  .benefit-flip{transition:none;}
+  .benefit-card[aria-expanded="true"] .benefit-flip{transform:none;}
+  .benefit-back{transform:none;visibility:hidden;}
+  .benefit-card[aria-expanded="true"] .benefit-front{visibility:hidden;}
+  .benefit-card[aria-expanded="true"] .benefit-back{visibility:visible;}
+}
 
 /* herd */
 .herd{padding:2.7rem 1.5rem;background:var(--green-tint);border-top:1px solid var(--border);}
