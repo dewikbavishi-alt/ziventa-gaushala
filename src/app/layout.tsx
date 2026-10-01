@@ -15,7 +15,7 @@ const geistMono = Geist_Mono({
 
 const SITE = "https://girbyziventa.com";
 const DESCRIPTION =
-  "Small-batch A2 Gir cow bilona ghee and Panchgavya from our own gaushala, with founding membership in the Gir Gold Club.";
+  "Small-batch A2 Gir cow Bilona ghee from our own gaushala, with founding membership in the Gir Gold Club.";
 
 export const metadata: Metadata = {
   /**
@@ -27,7 +27,7 @@ export const metadata: Metadata = {
   // `template` lets each page name itself - "Sign in | Ziventa Gaushala" -
   // while anything that does not fall back to `default`.
   title: {
-    default: "Ziventa Gaushala - A2 Gir Cow Ghee & Panchgavya",
+    default: "Ziventa Gaushala - A2 Gir Cow Bilona Ghee",
     template: "%s | Ziventa Gaushala",
   },
   description: DESCRIPTION,
@@ -39,7 +39,7 @@ export const metadata: Metadata = {
   openGraph: {
     type: "website",
     siteName: "Ziventa Gaushala",
-    title: "Ziventa Gaushala - A2 Gir Cow Ghee & Panchgavya",
+    title: "Ziventa Gaushala - A2 Gir Cow Bilona Ghee",
     description: DESCRIPTION,
     url: SITE,
     locale: "en_IN",
@@ -48,13 +48,13 @@ export const metadata: Metadata = {
         url: "/logo/og-image.png",
         width: 1200,
         height: 630,
-        alt: "Ziventa Gaushala - A2 Gir Cow Bilona Ghee and Panchgavya",
+        alt: "Ziventa Gaushala - A2 Gir Cow Bilona Ghee",
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "Ziventa Gaushala - A2 Gir Cow Ghee & Panchgavya",
+    title: "Ziventa Gaushala - A2 Gir Cow Bilona Ghee",
     description: DESCRIPTION,
     images: ["/logo/og-image.png"],
   },

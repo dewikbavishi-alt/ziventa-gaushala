@@ -680,6 +680,8 @@ img[data-blur="loaded"]{filter:blur(0);transform:scale(1);}
 /* shop */
 .shop{padding:2.7rem 1.5rem;background:var(--card-bg);border-top:1px solid var(--border);}
 .shop-grid{max-width:1060px;margin:0 auto;display:grid;grid-template-columns:repeat(3,1fr);gap:1.2rem;}
+/* Two products: keep the cards at their three-column width, centred. */
+.shop-grid-pair{max-width:710px;grid-template-columns:repeat(2,1fr);}
 .shop-card{
   background:var(--card-bg);border:1px solid var(--border);border-radius:var(--radius);padding:1.2rem;
   position:relative;box-shadow:var(--shadow);transition:transform .25s ease, box-shadow .25s ease;
@@ -1615,4 +1617,59 @@ body.zv-hide-chat .zv-chat{
 @media (prefers-reduced-motion:reduce){
   .zv-chat-tag{animation:none;}
   .zv-chat-tag-dot::after{animation:none;opacity:0;}
+}
+
+/* ---- the veil shown while leaving for another page ----
+
+   The account and sign-in pages are rendered on the server, and a link to one
+   of them gives no sign of having been followed until that answer arrives - the
+   page just sits there, then goes blank. This covers the wait with the grazing
+   cow from the hero, so a tap visibly did something.
+
+   Kept in the document and faded in, rather than built on the click: the
+   browser stops running scripts and loading images the moment it starts to
+   navigate, so anything not already here might never be painted. */
+.page-leave{
+  position:fixed;top:0;right:0;bottom:0;left:0;z-index:500;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1.2rem;
+  background:var(--cream);
+  opacity:0;visibility:hidden;transition:opacity .3s ease,visibility 0s linear .3s;
+}
+.page-leave.on{opacity:1;visibility:visible;transition:opacity .3s ease;}
+.page-leave svg{width:min(340px,78vw);height:auto;display:block;overflow:visible;}
+/* Nothing here should cost anything while the veil is out of sight. */
+.page-leave:not(.on) *{animation-play-state:paused !important;}
+.pl-sun{fill:var(--green);opacity:.16;}
+.pl-ground{fill:none;stroke:var(--ink);stroke-width:1.6;stroke-linecap:round;opacity:.2;}
+/* The hero's cows are filled from a gradient defined inside the hero's own
+   SVG, which a page without a hero does not have. */
+.page-leave .zc-body,.page-leave .zc-neck,.page-leave .zc-face{fill:#FFFDF8;stroke:#BDB498;}
+.page-leave .zc-leg{stroke:#BDB498;}
+.page-leave .zc-tailline{stroke:#CFC7AE;}
+.pl-head{animation:plGraze 5s ease-in-out infinite;}
+/* Down to the grass, a few tugs at it, then up to chew. */
+@keyframes plGraze{
+  0%,100%{transform:rotate(2deg);}
+  16%{transform:rotate(24deg);}
+  24%{transform:rotate(20deg);}
+  32%{transform:rotate(24deg);}
+  40%{transform:rotate(20deg);}
+  48%{transform:rotate(24deg);}
+  56%{transform:rotate(20deg);}
+  64%{transform:rotate(24deg);}
+  82%{transform:rotate(2deg);}
+}
+.page-leave-text{
+  margin:0;font-family:var(--font-display);font-size:1.15rem;color:var(--ink);
+  display:flex;align-items:baseline;
+}
+.page-leave-dots i{
+  display:inline-block;width:5px;height:5px;margin-left:5px;border-radius:50%;background:var(--gold);
+  animation:zvBlink 1.2s infinite both;
+}
+.page-leave-dots i:nth-child(2){animation-delay:.15s;}
+.page-leave-dots i:nth-child(3){animation-delay:.3s;}
+@media (prefers-reduced-motion:reduce){
+  .page-leave,.page-leave.on{transition:none;}
+  .page-leave *{animation:none !important;}
 }

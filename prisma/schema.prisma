@@ -72,7 +72,7 @@ model Address {
 
 model Product {
   id          String  @id @default(uuid()) @db.Uuid
-  /// Matches the data-id already used by the landing page cart: ghee-250, dhoop...
+  /// Matches the data-id already used by the landing page cart: ghee-500, ghee-1kg
   slug        String  @unique
   name        String
   description String?
@@ -100,7 +100,7 @@ model Product {
   /// Null means "not tracked"; a number means decrement on paid order.
   stockCount  Int?
   /// At or below this, the product counts as low stock. Per product because a
-  /// 1kg tin and a 250g jar do not run out at the same pace.
+  /// 1000ml jar and a 500ml jar do not run out at the same pace.
   lowStockThreshold Int @default(5)
 
   createdAt DateTime @default(now())

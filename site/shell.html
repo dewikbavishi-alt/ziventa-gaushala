@@ -27,7 +27,7 @@
 <meta property="og:image" content="https://girbyziventa.com/logo/og-image.png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
-<meta property="og:image:alt" content="Ziventa Gaushala — A2 Gir Cow Bilona Ghee and Panchgavya">
+<meta property="og:image:alt" content="Ziventa Gaushala — A2 Gir Cow Bilona Ghee">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:image" content="https://girbyziventa.com/logo/og-image.png">
 
@@ -61,7 +61,7 @@
       "url": "https://girbyziventa.com/",
       "logo": "https://girbyziventa.com/logo/icon-512.png",
       "image": "https://girbyziventa.com/logo/og-image.png",
-      "description": "A small gaushala raising Gir cows and preparing A2 Bilona ghee and Panchgavya products in small batches.",
+      "description": "A small gaushala raising Gir cows and preparing A2 Bilona ghee in small batches.",
       "email": "girbyziventagaushala@gmail.com",
       "telephone": "+91-90335-25352",
       "address": {
@@ -210,7 +210,7 @@ Color: warm cream ground, deep gaushala-green = trust/tradition, hand-ghee gold 
           <span class="brand-sub">Gaushala</span>
         </span>
       </a>
-      <p>A small, dedicated gaushala raising Gir cows and preparing A2 Bilona ghee and Panchgavya products in small batches — for a limited circle of families who value trust over transactions.</p>
+      <p>A small, dedicated gaushala raising Gir cows and preparing A2 Bilona ghee in small batches — for a limited circle of families who value trust over transactions.</p>
     </div>
     <div class="footer-col">
       <h4>Explore</h4>
@@ -607,8 +607,8 @@ document.addEventListener('DOMContentLoaded', function(){
   function formatRate(low, high){
     var fmt=function(n){ return Math.round(n).toLocaleString('en-IN'); };
     return Math.round(low)===Math.round(high)
-      ? '₹'+fmt(low)+'/kg'
-      : '₹'+fmt(low)+'–'+fmt(high)+'/kg';
+      ? '₹'+fmt(low)+'/litre'
+      : '₹'+fmt(low)+'–'+fmt(high)+'/litre';
   }
 
   function tickPrice(fromRate, toRate){
@@ -1171,6 +1171,9 @@ document.addEventListener('DOMContentLoaded', function(){
 
     var cart={};
     try{ cart=JSON.parse(localStorage.getItem(KEY))||{}; }catch(e){ cart={}; }
+    /* Products taken off sale. A basket saved before then would otherwise
+       still show them, and checkout would refuse the whole order. */
+    ['ghee-250','dhoop','ark','gift'].forEach(function(id){ delete cart[id]; });
 
     var els={
       btn:document.getElementById('cartBtn'), count:document.getElementById('cartCount'),
@@ -1759,7 +1762,7 @@ document.addEventListener('DOMContentLoaded', function(){
   var KB = [
     {
       test:/^\s*(hi|hii|hey|hello|namaste|hola|yo)\b/i,
-      reply:'<p>Hello! I\'m the Ziventa Assistant. I can help with the Gir Gold Club membership, our ghee &amp; Panchgavya products, how the Bilona process works, the herd, or how to join. What would you like to know?</p>'
+      reply:'<p>Hello! I\'m the Ziventa Assistant. I can help with the Gir Gold Club membership, our Bilona ghee, how the Bilona process works, the herd, or how to join. What would you like to know?</p>'
     },
     {
       test:/\b(thanks|thank you|thx|shukriya|dhanyavad)\b/i,
@@ -1767,62 +1770,46 @@ document.addEventListener('DOMContentLoaded', function(){
     },
     {
       test:/\b(cure|heal(ing)?|treat(ment)?|disease|illness|diabetes|cholesterol|blood pressure|bp|cancer|allerg(y|ic)|infection|medicine|medication|doctor|physician|prescription|dosage|side effects?|symptoms?|healthy|health condition|health issue|health problem|health benefit|is it safe for|good for my health|lower my|reduce my|pregnan(t|cy)|ayurvedic remedy)\b/i,
-      reply:'<p>That\'s a medical question, and I\'m not able to give health advice or make medical claims about our products — our ghee and Panchgavya items are traditional foods, not medicine. For anything related to a health condition, please check with a doctor or qualified health professional.</p><p>I\'m happy to help with prices, ingredients, how something is made, or which product might suit what you\'re looking for.</p>'
+      reply:'<p>That\'s a medical question, and I\'m not able to give health advice or make medical claims about our products — our ghee is a traditional food, not medicine. For anything related to a health condition, please check with a doctor or qualified health professional.</p><p>I\'m happy to help with prices, ingredients, how something is made, or which product might suit what you\'re looking for.</p>'
     },
     {
-      test:/\b(250\s?g(ram)?s?)\b/i,
-      reply:'<p><strong>Bilona Ghee — 250g</strong> is ₹1,000, or ₹800 for Gir Gold Club members. A good size for everyday cooking or trying us for the first time.</p><a class="zv-cta" href="#shop" data-zv-nav="1">View in the shop <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14" key="1ays0h"/><path d="m12 5 7 7-7 7" key="xquz4c"/></svg></a>'
+      test:/\b(500\s?(ml|g(ram)?s?)|half (a )?lit(re|er))\b/i,
+      reply:'<p><strong>Bilona Ghee — 500ml</strong> is ₹2,000, or ₹1,600 for members — our most-loved size, made for the whole family.</p><a class="zv-cta" href="#shop" data-zv-nav="1">View in the shop <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14" key="1ays0h"/><path d="m12 5 7 7-7 7" key="xquz4c"/></svg></a>'
     },
     {
-      test:/\b(500\s?g(ram)?s?)\b/i,
-      reply:'<p><strong>Bilona Ghee — 500g</strong> is ₹2,000, or ₹1,600 for members — our most-loved size, made for the whole family.</p><a class="zv-cta" href="#shop" data-zv-nav="1">View in the shop <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14" key="1ays0h"/><path d="m12 5 7 7-7 7" key="xquz4c"/></svg></a>'
+      test:/\b(1\s?kg|one kg|1000\s?(ml|g(ram)?s?)|1\s?l(it(re|er))?|one lit(re|er))\b/i,
+      reply:'<p><strong>Bilona Ghee — 1000ml</strong> is ₹4,000, or ₹3,150 for members — our signature jar, and the size where membership saves the most.</p><a class="zv-cta" href="#shop" data-zv-nav="1">View in the shop <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14" key="1ays0h"/><path d="m12 5 7 7-7 7" key="xquz4c"/></svg></a>'
     },
     {
-      test:/\b(1\s?kg|one kg|1000\s?g(ram)?s?)\b/i,
-      reply:'<p><strong>Bilona Ghee — 1kg</strong> is ₹4,000, or ₹3,150 for members — our signature jar, and the size where membership saves the most.</p><a class="zv-cta" href="#shop" data-zv-nav="1">View in the shop <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14" key="1ays0h"/><path d="m12 5 7 7-7 7" key="xquz4c"/></svg></a>'
-    },
-    {
-      test:/\bdhoop\b/i,
-      reply:'<p><strong>Panchgavya Dhoop</strong> is ₹310, or ₹250 for members — traditional havan dhoop made with gaushala by-products.</p><a class="zv-cta" href="#shop" data-zv-nav="1">View in the shop <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14" key="1ays0h"/><path d="m12 5 7 7-7 7" key="xquz4c"/></svg></a>'
-    },
-    {
-      test:/\b(gau mutra|gaumutra|cow urine|ark)\b/i,
-      reply:'<p><strong>Gau Mutra Ark</strong> is ₹440, or ₹350 for members — a distilled Panchgavya ark, prepared the traditional way.</p><a class="zv-cta" href="#shop" data-zv-nav="1">View in the shop <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14" key="1ays0h"/><path d="m12 5 7 7-7 7" key="xquz4c"/></svg></a>'
-    },
-    {
-      test:/\b(gift box|festive box|combo|hamper)\b/i,
-      reply:'<p><strong>Festive Gift Box</strong> is ₹5,250, or ₹4,200 for members — ghee, dhoop &amp; ark together, gifted the Ziventa way.</p><a class="zv-cta" href="#shop" data-zv-nav="1">View in the shop <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14" key="1ays0h"/><path d="m12 5 7 7-7 7" key="xquz4c"/></svg></a>'
-    },
-    {
-      test:/\b(puja|pooja|havan|yagna|yajna|ritual|prayer|temple|worship)\b/i,
-      reply:'<p>For puja or havan, families usually pick <strong>Panchgavya Dhoop</strong> (₹250) and <strong>Gau Mutra Ark</strong> (₹350) — both traditional Panchgavya preparations made at the gaushala.</p><a class="zv-cta" href="#shop" data-zv-nav="1">View in the shop <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14" key="1ays0h"/><path d="m12 5 7 7-7 7" key="xquz4c"/></svg></a>'
+      test:/\b(dhoop|gau mutra|gaumutra|cow urine|ark|gift box|festive box|combo|hamper|panchgavya)\b/i,
+      reply:'<p>Our shop carries just one thing right now: <strong>Bilona Ghee</strong>, in <strong>500ml</strong> (₹2,000, or ₹1,600 for members) and <strong>1000ml</strong> (₹4,000, or ₹3,150 for members).</p><a class="zv-cta" href="#shop" data-zv-nav="1">View in the shop <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14" key="1ays0h"/><path d="m12 5 7 7-7 7" key="xquz4c"/></svg></a>'
     },
     {
       test:/\b(gift(ing)?|present|diwali|festive season|someone special)\b/i,
-      reply:'<p>If it\'s a gift, the <strong>Festive Gift Box</strong> (₹4,200) is made for exactly that — ghee, dhoop and ark together, packed the Ziventa way. For something smaller, the <strong>250g Bilona Ghee</strong> (₹800) also gifts well.</p><a class="zv-cta" href="#shop" data-zv-nav="1">View in the shop <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14" key="1ays0h"/><path d="m12 5 7 7-7 7" key="xquz4c"/></svg></a>'
+      reply:'<p>If it's a gift, the <strong>Bilona Ghee — 500ml</strong> (₹1,600 for members, ₹2,000 regular) gifts well, and every jar is sealed and gift-ready. For a family that cooks with ghee daily, the <strong>1000ml</strong> jar goes further.</p><a class="zv-cta" href="#shop" data-zv-nav="1">View in the shop <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14" key="1ays0h"/><path d="m12 5 7 7-7 7" key="xquz4c"/></svg></a>'
     },
     {
       test:/\b(first time|trial|try (it|before|us|first)|sample|new customer|never tried|new to (ziventa|this))\b/i,
-      reply:'<p>New to Ziventa? The <strong>Bilona Ghee — 250g</strong> (₹800) is the easiest way to try our Bilona-method A2 Gir ghee before committing to a bigger jar.</p><a class="zv-cta" href="#shop" data-zv-nav="1">View in the shop <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14" key="1ays0h"/><path d="m12 5 7 7-7 7" key="xquz4c"/></svg></a>'
+      reply:'<p>New to Ziventa? The <strong>Bilona Ghee — 500ml</strong> (₹1,600 for members, ₹2,000 regular) is the easiest way to try our Bilona-method A2 Gir ghee before committing to the bigger jar.</p><a class="zv-cta" href="#shop" data-zv-nav="1">View in the shop <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14" key="1ays0h"/><path d="m12 5 7 7-7 7" key="xquz4c"/></svg></a>'
     },
     {
       test:/\b(daily|everyday|every day|day to day|regular(ly)? use|daily basis|daily use|for cooking|home cooking|routine use)\b/i,
-      reply:'<p>For everyday cooking, most families go with the <strong>Bilona Ghee — 500g</strong> (₹1,600) — our most-loved size, made to last a household through regular use. If you\'d rather start smaller and see how it goes, the <strong>250g</strong> (₹800) is a good first jar.</p><a class="zv-cta" href="#shop" data-zv-nav="1">View in the shop <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14" key="1ays0h"/><path d="m12 5 7 7-7 7" key="xquz4c"/></svg></a>'
+      reply:'<p>For everyday cooking, most families go with the <strong>Bilona Ghee — 500ml</strong> (₹1,600) — our most-loved size, made to last a household through regular use. If you go through ghee quickly, the <strong>1000ml</strong> (₹3,150) is better value.</p><a class="zv-cta" href="#shop" data-zv-nav="1">View in the shop <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14" key="1ays0h"/><path d="m12 5 7 7-7 7" key="xquz4c"/></svg></a>'
     },
     {
       test:/\b(bulk|big family|large family|value pack|stock up|monthly supply)\b/i,
-      reply:'<p>For a family that goes through ghee regularly, the <strong>Bilona Ghee — 1kg</strong> (₹3,150) is our best value — our signature jar for founding members.</p><a class="zv-cta" href="#shop" data-zv-nav="1">View in the shop <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14" key="1ays0h"/><path d="m12 5 7 7-7 7" key="xquz4c"/></svg></a>'
+      reply:'<p>For a family that goes through ghee regularly, the <strong>Bilona Ghee — 1000ml</strong> (₹3,150) is our best value — our signature jar for founding members.</p><a class="zv-cta" href="#shop" data-zv-nav="1">View in the shop <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14" key="1ays0h"/><path d="m12 5 7 7-7 7" key="xquz4c"/></svg></a>'
     },
     {
       test:/\b(budget|cheap(est)?|affordable|less expensive|lowest price|inexpensive)\b/i,
-      reply:'<p>Our most accessible product is <strong>Panchgavya Dhoop</strong> at ₹250. If you\'re after ghee specifically, it starts at ₹800 for the 250g jar — we keep batches small, so pricing reflects genuine curd-churned Bilona work rather than a mass-market rate.</p><a class="zv-cta" href="#shop" data-zv-nav="1">View in the shop <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14" key="1ays0h"/><path d="m12 5 7 7-7 7" key="xquz4c"/></svg></a>'
+      reply:'<p>Our ghee starts at ₹1,600 for the 500ml jar (members) or ₹2,000 regular — we keep batches small, so pricing reflects genuine curd-churned Bilona work rather than a mass-market rate.</p><a class="zv-cta" href="#shop" data-zv-nav="1">View in the shop <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14" key="1ays0h"/><path d="m12 5 7 7-7 7" key="xquz4c"/></svg></a>'
     },
     {
       test:/\b(recommend|suggest|help me choose|help me pick|what should i (buy|get)|not sure what to (buy|get|choose|pick)|what do you suggest|what do you recommend)\b|which\b.{0,30}\bshould i (buy|get|choose|pick)\b/i,
-      reply:'<p>Happy to help you choose. Are you looking for ghee for everyday cooking, something for puja or a havan, a gift for someone, or just want to try us for the first time?</p>'
+      reply:'<p>Happy to help you choose. We make one thing — Bilona Ghee — in two sizes. The <strong>500ml</strong> suits most households and first-timers; the <strong>1000ml</strong> is better value if you cook with ghee every day.</p>'
     },
     /* ---- the practical questions, after the product ones so "how much is
-       the 500g" still gets a price, but before the broad membership and
+       the 500ml" still gets a price, but before the broad membership and
        pricing catch-alls further down, which would otherwise swallow them.
        First match wins, so position here is the behaviour. ---- */
     {
@@ -1887,7 +1874,7 @@ document.addEventListener('DOMContentLoaded', function(){
     },
     {
       test:/\b(deposit|refund(able)?|₹?\s?5,?000)\b/i,
-      reply:'<p>Joining needs a fully refundable deposit of <strong>₹5,000</strong>. It reserves your seat in the Gir Gold Club and unlocks the member ghee rate of ₹3,150–3,200/kg — about 20% off. Nothing is hidden or inflated.</p><p>How it goes: you pre-register (no payment at that stage), we check whether a seat is open for your area, and if it is we email you a private link to pay the deposit. Once it is paid your seat is confirmed and the member rate applies from then on.</p><a class="zv-cta" href="#pricing" data-zv-nav="1">See membership terms <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14" key="1ays0h"/><path d="m12 5 7 7-7 7" key="xquz4c"/></svg></a>'
+      reply:'<p>Joining needs a fully refundable deposit of <strong>₹5,000</strong>. It reserves your seat in the Gir Gold Club and unlocks the member ghee rate of ₹3,150–3,200 per litre — about 20% off. Nothing is hidden or inflated.</p><p>How it goes: you pre-register (no payment at that stage), we check whether a seat is open for your area, and if it is we email you a private link to pay the deposit. Once it is paid your seat is confirmed and the member rate applies from then on.</p><a class="zv-cta" href="#pricing" data-zv-nav="1">See membership terms <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14" key="1ays0h"/><path d="m12 5 7 7-7 7" key="xquz4c"/></svg></a>'
     },
     {
       test:/\b(membership|gir gold club|member(ship)?s?\b|benefit|what do i get|perks)\b/i,
@@ -1898,8 +1885,8 @@ document.addEventListener('DOMContentLoaded', function(){
       reply:'<p>Every batch follows five unhurried steps: fresh Gir A2 milk drawn daily, naturally set into curd overnight, churned to separate the makkhan, cooked in a steam-jacketed kettle until golden, then machine-filled and sealed into premium jars for Gir Gold Club members. The churning, cooking and filling are done by food-grade machinery — the curd stage is never skipped, so it is Bilona ghee and never cream-separated.</p><a class="zv-cta" href="#process" data-zv-nav="1">See the full ritual <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14" key="1ays0h"/><path d="m12 5 7 7-7 7" key="xquz4c"/></svg></a>'
     },
     {
-      test:/\b(pric(e|es|ing)|costs?|how much|rates?|ghee|panchgavya|dhoop|ark|gift box|products?|buy|shop)\b/i,
-      reply:'<p>Our range. The first price is what anyone pays, the second is the Gir Gold Club member rate:</p><ul><li>Bilona Ghee 250g — ₹1,000 / ₹800</li><li>Bilona Ghee 500g — ₹2,000 / ₹1,600 (most loved)</li><li>Bilona Ghee 1kg — ₹4,000 / ₹3,150 (best value)</li><li>Panchgavya Dhoop — ₹310 / ₹250</li><li>Gau Mutra Ark — ₹440 / ₹350</li><li>Festive Gift Box (ghee + dhoop + ark) — ₹5,250 / ₹4,200</li></ul><p>Everything is made in-house at the gaushala, in small batches.</p><a class="zv-cta" href="#shop" data-zv-nav="1">Open the shop <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14" key="1ays0h"/><path d="m12 5 7 7-7 7" key="xquz4c"/></svg></a>'
+      test:/\b(pric(e|es|ing)|costs?|how much|rates?|ghee|products?|buy|shop)\b/i,
+      reply:'<p>Our range. The first price is what anyone pays, the second is the Gir Gold Club member rate:</p><ul><li>Bilona Ghee 500ml — ₹2,000 / ₹1,600 (most loved)</li><li>Bilona Ghee 1000ml — ₹4,000 / ₹3,150 (best value)</li></ul><p>Every jar is made in-house at the gaushala, in small batches.</p><a class="zv-cta" href="#shop" data-zv-nav="1">Open the shop <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14" key="1ays0h"/><path d="m12 5 7 7-7 7" key="xquz4c"/></svg></a>'
     },
     {
       test:/\b(cows?|herd|gir cow|kamdhenu|radha|ganga|nandini|cattle|animal)\b/i,
@@ -1914,12 +1901,12 @@ document.addEventListener('DOMContentLoaded', function(){
       reply:'<p><strong>Call or WhatsApp</strong> <a href="tel:+919033525352">+91 90335 25352</a><br><strong>Email</strong> <a href="mailto:girbyziventagaushala@gmail.com">girbyziventagaushala@gmail.com</a><br><strong>Instagram</strong> <a href="https://instagram.com/ziventagaushala" target="_blank" rel="noopener noreferrer">@ziventagaushala</a>, for daily glimpses of the herd</p><p><strong>The gaushala</strong><br>Aarya Gir Nutriments<br>Plot No 21, Village: Khari<br>Taluka: Bagasara, Dist. Amreli<br>Gujarat 365456</p><p>Visiting in person is one of the Gir Gold Club benefits — members are welcome to come and see the herd. Do call before setting off so someone is there to show you round.</p><a class="zv-cta" href="https://www.google.com/maps/search/?api=1&amp;query=Plot+No+21%2C+Khari%2C+Bagasara%2C+Amreli%2C+Gujarat+365456" target="_blank" rel="noopener noreferrer">Get directions <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14" key="1ays0h"/><path d="m12 5 7 7-7 7" key="xquz4c"/></svg></a>'
     },
   ];
-  var FALLBACK = '<p>I can only help with questions about Ziventa Gaushala — the Gir Gold Club membership, our ghee &amp; Panchgavya products, or the gaushala itself — and I don\'t have an answer for that one within what\'s on this site. For anything else, please email <a href="mailto:girbyziventagaushala@gmail.com">girbyziventagaushala@gmail.com</a> or message <a href="https://instagram.com/ziventagaushala" target="_blank" rel="noopener noreferrer">@ziventagaushala</a> on Instagram.</p>';
+  var FALLBACK = '<p>I can only help with questions about Ziventa Gaushala — the Gir Gold Club membership, our Bilona ghee, or the gaushala itself — and I don\'t have an answer for that one within what\'s on this site. For anything else, please email <a href="mailto:girbyziventagaushala@gmail.com">girbyziventagaushala@gmail.com</a> or message <a href="https://instagram.com/ziventagaushala" target="_blank" rel="noopener noreferrer">@ziventagaushala</a> on Instagram.</p>';
 
   var CHIPS = [
     {label:'Membership & benefits', q:'What does membership include?'},
-    {label:'Ghee & Panchgavya prices', q:'What are your prices?'},
-    {label:'Suggest a product for me', q:'Can you recommend a product for me?'},
+    {label:'Ghee prices', q:'What are your prices?'},
+    {label:'Which size should I get?', q:'Can you recommend a size for me?'},
     {label:'How the ghee is made', q:'How is the ghee made?'},
     {label:'Meet the herd', q:'Tell me about the cows'},
     {label:'How do I join?', q:'How do I join?'},
@@ -2005,7 +1992,7 @@ document.addEventListener('DOMContentLoaded', function(){
       toggle.setAttribute('aria-expanded','true');
       if(!greeted){
         greeted=true;
-        addMsg('<p>Hello! I\'m the Ziventa Assistant — ask me about membership, the ghee &amp; Panchgavya range, the Bilona process, the herd, or how to join.</p>','bot',true);
+        addMsg('<p>Hello! I\'m the Ziventa Assistant — ask me about membership, our Bilona ghee, the Bilona process, the herd, or how to join.</p>','bot',true);
         renderChips();
       }
       setTimeout(function(){ input.focus(); },50);
@@ -2052,6 +2039,95 @@ document.addEventListener('DOMContentLoaded', function(){
 
   if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',boot);
   else boot();
+})();
+</script>
+
+<!-- Covers the page while the browser fetches the next one. Styled in
+     site.css under "the veil shown while leaving for another page". -->
+<div class="page-leave" id="pageLeave" role="status" aria-hidden="true">
+  <svg viewBox="-25 8 300 150" aria-hidden="true" focusable="false">
+    <circle class="pl-sun" cx="125" cy="82" r="78"/>
+    <path class="pl-ground" d="M-12 140 H262"/>
+    <ellipse class="zc-shadow" cx="104" cy="139" rx="96" ry="7"/>
+    <path class="zc-leg-far" d="M48 84 h14 v52 h-14 z"/>
+    <path class="zc-leg-far" d="M150 84 h14 v52 h-14 z"/>
+    <g class="zc-tail">
+      <path class="zc-tailline" d="M18 70 C8 88 8 108 16 124"/>
+      <path class="zc-tuft" d="M16 120 C23 125 23 136 16 141 C9 136 9 125 16 120 Z"/>
+    </g>
+    <path class="zc-body" d="M14 74 C14 52 36 40 64 40 C86 28 112 28 128 42 C156 45 182 52 194 68 C202 80 200 92 190 96 C158 100 112 102 76 101 C42 100 18 94 14 84 Z"/>
+    <path class="zc-shade" d="M64 40 C86 28 112 28 128 42 C108 36 84 36 64 40 Z"/>
+    <path class="zc-leg" d="M56 88 h15 v50 h-15 z"/>
+    <path class="zc-leg" d="M158 88 h15 v50 h-15 z"/>
+    <rect class="zc-hoof" x="55" y="133" width="17" height="6" rx="2"/>
+    <rect class="zc-hoof" x="157" y="133" width="17" height="6" rx="2"/>
+    <ellipse class="zc-udder" cx="92" cy="106" rx="15" ry="9"/>
+    <path class="zc-teat" d="M85 114 v7 M99 114 v7"/>
+    <g class="zc-head pl-head">
+      <path class="zc-neck" d="M180 58 C198 62 212 76 218 92 C210 100 196 102 186 96 C182 82 176 70 168 64 Z"/>
+      <path class="zc-face" d="M210 86 C226 84 242 92 245 105 C247 116 238 123 225 121 C210 118 200 109 199 98 C198 90 202 86 210 86 Z"/>
+      <ellipse class="zc-muzzle" cx="238" cy="114" rx="9" ry="6"/>
+      <path class="zc-ear" d="M204 86 C196 78 184 78 179 84 C185 92 196 94 204 89 Z"/>
+      <path class="zc-horn" d="M208 80 C203 63 212 51 223 48 C220 60 216 70 216 82 Z"/>
+      <path class="zc-horn" d="M196 83 C188 70 191 56 200 51 C199 63 200 73 203 82 Z"/>
+      <circle class="zc-eye" cx="221" cy="100" r="3"/>
+    </g>
+    <g class="zg zg-a">
+      <path d="M212 141 c4 -11 3 -18 1 -23 M212 141 c-4 -10 -5 -15 -8 -19 M212 141 c8 -10 11 -15 13 -19"/>
+      <path d="M-4 141 c4 -12 3 -19 1 -24 M-4 141 c-4 -10 -5 -16 -8 -20 M-4 141 c8 -10 11 -16 13 -20"/>
+    </g>
+    <g class="zg zg-b">
+      <path d="M238 141 c4 -12 3 -19 1 -24 M238 141 c-4 -10 -5 -16 -8 -20 M238 141 c8 -10 11 -16 13 -20"/>
+      <path d="M118 141 c4 -11 3 -18 1 -23 M118 141 c-4 -10 -5 -15 -8 -19 M118 141 c8 -10 11 -15 13 -19"/>
+    </g>
+  </svg>
+  <p class="page-leave-text"><span id="pageLeaveMsg"></span><span class="page-leave-dots" aria-hidden="true"><i></i><i></i><i></i></span></p>
+</div>
+
+<script>
+/* Show the veil when a link to another page of this site is followed.
+
+   One listener on the document rather than one per link, because several of
+   the account links are written into the page later by the header script.
+   It runs after every other click handler, so a link something else has
+   already taken over - preventDefault - is left alone. */
+(function(){
+  var veil=document.getElementById('pageLeave');
+  var msg=document.getElementById('pageLeaveMsg');
+  if(!veil || !msg) return;
+  var timer;
+  function hide(){
+    clearTimeout(timer);
+    veil.classList.remove('on');
+    veil.setAttribute('aria-hidden','true');
+    msg.textContent='';
+  }
+  function show(){
+    veil.classList.add('on');
+    veil.removeAttribute('aria-hidden');
+    /* Written now rather than sitting in the markup, so a screen reader
+       announces it as the status changing. */
+    msg.textContent='Taking you there';
+    /* If the page never arrives - offline, or the link turned out to be a
+       download - do not leave the site buried under this. */
+    clearTimeout(timer);
+    timer=setTimeout(hide,12000);
+  }
+  document.addEventListener('click',function(e){
+    if(e.defaultPrevented || e.button!==0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
+    var a=e.target && e.target.closest ? e.target.closest('a[href]') : null;
+    if(!a || a.hasAttribute('download')) return;
+    /* A new tab leaves this page exactly where it was. */
+    if(a.target && a.target!=='_self') return;
+    /* mailto:, tel: and other sites are not ours to cover for. */
+    if(a.origin!==location.origin) return;
+    /* Same page: an in-page anchor, which scrolls rather than loads. */
+    if(a.pathname===location.pathname && a.search===location.search) return;
+    show();
+  });
+  /* Back and forward restore this page exactly as it was left, veil
+     included - the same iOS behaviour the scroll lock has to allow for. */
+  window.addEventListener('pageshow',hide);
 })();
 </script>
 
