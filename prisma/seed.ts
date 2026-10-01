@@ -26,8 +26,8 @@ const products = [
     name: 'Bilona Ghee - 500ml',
     description: 'The household size. Small-batch A2 Gir ghee, curd-churned the Bilona way.',
     sizeLabel: '500ml',
-    pricePaise: 200_000,
-    memberPricePaise: 160_000,
+    pricePaise: 370_000,
+    memberPricePaise: 277_500,
     sortOrder: 1,
   },
   {
@@ -36,8 +36,8 @@ const products = [
     name: 'Bilona Ghee - 1000ml',
     description: 'For families who cook with ghee daily.',
     sizeLabel: '1000ml',
-    pricePaise: 400_000,
-    memberPricePaise: 315_000,
+    pricePaise: 699_900,
+    memberPricePaise: 525_000,
     sortOrder: 2,
   },
 ];
