@@ -528,6 +528,75 @@ img[data-blur="loaded"]{filter:blur(0);transform:scale(1);}
 .herd-card h3{margin-bottom:.2em;font-size:1.1rem;}
 .herd-card p{font-size:.9rem;}
 
+/* Hover pop-up. The cards above stay exactly as they are; pointing at one
+   grows a soft-square card out of its round photo - origin on the photo's
+   centre, radius easing from a circle to 28px - with the enlarged photo and
+   the details. pointer-events:none so it never blocks the neighbouring cards:
+   moving across the row hands the pop-up from one cow to the next. */
+.herd-card{position:relative;outline:none;}
+.herd-card:hover,.herd-card:focus-visible,.herd-card.is-open{z-index:6;}
+.herd-pop{
+  --pop:330px;
+  position:absolute;left:50%;top:-88px;width:var(--pop);height:var(--pop);margin-left:calc(var(--pop) / -2);
+  border-radius:50%;overflow:hidden;pointer-events:none;text-align:left;
+  background:var(--cream-alt);box-shadow:0 28px 60px rgba(36,56,45,.32), 0 0 0 1px rgba(255,255,255,.5) inset;
+  opacity:0;transform:translateY(16px) scale(.3);transform-origin:50% 135px;
+  transition:transform .55s cubic-bezier(.22,1,.36,1), border-radius .55s cubic-bezier(.22,1,.36,1), opacity .3s ease;
+}
+.herd-pop-photo{position:absolute;inset:0;}
+.herd-pop-photo .cell{
+  left:0;top:50%;width:100%;aspect-ratio:3/4;
+  transform:translateY(-50%) scale(1.15);transition:transform .9s cubic-bezier(.22,1,.36,1);
+}
+.herd-pop-photo::after{
+  content:"";position:absolute;inset:0;
+  background:linear-gradient(180deg, rgba(20,30,24,0) 34%, rgba(20,30,24,.45) 60%, rgba(20,30,24,.88) 100%);
+}
+.herd-pop-info{position:absolute;left:0;right:0;bottom:0;padding:1.1rem 1.25rem 1.2rem;color:var(--cream);}
+.herd-pop-info > *{opacity:0;transform:translateY(10px);transition:opacity .35s ease, transform .5s cubic-bezier(.22,1,.36,1);}
+.herd-tag{
+  display:inline-block;padding:.3em .8em;border-radius:999px;
+  font-size:.66rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase;
+  background:var(--gold);color:#fff;
+}
+.herd-pop-name{margin:.4rem 0 .15rem;font-family:var(--font-display);font-size:1.6rem;font-weight:700;line-height:1.1;color:var(--cream);}
+.herd-pop-text{margin:0;font-size:.86rem;line-height:1.45;color:rgba(251,246,236,.88);}
+.herd-facts{display:flex;flex-wrap:wrap;gap:.4rem;margin:0;padding:.65rem 0 0;list-style:none;}
+.herd-facts li{
+  padding:.25em .75em;border-radius:999px;font-size:.72rem;color:var(--cream);
+  border:1px solid rgba(251,246,236,.35);background:rgba(251,246,236,.1);
+}
+
+.herd-card:focus-visible .herd-pop,.herd-card.is-open .herd-pop{opacity:1;transform:none;border-radius:28px;}
+.herd-card:focus-visible .herd-pop-photo .cell,.herd-card.is-open .herd-pop-photo .cell{transform:translateY(-50%) scale(1);}
+.herd-card:focus-visible .herd-pop-info > *,.herd-card.is-open .herd-pop-info > *{opacity:1;transform:none;}
+/* Only a real mouse gets :hover - on touch it sticks after a tap, so taps go
+   through .is-open in the script instead. */
+@media (hover:hover) and (pointer:fine){
+  .herd-card:hover .herd-pop{opacity:1;transform:none;border-radius:28px;}
+  .herd-card:hover .herd-pop-photo .cell{transform:translateY(-50%) scale(1);}
+  .herd-card:hover .herd-pop-info > *{opacity:1;transform:none;}
+}
+/* Details follow the card open, one after another. */
+.herd-pop-info > :nth-child(1){transition-delay:.14s;}
+.herd-pop-info > :nth-child(2){transition-delay:.19s;}
+.herd-pop-info > :nth-child(3){transition-delay:.24s;}
+.herd-pop-info > :nth-child(4){transition-delay:.29s;}
+/* ...but leave together, so closing is quick. */
+.herd-card:not(:hover):not(.is-open):not(:focus-visible) .herd-pop-info > *{transition-delay:0s;}
+
+/* Two columns: a centred pop-up would run off the screen edge, so it grows
+   from the outer side of each card instead. */
+@media (max-width:900px){
+  .herd-pop{--pop:min(330px, calc(100vw - 2.4rem));}
+  .herd-card:nth-child(odd) .herd-pop{left:0;margin-left:0;transform-origin:25% 135px;}
+  .herd-card:nth-child(even) .herd-pop{left:auto;right:0;margin-left:0;transform-origin:75% 135px;}
+}
+
+@media (prefers-reduced-motion: reduce){
+  .herd-pop,.herd-pop-photo .cell,.herd-pop-info > *{transition:opacity .2s ease;transform:none !important;}
+}
+
 /* gallery */
 .gallery{padding:2.7rem 1.5rem;background:var(--card-bg);border-top:1px solid var(--border);}
 .gallery-grid{

@@ -543,6 +543,26 @@ document.addEventListener('DOMContentLoaded', function(){
     });
   });
 
+  /* herd pop-ups: a mouse uses :hover in the CSS. A tap toggles .is-open
+     here - tap again or tap elsewhere to close - because :hover sticks on
+     touch screens and would never let go. */
+  var herdCards=Array.prototype.slice.call(document.querySelectorAll('.herd-card'));
+  herdCards.forEach(function(card){
+    card.addEventListener('click',function(e){
+      if(window.matchMedia('(hover:hover) and (pointer:fine)').matches) return;
+      var wasOpen=card.classList.contains('is-open');
+      herdCards.forEach(function(c){ c.classList.remove('is-open'); });
+      if(!wasOpen) card.classList.add('is-open');
+      e.stopPropagation();
+    });
+    card.addEventListener('keydown',function(e){ if(e.key==='Escape') card.blur(); });
+  });
+  if(herdCards.length){
+    document.addEventListener('click',function(){
+      herdCards.forEach(function(c){ c.classList.remove('is-open'); });
+    });
+  }
+
   /* bilona ritual scroll progress */
   var ritual=document.getElementById('ritual');
   var ritualFill=document.getElementById('ritualFill');

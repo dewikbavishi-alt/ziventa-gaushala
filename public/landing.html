@@ -561,25 +561,61 @@ Color: warm cream ground, deep gaushala-green = trust/tradition, hand-ghee gold 
     <p class="section-sub">Every member's ghee traces back to a small herd of well-cared-for Gir cows — each one known, named, and looked after individually.</p>
   </div>
   <div class="herd-grid">
-    <div class="herd-card reveal">
+    <div class="herd-card reveal" tabindex="0">
       <div class="herd-avatar"><span class="cell cell-tl"><img src="assets/ziventa-05.jpg" alt="Kamdhenu, a Gir cow at Ziventa Gaushala" loading="lazy"></span></div>
       <h3>Kamdhenu</h3>
       <p>Eldest of the herd, gentle and unhurried.</p>
+      <div class="herd-pop">
+        <div class="herd-pop-photo"><span class="cell cell-tl"><img src="assets/ziventa-05.jpg" alt="" loading="lazy"></span></div>
+        <div class="herd-pop-info">
+          <span class="herd-tag">Eldest</span>
+          <p class="herd-pop-name">Kamdhenu</p>
+          <p class="herd-pop-text">Eldest of the herd, gentle and unhurried. The one the younger cows settle beside. She takes her time over everything, and the herd takes its pace from her.</p>
+          <ul class="herd-facts"><li>Gir breed</li><li>Ziventa Gaushala</li></ul>
+        </div>
+      </div>
     </div>
-    <div class="herd-card reveal">
+    <div class="herd-card reveal" tabindex="0">
       <div class="herd-avatar"><span class="cell cell-tr"><img src="assets/ziventa-05.jpg" alt="Radha, a Gir cow at Ziventa Gaushala" loading="lazy"></span></div>
       <h3>Radha</h3>
       <p>Calm-eyed, favourite of the caretakers.</p>
+      <div class="herd-pop">
+        <div class="herd-pop-photo"><span class="cell cell-tr"><img src="assets/ziventa-05.jpg" alt="" loading="lazy"></span></div>
+        <div class="herd-pop-info">
+          <span class="herd-tag">Caretakers’ favourite</span>
+          <p class="herd-pop-name">Radha</p>
+          <p class="herd-pop-text">Calm-eyed, favourite of the caretakers. Quiet and trusting, she is the easiest of the four to sit with.</p>
+          <ul class="herd-facts"><li>Gir breed</li><li>Ziventa Gaushala</li></ul>
+        </div>
+      </div>
     </div>
-    <div class="herd-card reveal">
+    <div class="herd-card reveal" tabindex="0">
       <div class="herd-avatar"><span class="cell cell-bl"><img src="assets/ziventa-05.jpg" alt="Ganga, a Gir cow at Ziventa Gaushala" loading="lazy"></span></div>
       <h3>Ganga</h3>
       <p>Youngest, full of energy in the mornings.</p>
+      <div class="herd-pop">
+        <div class="herd-pop-photo"><span class="cell cell-bl"><img src="assets/ziventa-05.jpg" alt="" loading="lazy"></span></div>
+        <div class="herd-pop-info">
+          <span class="herd-tag">Youngest</span>
+          <p class="herd-pop-name">Ganga</p>
+          <p class="herd-pop-text">Youngest, full of energy in the mornings. First to the fodder and last to settle down. Her mornings are the liveliest part of the day at the gaushala.</p>
+          <ul class="herd-facts"><li>Gir breed</li><li>Ziventa Gaushala</li></ul>
+        </div>
+      </div>
     </div>
-    <div class="herd-card reveal">
+    <div class="herd-card reveal" tabindex="0">
       <div class="herd-avatar"><span class="cell cell-br"><img src="assets/ziventa-05.jpg" alt="Nandini, a Gir cow at Ziventa Gaushala" loading="lazy"></span></div>
       <h3>Nandini</h3>
       <p>Steady producer, mother of two calves.</p>
+      <div class="herd-pop">
+        <div class="herd-pop-photo"><span class="cell cell-br"><img src="assets/ziventa-05.jpg" alt="" loading="lazy"></span></div>
+        <div class="herd-pop-info">
+          <span class="herd-tag">Mother of two</span>
+          <p class="herd-pop-name">Nandini</p>
+          <p class="herd-pop-text">Steady producer, mother of two calves. Calm, regular and dependable, day in and day out.</p>
+          <ul class="herd-facts"><li>Gir breed</li><li>Ziventa Gaushala</li></ul>
+        </div>
+      </div>
     </div>
   </div>
 </section>
@@ -1172,6 +1208,26 @@ document.addEventListener('DOMContentLoaded', function(){
       if(back) back.setAttribute('aria-hidden', isOpen? 'true':'false');
     });
   });
+
+  /* herd pop-ups: a mouse uses :hover in the CSS. A tap toggles .is-open
+     here - tap again or tap elsewhere to close - because :hover sticks on
+     touch screens and would never let go. */
+  var herdCards=Array.prototype.slice.call(document.querySelectorAll('.herd-card'));
+  herdCards.forEach(function(card){
+    card.addEventListener('click',function(e){
+      if(window.matchMedia('(hover:hover) and (pointer:fine)').matches) return;
+      var wasOpen=card.classList.contains('is-open');
+      herdCards.forEach(function(c){ c.classList.remove('is-open'); });
+      if(!wasOpen) card.classList.add('is-open');
+      e.stopPropagation();
+    });
+    card.addEventListener('keydown',function(e){ if(e.key==='Escape') card.blur(); });
+  });
+  if(herdCards.length){
+    document.addEventListener('click',function(){
+      herdCards.forEach(function(c){ c.classList.remove('is-open'); });
+    });
+  }
 
   /* bilona ritual scroll progress */
   var ritual=document.getElementById('ritual');
