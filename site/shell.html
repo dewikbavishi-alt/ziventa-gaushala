@@ -530,7 +530,22 @@ document.addEventListener('DOMContentLoaded', function(){
   document.querySelectorAll('.benefit-card').forEach(function(card){
     card.setAttribute('aria-expanded','false');
     var back=card.querySelector('.benefit-back');
+    var setOpen=function(open){
+      card.setAttribute('aria-expanded', open? 'true':'false');
+      if(back) back.setAttribute('aria-hidden', open? 'false':'true');
+    };
+    /* A mouse flips the card by pointing at it and back by leaving. Its click
+       is then ignored, or it would flip the card straight back while the
+       pointer is still on it. Touch and keyboard keep the click toggle.
+       pointerdown is remembered because older Safari gives click no
+       pointerType of its own. */
+    var lastPointer=null;
+    card.addEventListener('pointerdown',function(e){ lastPointer=e.pointerType; });
+    card.addEventListener('pointerenter',function(e){ if(e.pointerType==='mouse') setOpen(true); });
+    card.addEventListener('pointerleave',function(e){ if(e.pointerType==='mouse') setOpen(false); });
     card.addEventListener('click',function(){
+      var by=lastPointer; lastPointer=null;
+      if(by==='mouse') return;
       var isOpen=card.getAttribute('aria-expanded')==='true';
       card.setAttribute('aria-expanded', isOpen? 'false':'true');
       /* The visual side of this is a CSS rotation, which a screen reader
