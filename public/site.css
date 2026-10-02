@@ -754,6 +754,9 @@ img[data-blur="loaded"]{filter:blur(0);transform:scale(1);}
 .shop-card{
   background:var(--card-bg);border:1px solid var(--border);border-radius:var(--radius);padding:1.2rem;
   position:relative;box-shadow:var(--shadow);transition:transform .25s ease, box-shadow .25s ease;
+  /* A column, so .shop-actions can sit on the bottom edge. Descriptions wrap to
+     different lengths, and without this the cards' buttons land at different heights. */
+  display:flex;flex-direction:column;
 }
 .shop-card:hover{transform:translateY(-4px);box-shadow:0 16px 32px rgba(59,45,30,.14);}
 .shop-card-featured{border-color:var(--gold);}
@@ -972,7 +975,7 @@ body.zv-member .price-hint-member{display:block;text-decoration:line-through;}
   border:2px solid var(--cream);
 }
 
-.shop-actions{display:flex;gap:.5rem;margin-top:1rem;}
+.shop-actions{display:flex;gap:.5rem;margin-top:auto;padding-top:1rem;}
 .shop-actions .btn-add{margin-top:0;flex:1;width:auto;}
 .shop-actions .btn-buy{flex:1;}
 .btn-buy{
