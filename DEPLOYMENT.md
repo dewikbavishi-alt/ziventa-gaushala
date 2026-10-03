@@ -198,15 +198,21 @@ whether someone has an account here is private.
 
 ## Checking a deployment
 
-`/api/health` reports which settings a deployment actually has. It never
-reports a key, a password or a connection string, so it is safe to leave
-public. Most checks answer "configured" or "set" rather than with the value;
-the exceptions are the mail host, the From address and the site URL, all of
-which already appear publicly on the site anyway.
+`/api/health` answers everyone with just `{"status":"ok"}` (or
+`"degraded"` and a 503 when the database is unreachable) - enough for an
+uptime monitor, and enough to tell a deployment is serving:
 
 ```bash
 curl -s https://girbyziventa.com/api/health
 ```
+
+The details - database, email, mail host, From address, admin count,
+Supabase, site URL, payments and the payments webhook secret - are shown
+only to the owner. Open https://girbyziventa.com/api/health in a browser
+that is signed in to the admin dashboard. They used to be public; none of it
+was a secret, but naming the mail server and counting admin accounts is the
+kind of reconnaissance an attacker starts with, so it is no longer handed
+out. It still never reports a key, a password or a connection string.
 
 Use the real domain. `ziventag.vercel.app` still resolves, but every page on
 it now 308s to girbyziventa.com, so checking there tells you about the

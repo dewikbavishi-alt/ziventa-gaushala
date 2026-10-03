@@ -1,13 +1,20 @@
 import { NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import { smtpConfigured } from '@/lib/email';
+import { isAdmin } from '@/lib/admin';
+import { razorpayConfigured, razorpayIsLive } from '@/lib/payments/razorpay';
 
 /**
  * What this deployment actually has wired up.
  *
- * Reports only whether each setting is PRESENT - never a value, never a key,
- * never a connection string. That makes it safe to leave public, and it turns
- * "is the email key live yet?" into a one-second check instead of a guess.
+ * Anyone gets the headline - "ok" or "degraded" - which is all an uptime
+ * monitor needs. The details are for the owner only: open this URL in a
+ * browser that is signed in to the admin dashboard.
+ *
+ * The details never include a key, a password or a connection string, but
+ * they did name the mail server, the From address and how many admin
+ * accounts exist - the kind of thing that helps someone plan an attack, so
+ * they are no longer public.
  *
  * Deliberately no-store: a cached answer would report yesterday's deployment.
  */
@@ -24,8 +31,16 @@ export async function GET() {
     database = 'down';
   }
 
+  const status = database === 'up' ? 'ok' : 'degraded';
+  const httpStatus = database === 'up' ? 200 : 503;
+  const headers = { 'Cache-Control': 'no-store' };
+
+  if (!(await isAdmin())) {
+    return NextResponse.json({ status, time: new Date().toISOString() }, { status: httpStatus, headers });
+  }
+
   const body = {
-    status: database === 'up' ? 'ok' : 'degraded',
+    status,
     time: new Date().toISOString(),
     checks: {
       database,
@@ -43,11 +58,10 @@ export async function GET() {
         .filter(Boolean).length,
       supabase: present(process.env.NEXT_PUBLIC_SUPABASE_URL) ? 'configured' : 'not-configured',
       siteUrl: process.env.NEXT_PUBLIC_SITE_URL ?? '(not set)',
+      payments: razorpayConfigured() ? (razorpayIsLive() ? 'live' : 'test') : 'not-configured',
+      paymentsWebhook: present(process.env.RAZORPAY_WEBHOOK_SECRET) ? 'set' : 'not-set',
     },
   };
 
-  return NextResponse.json(body, {
-    status: database === 'up' ? 200 : 503,
-    headers: { 'Cache-Control': 'no-store' },
-  });
+  return NextResponse.json(body, { status: httpStatus, headers });
 }
