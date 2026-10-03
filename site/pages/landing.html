@@ -429,12 +429,20 @@ path: /
 </section>
 
 <section class="gallery" id="gallery">
+  <!--
+    On a wide screen with motion allowed, the section pins and scrolling
+    slides the photos sideways past the reader (the .gallery-slide class,
+    switched on by the script in the shell). Phones get a swipeable row, and
+    reduced motion keeps the plain grid.
+  -->
+  <div class="gallery-pin">
   <div class="section-head reveal">
     <p class="section-kicker">Life at the Gaushala</p>
     <h2>A Day in Our Gaushala</h2>
     <p class="section-sub">Real moments from the gaushala — where your ghee actually begins.</p>
+    <div class="gallery-count" aria-hidden="true"><span>01</span><i></i><span>04</span></div>
   </div>
-  <div class="gallery-grid">
+  <div class="gallery-grid" id="galleryRail">
     <figure class="gallery-item reveal">
       <img src="assets/ziventa-03.jpg" alt="Clean, well-maintained cow shelter at Ziventa Gaushala" loading="lazy">
       <figcaption>Shelter — clean, well-maintained sheds</figcaption>
@@ -451,6 +459,7 @@ path: /
       <img src="assets/ziventa-04.jpg" alt="Ziventa Gaushala cows grazing in open green pasture" loading="lazy">
       <figcaption>Open pasture — grazing freely, every morning</figcaption>
     </figure>
+  </div>
   </div>
 </section>
 

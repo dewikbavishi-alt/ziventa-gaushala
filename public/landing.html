@@ -621,12 +621,20 @@ Color: warm cream ground, deep gaushala-green = trust/tradition, hand-ghee gold 
 </section>
 
 <section class="gallery" id="gallery">
+  <!--
+    On a wide screen with motion allowed, the section pins and scrolling
+    slides the photos sideways past the reader (the .gallery-slide class,
+    switched on by the script in the shell). Phones get a swipeable row, and
+    reduced motion keeps the plain grid.
+  -->
+  <div class="gallery-pin">
   <div class="section-head reveal">
     <p class="section-kicker">Life at the Gaushala</p>
     <h2>A Day in Our Gaushala</h2>
     <p class="section-sub">Real moments from the gaushala — where your ghee actually begins.</p>
+    <div class="gallery-count" aria-hidden="true"><span>01</span><i></i><span>04</span></div>
   </div>
-  <div class="gallery-grid">
+  <div class="gallery-grid" id="galleryRail">
     <figure class="gallery-item reveal">
       <img src="assets/ziventa-03.jpg" alt="Clean, well-maintained cow shelter at Ziventa Gaushala" loading="lazy">
       <figcaption>Shelter — clean, well-maintained sheds</figcaption>
@@ -643,6 +651,7 @@ Color: warm cream ground, deep gaushala-green = trust/tradition, hand-ghee gold 
       <img src="assets/ziventa-04.jpg" alt="Ziventa Gaushala cows grazing in open green pasture" loading="lazy">
       <figcaption>Open pasture — grazing freely, every morning</figcaption>
     </figure>
+  </div>
   </div>
 </section>
 
@@ -1837,6 +1846,78 @@ document.addEventListener('DOMContentLoaded', function(){
     },6000);
   }
 
+  /* gallery: vertical scroll slides the photos sideways (wide screens only) */
+  var gallery=document.getElementById('gallery');
+  var galleryRail=document.getElementById('galleryRail');
+  if(gallery && galleryRail){
+    var galleryCount=gallery.querySelector('.gallery-count');
+    // The heading travels with the photos, so they never slide over it.
+    // `translate`, not `transform`: the heading's reveal animation holds its
+    // transform, and an animation outranks an inline style.
+    var galleryMovers=[gallery.querySelector('.section-head'),galleryRail].filter(Boolean);
+    var galleryShift=function(x){
+      galleryMovers.forEach(function(el){ el.style.translate=x; });
+    };
+    var galleryFigs=Array.prototype.slice.call(galleryRail.children);
+    var wideMQ=window.matchMedia('(min-width:961px) and (prefers-reduced-motion: no-preference)');
+    var galleryDist=0, galleryTicking=false;
+    var galleryFrame=function(){
+      galleryTicking=false;
+      if(!gallery.classList.contains('gallery-slide')) return;
+      var p=Math.min(1,Math.max(0,-gallery.getBoundingClientRect().top/(galleryDist||1)));
+      galleryShift((-p*galleryDist).toFixed(1)+'px 0');
+      var mid=window.innerWidth/2, best=0, bestD=1e9;
+      galleryFigs.forEach(function(fig,i){
+        var r=fig.getBoundingClientRect(), c=r.left+r.width/2-mid;
+        fig.style.setProperty('--ix',(c*-0.06).toFixed(1)+'px');
+        // Wipe each photo in as it slides on. The gallery observer above
+        // cannot do it here: a photo still fully clipped by its wipe counts as
+        // invisible to IntersectionObserver, and sliding sideways inside the
+        // pinned section never gives it a fresh crossing to report.
+        if(r.left<window.innerWidth*0.92 && !fig.classList.contains('in-view')){
+          fig.classList.add('in-view');
+          setTimeout(function(){ fig.style.clipPath='inset(0 0 0 0)'; },1300);
+        }
+        if(Math.abs(c)<bestD){ bestD=Math.abs(c); best=i; }
+      });
+      if(galleryCount){
+        galleryCount.style.setProperty('--gp',p.toFixed(3));
+        galleryCount.firstElementChild.textContent=('0'+(best+1)).slice(-2);
+      }
+    };
+    var galleryMeasure=function(){
+      if(!wideMQ.matches){
+        gallery.classList.remove('gallery-slide');
+        gallery.style.removeProperty('--gh');
+        galleryShift('');
+        return;
+      }
+      gallery.classList.add('gallery-slide');
+      // Off to the right of a clipped row, lazy photos would not start
+      // loading until they were already sliding on.
+      galleryFigs.forEach(function(fig){
+        var img=fig.querySelector('img');
+        if(img) img.loading='eager';
+      });
+      galleryShift('');
+      // How far the row must travel for its last photo to come fully in.
+      var railRight=galleryRail.getBoundingClientRect().left+galleryRail.scrollWidth;
+      galleryDist=Math.max(0,railRight-window.innerWidth);
+      gallery.style.setProperty('--gh',(window.innerHeight+galleryDist)+'px');
+      galleryFrame();
+    };
+    window.addEventListener('scroll',function(){
+      if(!galleryTicking){ galleryTicking=true; requestAnimationFrame(galleryFrame); }
+    },{passive:true});
+    window.addEventListener('resize',galleryMeasure);
+    if(wideMQ.addEventListener) wideMQ.addEventListener('change',galleryMeasure);
+    galleryFigs.forEach(function(fig){
+      var img=fig.querySelector('img');
+      if(img && !img.complete) img.addEventListener('load',galleryMeasure,{once:true});
+    });
+    galleryMeasure();
+  }
+
   /* scroll progress bar */
   var progressBar=document.getElementById('scrollProgressBar');
   function updateProgress(){
@@ -2488,7 +2569,7 @@ document.addEventListener('DOMContentLoaded', function(){
     },
     {
       test:/\b(gift(ing)?|present|diwali|festive season|someone special)\b/i,
-      reply:'<p>If it's a gift, the <strong>Bilona Ghee — 500ml</strong> (₹2,775 for members, ₹3,700 regular) gifts well, and every jar is sealed and gift-ready. For a family that cooks with ghee daily, the <strong>1000ml</strong> jar goes further.</p><a class="zv-cta" href="#shop" data-zv-nav="1">View in the shop <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14" key="1ays0h"/><path d="m12 5 7 7-7 7" key="xquz4c"/></svg></a>'
+      reply:'<p>If it’s a gift, the <strong>Bilona Ghee — 500ml</strong> (₹2,775 for members, ₹3,700 regular) gifts well, and every jar is sealed and gift-ready. For a family that cooks with ghee daily, the <strong>1000ml</strong> jar goes further.</p><a class="zv-cta" href="#shop" data-zv-nav="1">View in the shop <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14" key="1ays0h"/><path d="m12 5 7 7-7 7" key="xquz4c"/></svg></a>'
     },
     {
       test:/\b(first time|trial|try (it|before|us|first)|sample|new customer|never tried|new to (ziventa|this))\b/i,

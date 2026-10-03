@@ -626,6 +626,41 @@ img[data-blur="loaded"]{filter:blur(0);transform:scale(1);}
   transform:translateY(6px);opacity:.94;transition:transform .35s ease, opacity .35s ease;
 }
 .gallery-item:hover figcaption{transform:translateY(0);opacity:1;}
+/* The 01 - 04 counter only means something while the photos slide. */
+.gallery-count{display:none;}
+
+/* Sliding gallery, as in the design preview: the section is made tall, its
+   contents pin under the header, and the vertical scroll through that height
+   moves the row of photos sideways (the script sets the height and the
+   transform). Each photo also drifts a little inside its frame (--ix), which
+   is what makes the row feel like it is passing the camera rather than
+   being dragged. Only on a wide screen with motion allowed - the script adds
+   .gallery-slide, so without it this is all inert. */
+.gallery.gallery-slide{height:var(--gh,auto);padding:0;}
+.gallery-slide .gallery-pin{
+  position:sticky;top:0;height:100vh;overflow:hidden;
+  display:flex;align-items:center;gap:3rem;padding:90px 0 40px;
+}
+.gallery-slide .section-head{flex:0 0 min(360px,30vw);margin:0 0 0 max(1.5rem,calc((100vw - 1060px)/2));text-align:left;}
+.gallery-slide .section-sub{margin-left:0;}
+.gallery-slide .gallery-count{display:flex;align-items:center;gap:.8rem;margin-top:1.6rem;font-size:.82rem;letter-spacing:.08em;color:var(--gold-deep);}
+.gallery-slide .gallery-count i{display:block;width:110px;height:1px;background:var(--border);position:relative;}
+.gallery-slide .gallery-count i::after{
+  content:"";position:absolute;inset:0;background:var(--gold);
+  transform-origin:0 50%;transform:scaleX(var(--gp,0));
+}
+.gallery-slide .gallery-grid{
+  display:flex;align-items:flex-start;gap:1.75rem;max-width:none;margin:0;
+  padding-right:max(1.5rem,calc((100vw - 1060px)/2));will-change:translate;
+}
+.gallery-slide .gallery-item{flex:0 0 auto;width:min(36vw,420px);}
+/* Every other photo sits lower, so the row reads as a strip of prints. */
+.gallery-slide .gallery-item:nth-child(even){margin-top:60px;}
+.gallery-slide .gallery-item img{
+  height:min(56vh,480px);transform:translateX(var(--ix,0px)) scale(1.15);
+  transition:none;
+}
+.gallery-slide .gallery-item:hover img{transform:translateX(var(--ix,0px)) scale(1.2);transition:transform .6s cubic-bezier(.2,.7,.3,1);}
 
 /* process */
 .process{padding:2.7rem 1.5rem;background:var(--card-bg);position:relative;overflow:hidden;}
@@ -1530,9 +1565,18 @@ body.zv-member .price-hint-member{display:block;text-decoration:line-through;}
   .shop-card p{font-size:.78rem;margin-bottom:.6rem;}
   .price{font-size:1.05rem;}
   .btn-add,.btn-buy{font-size:.78rem;padding:.6em .5em;}
-  .gallery-grid{grid-template-columns:repeat(2,1fr);gap:.7rem;}
-  .gallery-item img{height:132px;}
-  .gallery-item figcaption{font-size:.74rem;padding:1.2rem .7rem .6rem;}
+  /* Phones: one large photo at a time in a row you swipe, snapping to each,
+     rather than four thumbnails. The row runs edge to edge, so the next
+     photo peeking in shows there is more. */
+  .gallery-grid{
+    display:flex;gap:.8rem;overflow-x:auto;scroll-snap-type:x mandatory;
+    margin:0 -1.5rem;padding:0 1.5rem .4rem;scrollbar-width:none;
+    -webkit-overflow-scrolling:touch;
+  }
+  .gallery-grid::-webkit-scrollbar{display:none;}
+  .gallery-item{flex:0 0 80vw;scroll-snap-align:center;}
+  .gallery-item img{height:min(62vh,380px);}
+  .gallery-item figcaption{font-size:.82rem;padding:1.4rem .9rem .75rem;}
   .footer-inner{grid-template-columns:1fr;}
 
   .hero{min-height:auto;padding:2.25rem 1.25rem clamp(210px,55vw,300px);}
