@@ -76,7 +76,7 @@ export function SiteFooter() {
 
 
           <p className="mt-4 max-w-[320px] text-[0.9rem] text-[#FBF6EC]/65">
-            A small, dedicated gaushala raising Gir cows and preparing A2 Bilona ghee in small
+            A small, dedicated gaushala raising Gir cows and preparing A2A2 Bilona ghee in small
             batches &mdash; for a limited circle of families who value trust over transactions.
           </p>
         </div>
