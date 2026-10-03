@@ -790,6 +790,11 @@ img[data-blur="loaded"]{filter:blur(0);transform:scale(1);}
 .shop-media-icon svg{width:46px;height:46px;color:var(--gold-deep);}
 .shop-card h3{font-size:1.08rem;margin-bottom:.3em;}
 .shop-card p{font-size:.9rem;margin-bottom:1rem;}
+/* The "100% A2" line under each jar's name: a label, not a sentence. */
+.shop-card .shop-a2{
+  margin:-.1em 0 .5em;font-size:.72rem;font-weight:700;letter-spacing:.07em;
+  text-transform:uppercase;color:var(--gold-deep);
+}
 .price{font-family:var(--font-display);font-size:1.3rem;color:var(--green);}
 .price em{display:block;font-style:normal;font-size:.68rem;text-transform:uppercase;letter-spacing:.08em;color:var(--ink-soft);margin-top:.15em;}
 

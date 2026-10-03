@@ -27,7 +27,7 @@ export const metadata: Metadata = {
   // `template` lets each page name itself - "Sign in | Ziventa Nutriments" -
   // while anything that does not fall back to `default`.
   title: {
-    default: "Ziventa Nutriments® - A2 Gir Cow Bilona Ghee",
+    default: "Ziventa Nutriments® - 100% A2 Gir Cow Bilona Ghee",
     template: "%s | Ziventa Nutriments®",
   },
   description: DESCRIPTION,
@@ -39,7 +39,7 @@ export const metadata: Metadata = {
   openGraph: {
     type: "website",
     siteName: "Ziventa Nutriments®",
-    title: "Ziventa Nutriments® - A2 Gir Cow Bilona Ghee",
+    title: "Ziventa Nutriments® - 100% A2 Gir Cow Bilona Ghee",
     description: DESCRIPTION,
     url: SITE,
     locale: "en_IN",
@@ -48,13 +48,13 @@ export const metadata: Metadata = {
         url: "/logo/og-image.png",
         width: 1200,
         height: 630,
-        alt: "Ziventa Nutriments - A2 Gir Cow Bilona Ghee",
+        alt: "Ziventa Nutriments - 100% A2 Gir Cow Bilona Ghee",
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "Ziventa Nutriments® - A2 Gir Cow Bilona Ghee",
+    title: "Ziventa Nutriments® - 100% A2 Gir Cow Bilona Ghee",
     description: DESCRIPTION,
     images: ["/logo/og-image.png"],
   },
