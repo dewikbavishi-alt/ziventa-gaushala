@@ -278,10 +278,11 @@ img[data-blur="loaded"]{filter:blur(0);transform:scale(1);}
 .zf-sky{fill:url(#zgSky);}
 .zf-sun{fill:url(#zgSun);animation:zSunBreathe 11s ease-in-out infinite;}
 .zf-sundisc{fill:#FBEBC0;opacity:.62;}
-.zf-cloud ellipse{fill:#FFFCF4;opacity:.72;}
+.zf-cloud ellipse{fill:url(#zgCloud);opacity:.9;}
 .zf-cloud-1{animation:zCloud 86s linear infinite;}
 .zf-cloud-2{animation:zCloud 112s linear infinite;animation-delay:-40s;}
 .zf-cloud-3{animation:zCloud 138s linear infinite;animation-delay:-88s;}
+.zf-cloud-4{animation:zCloud 170s linear infinite;animation-delay:-20s;opacity:.7;}
 .zf-bird{fill:none;stroke:#7A7355;stroke-width:2.4;stroke-linecap:round;opacity:.42;}
 .zf-birds-fly{animation:zBirdsFly 54s linear infinite;}
 @keyframes zCloud{from{transform:translateX(-190px);}to{transform:translateX(1390px);}}
@@ -292,6 +293,66 @@ img[data-blur="loaded"]{filter:blur(0);transform:scale(1);}
 .zf-mid{fill:url(#zgMid);}
 .zf-near{fill:url(#zgNear);}
 .zf-fore{fill:url(#zgFore);}
+
+/* Depth and life added around the cows. */
+.zf-mtn{fill:url(#zgMtn);opacity:.85;}
+.zf-treeline ellipse{fill:#9DB081;}
+.zf-trunk-far{fill:none;stroke:#8E8A66;stroke-width:3;}
+.zf-path{fill:url(#zgPath);opacity:.75;}
+.zf-tex{fill:url(#zgBlades);}
+/* Sun rays: a slow turn and a slow pulse, too faint to compete with the text. */
+.zf-rays polygon{fill:url(#zgRay);}
+.zf-rays{transform-box:fill-box;transform-origin:50% 50%;opacity:.55;animation:zRays 140s linear infinite, zRayPulse 9s ease-in-out infinite;}
+@keyframes zRays{to{transform:rotate(360deg);}}
+@keyframes zRayPulse{0%,100%{opacity:.4;}50%{opacity:.7;}}
+/* Birds beat their wings as they cross. */
+.zf-bird{transform-box:fill-box;transform-origin:50% 60%;animation:zFlap .55s ease-in-out infinite alternate;}
+.zf-bird-2{animation-duration:.48s;animation-delay:-.2s;}
+.zf-bird-3{animation-duration:.62s;animation-delay:-.4s;}
+@keyframes zFlap{from{transform:scaleY(1);}to{transform:scaleY(.35);}}
+/* The big tree: trunk and canopy, the leaves swaying from the trunk. */
+.zt-trunk{fill:#7A5A3A;}
+.zt-branch{fill:none;stroke:#7A5A3A;stroke-width:7;stroke-linecap:round;}
+.zt-canopy ellipse{fill:url(#zgCanopy);}
+.zt-canopy{transform-box:fill-box;transform-origin:50% 100%;animation:zCanopy 8s ease-in-out infinite;}
+@keyframes zCanopy{0%,100%{transform:rotate(0deg) skewX(0deg);}40%{transform:rotate(-1.1deg) skewX(-1.5deg);}70%{transform:rotate(.6deg) skewX(.8deg);}}
+/* Wildflowers nodding with the grass. */
+.zfl-y{fill:#F2C94C;}
+.zfl-w{fill:#FFFDF5;}
+.zfl-p{fill:#E99BB4;}
+.zfl{transform-box:fill-box;transform-origin:50% 100%;}
+.zfl-a{animation:zGrass 6.8s ease-in-out infinite;}
+.zfl-b{animation:zGrass 8.6s ease-in-out infinite;animation-delay:-3.1s;}
+/* Butterflies: a wandering flight, wings beating fast. */
+.zbf-body{fill:#3B2F25;}
+.zbf-w1{fill:#F2A93B;stroke:#B9741C;stroke-width:.8;}
+.zbf-w2{fill:#FFF6DC;stroke:#C9B98A;stroke-width:.8;}
+.zbf-wing{transform-box:fill-box;transform-origin:50% 50%;animation:zWing .22s ease-in-out infinite alternate;}
+@keyframes zWing{from{transform:scaleX(1);}to{transform:scaleX(.25);}}
+.zbf-1 .zbf-path{animation:zFly1 18s ease-in-out infinite;}
+.zbf-2 .zbf-path{animation:zFly2 23s ease-in-out infinite;animation-delay:-7s;}
+.zbf-2 .zbf-wing{animation-duration:.26s;}
+@keyframes zFly1{
+  0%{transform:translate(430px,300px);}20%{transform:translate(500px,262px);}
+  40%{transform:translate(560px,288px);}60%{transform:translate(520px,246px);}
+  80%{transform:translate(450px,272px);}100%{transform:translate(430px,300px);}
+}
+@keyframes zFly2{
+  0%{transform:translate(880px,280px);}25%{transform:translate(960px,236px);}
+  50%{transform:translate(1040px,270px);}75%{transform:translate(950px,300px);}
+  100%{transform:translate(880px,280px);}
+}
+/* Pollen and dust lifting through the light. */
+.zpl circle{fill:#FFF4CF;opacity:0;animation:zMote 9s ease-in-out infinite;}
+.zpl circle:nth-child(2){animation-duration:11s;animation-delay:-2s;}
+.zpl circle:nth-child(3){animation-duration:8s;animation-delay:-4s;}
+.zpl circle:nth-child(4){animation-duration:12s;animation-delay:-6s;}
+.zpl circle:nth-child(5){animation-duration:10s;animation-delay:-1s;}
+.zpl circle:nth-child(6){animation-duration:9.5s;animation-delay:-5s;}
+.zpl circle:nth-child(7){animation-duration:11.5s;animation-delay:-3s;}
+.zpl circle:nth-child(8){animation-duration:8.5s;animation-delay:-7s;}
+.zpl circle:nth-child(9){animation-duration:10.5s;animation-delay:-8s;}
+@keyframes zMote{0%{opacity:0;transform:translate(0,0);}25%{opacity:.85;}75%{opacity:.5;}100%{opacity:0;transform:translate(26px,-70px);}}
 @keyframes zSunBreathe{0%,100%{opacity:.75;}50%{opacity:1;}}
 .zb-w{fill:none;stroke:#7A8A4A;stroke-width:2;stroke-linecap:round;opacity:.5;}
 .zb-fly{animation:zBird 36s linear infinite;}
