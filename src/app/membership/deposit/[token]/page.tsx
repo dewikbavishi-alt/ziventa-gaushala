@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import { prisma } from '@/lib/prisma';
 import { DEPOSIT_PAISE } from '@/lib/membership';
 import { SiteFooter } from '@/components/site-footer';
+import { razorpayConfigured } from '@/lib/payments/razorpay';
 import { DepositForm } from './deposit-form';
 
 export const metadata: Metadata = {
@@ -130,7 +131,18 @@ export default async function DepositPage({ params }: { params: Promise<{ token:
           </div>
         </dl>
 
-        <DepositForm token={token} amountLabel={rs(amount)} />
+        {razorpayConfigured() ? (
+          <DepositForm token={token} amountLabel={rs(amount)} />
+        ) : (
+          // No payment gateway yet: say how it will be settled rather than
+          // offer a button that can only fail. The deposit is then recorded
+          // from the admin seats page once it arrives.
+          <p className="mt-5 rounded-xl border border-[#C08A2E]/30 bg-[#C08A2E]/8 px-4 py-3 text-sm text-[#2F4A3D]">
+            We will arrange the deposit with you directly. Reply to the email we sent you, or call
+            us on <a className="font-medium underline" href="tel:+919033525352">+91 90335 25352</a>,
+            and your seat becomes active as soon as it reaches us.
+          </p>
+        )}
 
         <p className="mt-4 text-xs text-[#2F4A3D]/60">
           The deposit is fully refundable and simply holds your seat in the founding circle.

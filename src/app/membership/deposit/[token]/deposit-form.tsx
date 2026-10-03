@@ -3,20 +3,69 @@
 import { useState } from 'react';
 
 /**
- * Cash on delivery is deliberately absent.
+ * Pays the founding deposit through Razorpay Checkout.
  *
- * A deposit is what holds the seat - there is no delivery to attach it to and
- * nothing to hand over at a door. Leaving the option out is the point of this
- * page being separate from checkout rather than reusing it.
+ * Pressing Pay asks our server for a gateway order (../../../api/membership/
+ * deposit), opens Razorpay's window - which handles UPI, cards and net
+ * banking itself - and, once it reports success, sends the signed result to
+ * be verified. The membership is activated by the server only after that
+ * signature checks out, never by this component. If the tab closes after
+ * paying, Razorpay's webhook settles it instead.
  */
-const METHODS = [
-  { value: 'UPI', label: 'UPI' },
-  { value: 'Card', label: 'Card' },
-  { value: 'Net Banking', label: 'Net Banking' },
-] as const;
+
+type RazorpayResponse = {
+  razorpay_order_id: string;
+  razorpay_payment_id: string;
+  razorpay_signature: string;
+};
+
+type RazorpayInstance = {
+  open: () => void;
+  on: (event: 'payment.failed', cb: (e: { error?: { description?: string } }) => void) => void;
+};
+
+declare global {
+  interface Window {
+    Razorpay?: new (options: Record<string, unknown>) => RazorpayInstance;
+  }
+}
+
+let loading: Promise<void> | null = null;
+
+/** Razorpay's script, loaded only when someone actually pays. */
+function loadRazorpay(): Promise<void> {
+  if (window.Razorpay) return Promise.resolve();
+  if (loading) return loading;
+  loading = new Promise((resolve, reject) => {
+    const s = document.createElement('script');
+    s.src = 'https://checkout.razorpay.com/v1/checkout.js';
+    s.async = true;
+    s.onload = () => resolve();
+    s.onerror = () => {
+      loading = null;
+      reject(
+        new Error(
+          'The payment window could not load. Check your connection and try again — nothing has been charged.',
+        ),
+      );
+    };
+    document.head.appendChild(s);
+  });
+  return loading;
+}
+
+async function postJson(url: string, body: unknown) {
+  const res = await fetch(url, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(body),
+  });
+  const data = await res.json().catch(() => ({}));
+  if (!res.ok) throw new Error(data.error ?? 'Something went wrong. Please try again.');
+  return data;
+}
 
 export function DepositForm({ token, amountLabel }: { token: string; amountLabel: string }) {
-  const [method, setMethod] = useState<string>('UPI');
   const [busy, setBusy] = useState(false);
   const [done, setDone] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -26,21 +75,52 @@ export function DepositForm({ token, amountLabel }: { token: string; amountLabel
     setBusy(true);
     setError(null);
     try {
-      const res = await fetch('/api/membership/deposit', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        // The token identifies the membership; the amount is never sent,
-        // because the server reads it from the record it already has.
-        body: JSON.stringify({ token, method }),
-      });
-      const data = await res.json().catch(() => ({}));
-      if (!res.ok) {
-        setError(data.error ?? 'We could not record that just now. Please try again.');
+      const start = await postJson('/api/membership/deposit', { token });
+      if (start.alreadyPaid) {
+        setDone(true);
         return;
       }
+      const p = start.payment;
+      await loadRazorpay();
+
+      const paid = await new Promise<RazorpayResponse>((resolve, reject) => {
+        const Razorpay = window.Razorpay;
+        if (!Razorpay) {
+          reject(new Error('The payment window could not load. Nothing has been charged.'));
+          return;
+        }
+        const rzp = new Razorpay({
+          key: p.keyId,
+          order_id: p.orderId,
+          amount: p.amountPaise,
+          currency: 'INR',
+          name: 'Ziventa Nutriments',
+          description: `Founding deposit · Seat ${p.seatNumber}`,
+          prefill: p.prefill,
+          theme: { color: '#1E4A35' },
+          handler: (r: RazorpayResponse) => resolve(r),
+          modal: {
+            ondismiss: () =>
+              reject(new Error('Payment was not completed, so nothing has been charged. You can try again.')),
+            escape: true,
+            confirm_close: true,
+          },
+        });
+        rzp.on('payment.failed', (ev) =>
+          reject(
+            new Error(
+              ev?.error?.description ??
+                'The payment did not go through. Nothing has been charged — you can try again.',
+            ),
+          ),
+        );
+        rzp.open();
+      });
+
+      await postJson('/api/membership/deposit/verify', paid);
       setDone(true);
-    } catch {
-      setError('We could not reach our server. Please check your connection and try again.');
+    } catch (err) {
+      setError((err as Error).message);
     } finally {
       setBusy(false);
     }
@@ -51,7 +131,7 @@ export function DepositForm({ token, amountLabel }: { token: string; amountLabel
       <div className="mt-5 rounded-xl border border-[#1E4A35]/20 bg-[#1E4A35]/5 p-5 text-center">
         <p className="font-display text-lg text-[#1E4A35]">You are a member.</p>
         <p className="mt-1 text-sm text-[#2F4A3D]/75">
-          Your deposit is recorded and your seat is now active. We have emailed you the details.
+          Your deposit is paid and your seat is now active. We have emailed you the details.
         </p>
         <a
           href="/your-account/membership"
@@ -65,31 +145,9 @@ export function DepositForm({ token, amountLabel }: { token: string; amountLabel
 
   return (
     <form onSubmit={pay} className="mt-5">
-      <fieldset>
-        <legend className="text-sm font-medium text-[#2F4A3D]">How would you like to pay?</legend>
-        <div className="mt-2 flex flex-col gap-2">
-          {METHODS.map((m) => (
-            <label
-              key={m.value}
-              className={`flex min-h-[44px] cursor-pointer items-center gap-3 rounded-xl border px-4 py-2 text-sm transition ${
-                method === m.value
-                  ? 'border-[#C08A2E] bg-[#C08A2E]/8 text-[#2F4A3D]'
-                  : 'border-[#2F4A3D]/20 text-[#2F4A3D]/80 hover:border-[#C08A2E]/50'
-              }`}
-            >
-              <input
-                type="radio"
-                name="method"
-                value={m.value}
-                checked={method === m.value}
-                onChange={() => setMethod(m.value)}
-                className="h-4 w-4 accent-[#C08A2E]"
-              />
-              {m.label}
-            </label>
-          ))}
-        </div>
-      </fieldset>
+      <p className="text-sm text-[#2F4A3D]/75">
+        Pay securely by UPI, card or net banking. The deposit is fully refundable.
+      </p>
 
       {error && (
         <p role="alert" className="mt-3 rounded-lg bg-red-50 px-3 py-2 text-sm text-red-700">
@@ -102,17 +160,8 @@ export function DepositForm({ token, amountLabel }: { token: string; amountLabel
         disabled={busy}
         className="mt-4 min-h-[44px] w-full rounded-lg bg-[#1E4A35] px-5 font-medium text-[#FBF6EC] transition hover:bg-[#173a29] disabled:opacity-60"
       >
-        {busy ? 'Recording…' : `Pay ${amountLabel}`}
+        {busy ? 'Opening secure payment…' : `Pay ${amountLabel}`}
       </button>
-
-      {/* The same admission checkout makes. It is not a real charge yet. */}
-      <p className="mt-3 flex items-start gap-2 rounded-lg bg-[#C08A2E]/10 px-3 py-2 text-xs text-[#2F4A3D]">
-        <span aria-hidden="true">ⓘ</span>
-        <span>
-          <strong>Demonstration payment.</strong> No card or bank details are collected and nothing
-          is charged. Connect a payment provider to take the deposit for real.
-        </span>
-      </p>
     </form>
   );
 }

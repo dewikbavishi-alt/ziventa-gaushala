@@ -1,27 +1,42 @@
 import { NextResponse } from 'next/server';
 import { z } from 'zod';
 import { prisma } from '@/lib/prisma';
-import { membershipActiveEmail, sendEmail } from '@/lib/email';
+import { DEPOSIT_PAISE } from '@/lib/membership';
+import {
+  PaymentError,
+  createRazorpayOrder,
+  razorpayConfigured,
+  razorpayIsLive,
+  razorpayKeyId,
+} from '@/lib/payments/razorpay';
 
-/**
- * Records the founding deposit and activates the seat.
- *
- * There is no payment provider yet, so nothing is charged - exactly as at
- * checkout, and the page says so. When one is connected, this is where its
- * webhook or verification result goes, and the rest of the flow is unchanged.
- *
- * The amount is never taken from the request. It is read from the membership
- * the token identifies, so the page cannot be edited to settle a seat for a
- * rupee.
- */
 export const dynamic = 'force-dynamic';
 
+/**
+ * Starts a deposit payment: creates a Razorpay order for the deposit and
+ * hands the browser what it needs to open Checkout.
+ *
+ * This route does NOT mark anything paid. It used to - a button here
+ * "recorded" the deposit without charging a rupee, which let anyone holding a
+ * deposit link activate their membership and the 25% member rate for free.
+ * The membership now activates only in confirmPaidDeposit, after a verified
+ * Razorpay signature (see ./verify and the payments webhook).
+ */
 const schema = z.object({
   token: z.string().min(32).max(128),
-  method: z.enum(['UPI', 'Card', 'Net Banking']),
 });
 
 export async function POST(request: Request) {
+  if (!razorpayConfigured()) {
+    return NextResponse.json(
+      {
+        error:
+          'Online payment is not available just yet. Reply to the email we sent you and we will arrange the deposit with you directly.',
+      },
+      { status: 503 },
+    );
+  }
+
   let body: unknown;
   try {
     body = await request.json();
@@ -31,9 +46,7 @@ export async function POST(request: Request) {
 
   const parsed = schema.safeParse(body);
   if (!parsed.success) {
-    // Cash on delivery reaches here if someone posts it by hand. There is no
-    // delivery to attach a deposit to, so it is not an accepted method.
-    return NextResponse.json({ error: 'That payment method is not accepted.' }, { status: 422 });
+    return NextResponse.json({ error: 'Invalid request' }, { status: 400 });
   }
 
   const membership = await prisma.membership.findUnique({
@@ -41,67 +54,57 @@ export async function POST(request: Request) {
     select: {
       id: true,
       seatNumber: true,
+      depositPaise: true,
       depositStatus: true,
-      customer: { select: { email: true, fullName: true } },
+      customer: { select: { email: true, fullName: true, phone: true } },
     },
   });
 
   if (!membership) {
     return NextResponse.json({ error: 'This link is no longer active.' }, { status: 404 });
   }
-
-  /**
-   * Releasing a seat clears the deposit token, so a departed family's link
-   * stops resolving and this is all but unreachable. Checked anyway, because
-   * the alternative is activating a membership that holds no seat.
-   */
   if (membership.seatNumber === null) {
     return NextResponse.json({ error: 'This membership has ended.' }, { status: 409 });
   }
-
   if (membership.depositStatus === 'PAID') {
-    // Someone pressed pay twice, or reopened the page from the email. Not an
-    // error worth showing - the seat is settled either way.
     return NextResponse.json({ ok: true, alreadyPaid: true, seatNumber: membership.seatNumber });
   }
 
-  /**
-   * Activating and clearing the token happen together.
-   *
-   * The token is what makes the link work, so clearing it in the same write
-   * that marks the deposit paid is what stops a forwarded email being replayed
-   * later against a seat that has already settled.
-   */
-  await prisma.membership.update({
-    where: { id: membership.id },
-    data: {
-      status: 'ACTIVE',
-      depositStatus: 'PAID',
-      depositPaidAt: new Date(),
-      depositToken: null,
-      joinedOn: new Date(),
-      notes: `Deposit recorded via ${parsed.data.method} (demonstration payment).`,
-    },
-  });
+  const amountPaise = membership.depositPaise || DEPOSIT_PAISE;
 
-  /**
-   * Sent after the membership is committed. The seat is active whether or not
-   * the email lands; a mail outage must not cost someone the thing they just
-   * paid for.
-   */
-  const email = membership.customer.email;
-  if (email) {
-    const sent = await sendEmail(
-      membershipActiveEmail({
-        to: email,
-        fullName: membership.customer.fullName?.trim() || 'there',
+  try {
+    // A fresh gateway order each time Checkout opens. Saving it replaces any
+    // earlier one, so a payment can only ever settle against the latest.
+    const gatewayOrder = await createRazorpayOrder({
+      amountPaise,
+      receipt: `DEP-seat-${membership.seatNumber}`,
+      notes: { kind: 'deposit', seat: String(membership.seatNumber) },
+    });
+
+    await prisma.membership.update({
+      where: { id: membership.id },
+      data: { depositGatewayOrderId: gatewayOrder.id },
+    });
+
+    return NextResponse.json({
+      ok: true,
+      payment: {
+        orderId: gatewayOrder.id,
+        keyId: razorpayKeyId(),
+        amountPaise,
+        live: razorpayIsLive(),
         seatNumber: membership.seatNumber,
-      }),
-    );
-    if (!sent.delivered) {
-      console.error(`[membership] welcome email failed for seat ${membership.seatNumber}: ${sent.reason}`);
-    }
+        prefill: {
+          name: membership.customer.fullName ?? '',
+          email: membership.customer.email ?? '',
+          contact: membership.customer.phone ?? '',
+        },
+      },
+    });
+  } catch (err) {
+    const message =
+      err instanceof PaymentError ? err.message : 'We could not start the payment.';
+    console.error(`[deposit] gateway order failed for seat ${membership.seatNumber}: ${(err as Error).message}`);
+    return NextResponse.json({ error: message }, { status: 502 });
   }
-
-  return NextResponse.json({ ok: true, seatNumber: membership.seatNumber });
 }

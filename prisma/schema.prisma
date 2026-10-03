@@ -164,6 +164,13 @@ model Membership {
   depositTokenAt   DateTime?
   depositPaidAt    DateTime?
 
+  /// Razorpay's order id for the deposit payment, saved when checkout opens.
+  /// The webhook and the browser both find the membership by it, so it is
+  /// unique: one gateway order can only ever settle one membership.
+  depositGatewayOrderId String? @unique
+  /// Razorpay's payment id once the deposit is taken - what a refund needs.
+  depositPaymentId      String?
+
   joinedOn DateTime?
   leftOn   DateTime?
   notes    String?

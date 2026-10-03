@@ -5,7 +5,7 @@ import { z } from 'zod';
 import { prisma } from '@/lib/prisma';
 import { requireAdmin } from '@/lib/admin';
 import { LEAD_STATUSES } from '@/lib/admin/status';
-import { membershipDepositEmail, sendEmail } from '@/lib/email';
+import { membershipActiveEmail, membershipDepositEmail, sendEmail } from '@/lib/email';
 import { newDepositToken, depositLink, lowestFreeSeat, DEPOSIT_PAISE, SEATS } from '@/lib/membership';
 import type { ActionResult } from '@/components/admin/action-form';
 
@@ -294,4 +294,97 @@ export async function releaseSeat(
     ok: true,
     message: `${family} has left the club. Seat ${seat} is free again.${refundNote}`,
   };
+}
+
+/**
+ * Record a deposit the family paid us directly - a UPI transfer, a bank
+ * transfer, cash at the gaushala - and activate their seat.
+ *
+ * The deposit page takes the deposit through Razorpay. This is for money that
+ * arrived some other way, which is every deposit while online payment is not
+ * set up. Owner only, like every action here, and it asks for a reference so
+ * the record says what the money was.
+ *
+ * Sends the same welcome email as an online deposit.
+ */
+export async function markDepositReceived(
+  _prev: ActionResult | null,
+  formData: FormData,
+): Promise<ActionResult> {
+  try {
+    await requireAdmin();
+  } catch {
+    return { ok: false, message: 'You are no longer signed in as an admin.' };
+  }
+
+  const parsed = z
+    .object({
+      membershipId: z.string().uuid(),
+      reference: z.string().trim().min(3, 'Add how it was paid, e.g. "UPI ref 4321".').max(200),
+    })
+    .safeParse({
+      membershipId: formData.get('membershipId'),
+      reference: formData.get('reference') ?? '',
+    });
+  if (!parsed.success) {
+    return { ok: false, message: parsed.error.issues[0]?.message ?? 'That request was not valid.' };
+  }
+  const { membershipId, reference } = parsed.data;
+
+  const membership = await prisma.membership.findUnique({
+    where: { id: membershipId },
+    select: {
+      seatNumber: true,
+      notes: true,
+      customer: { select: { fullName: true, email: true } },
+    },
+  });
+  if (!membership) return { ok: false, message: 'That membership no longer exists.' };
+  if (membership.seatNumber === null) {
+    return { ok: false, message: 'That family has left - give them a seat again first.' };
+  }
+  const seat = membership.seatNumber;
+
+  const now = new Date();
+  const note = [
+    membership.notes?.trim(),
+    `Deposit received directly on ${now.toISOString().slice(0, 10)}: ${reference}`,
+  ]
+    .filter(Boolean)
+    .join('\n');
+
+  // Conditional on the deposit still being unpaid, so a Razorpay payment
+  // landing at the same moment cannot be recorded twice.
+  const claimed = await prisma.membership.updateMany({
+    where: { id: membershipId, seatNumber: seat, depositStatus: { not: 'PAID' } },
+    data: {
+      status: 'ACTIVE',
+      depositStatus: 'PAID',
+      depositPaidAt: now,
+      joinedOn: now,
+      depositToken: null,
+      notes: note,
+    },
+  });
+  if (claimed.count === 0) {
+    return { ok: false, message: 'That deposit is already recorded as paid. Reload to see it.' };
+  }
+
+  const family = membership.customer.fullName?.trim() || membership.customer.email || 'The family';
+  if (membership.customer.email) {
+    const sent = await sendEmail(
+      membershipActiveEmail({
+        to: membership.customer.email,
+        fullName: membership.customer.fullName?.trim() || 'there',
+        seatNumber: seat,
+      }),
+    );
+    if (!sent.delivered) {
+      console.error(`[membership] welcome email failed for seat ${seat}: ${sent.reason}`);
+    }
+  }
+
+  revalidatePath('/admin/membership', 'layout');
+  revalidatePath('/your-account/membership');
+  return { ok: true, message: `${family}'s deposit is recorded. Seat ${seat} is now active.` };
 }

@@ -13,7 +13,7 @@ import { SEATS } from '@/lib/membership';
 import { Badge, Card, Empty, PageHeader, StatCard, TableWrap, td, th } from '@/components/admin/ui';
 import { ActionForm } from '@/components/admin/action-form';
 import { IconCheck, IconClock, IconUser } from '@/components/admin/icons';
-import { releaseSeat } from '../actions';
+import { markDepositReceived, releaseSeat } from '../actions';
 
 export const metadata = { title: 'Seats' };
 
@@ -168,6 +168,37 @@ export default async function SeatsPage() {
                       <span className="mt-1 block text-xs text-a-muted">
                         {rupees(m.depositPaise)}
                       </span>
+                      {/* For a deposit paid to us directly - UPI, bank, cash -
+                          rather than through the deposit page's checkout. */}
+                      {!gone && m.depositStatus !== 'PAID' && m.depositStatus !== 'REFUNDED' && (
+                        <ActionForm
+                          action={markDepositReceived}
+                          submitLabel="Mark received"
+                          pendingLabel="Recording…"
+                          tone="quiet"
+                          className="mt-2 flex flex-col items-start gap-1.5"
+                          confirm={{
+                            title: `Record seat ${m.seatNumber}'s deposit as received?`,
+                            body: `Only if ${rupees(m.depositPaise)} has actually reached you. Seat ${m.seatNumber} becomes active, ${family} gets the member rate, and they are emailed a welcome.`,
+                            confirmLabel: 'Record deposit',
+                          }}
+                        >
+                          <input type="hidden" name="membershipId" value={m.id} />
+                          <label htmlFor={`ref-${m.id}`} className="sr-only">
+                            How {family} paid
+                          </label>
+                          <input
+                            id={`ref-${m.id}`}
+                            name="reference"
+                            type="text"
+                            required
+                            minLength={3}
+                            maxLength={200}
+                            placeholder="UPI ref / how paid"
+                            className="w-40 rounded-lg border border-a-line bg-a-bg px-2 py-1.5 text-xs text-a-text placeholder:text-a-muted"
+                          />
+                        </ActionForm>
+                      )}
                     </td>
 
                     <td className={`${td} whitespace-nowrap text-a-muted`}>

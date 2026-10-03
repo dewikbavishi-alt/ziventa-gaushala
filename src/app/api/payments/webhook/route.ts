@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import { confirmPaidOrder, releaseAbandonedOrder } from '@/lib/payments/confirm';
+import { confirmPaidDeposit, isDepositGatewayOrder } from '@/lib/payments/deposit';
 import { verifyWebhookSignature } from '@/lib/payments/razorpay';
 
 /**
@@ -65,6 +66,30 @@ export async function POST(request: Request) {
   }
 
   try {
+    // Membership deposits share the gateway, and the webhook, with shop
+    // orders; which one a payment is for is decided by whose gateway order
+    // id it carries.
+    if (await isDepositGatewayOrder(payment.order_id)) {
+      if (name === 'payment.captured' || name === 'order.paid') {
+        const result = await confirmPaidDeposit({
+          gatewayOrderId: payment.order_id,
+          gatewayPaymentId: payment.id,
+          amountPaise: payment.amount,
+          source: 'webhook',
+        });
+        if (!result.ok) return NextResponse.json({ ok: true, refused: result.reason });
+        console.log(
+          `[payment:webhook] deposit ${payment.order_id} paid` +
+            (result.first ? '' : ' (already recorded by the browser)'),
+        );
+        return NextResponse.json({ ok: true });
+      }
+      // A failed deposit attempt holds nothing back - no stock, no seat - so
+      // there is nothing to release. The link still works for another try.
+      console.log(`[payment:webhook] deposit ${payment.order_id}: ${name}`);
+      return NextResponse.json({ ok: true });
+    }
+
     if (name === 'payment.captured' || name === 'order.paid') {
       const result = await confirmPaidOrder({
         gatewayOrderId: payment.order_id,
