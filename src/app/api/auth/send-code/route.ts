@@ -3,6 +3,7 @@ import { z } from 'zod';
 import { prisma } from '@/lib/prisma';
 import { accountExists, adminClient } from '@/lib/supabase/admin';
 import { authCodeEmail, sendEmail } from '@/lib/email';
+import { deviceKey, takeAllowance, waitPhrase } from '@/lib/throttle';
 
 /**
  * Emails a one-time sign-in code, sent by us rather than by Supabase.
@@ -27,6 +28,7 @@ export const dynamic = 'force-dynamic';
 /** Per address, per window. Generous for a real person, useless for a spammer. */
 const MAX_PER_WINDOW = 5;
 const WINDOW_MINUTES = 15;
+const MAX_PER_DAY = 15;
 
 const schema = z.object({
   email: z.string().trim().email().max(200),
@@ -78,13 +80,39 @@ export async function POST(request: Request) {
   const isSignup = parsed.data.intent === 'signup';
 
   // ---- rate limit ----------------------------------------------------
+  /**
+   * Per device first. The per-address limit below alone let one script
+   * request codes for every customer in turn - up to ~480 emails a day into
+   * each inbox. Unlike the per-address limit, this one can be reported
+   * honestly: it says something about the caller's connection, nothing
+   * about whether any address has an account.
+   */
+  const device = await takeAllowance(deviceKey(request), 'auth_code_device', [
+    { max: 10, minutes: 60 },
+    { max: 30, minutes: 24 * 60 },
+  ]);
+  if (!device.ok) {
+    return NextResponse.json(
+      {
+        error: `Too many code requests from this connection. Please try again ${waitPhrase(device.retryMinutes)}.`,
+      },
+      { status: 429 },
+    );
+  }
+
   const since = new Date(Date.now() - WINDOW_MINUTES * 60 * 1000);
   const recent = await prisma.emailThrottle.count({
     where: { email, kind: 'auth_link', sentAt: { gte: since } },
   });
 
-  if (recent >= MAX_PER_WINDOW) {
-    console.warn(`[auth-code] throttled ${email}: ${recent} in ${WINDOW_MINUTES}m`);
+  // And a daily ceiling per address, so even many devices together cannot
+  // bury one inbox in codes.
+  const today = await prisma.emailThrottle.count({
+    where: { email, kind: 'auth_link', sentAt: { gte: new Date(Date.now() - 24 * 60 * 60 * 1000) } },
+  });
+
+  if (recent >= MAX_PER_WINDOW || today >= MAX_PER_DAY) {
+    console.warn(`[auth-code] throttled ${email}: ${recent} in ${WINDOW_MINUTES}m, ${today} today`);
     return generic();
   }
 

@@ -1,6 +1,7 @@
 import { z } from 'zod';
 import { prisma } from '@/lib/prisma';
 import { createClient } from '@/lib/supabase/server';
+import { deviceKey, takeAllowance } from '@/lib/throttle';
 
 /**
  * First-party page-view beacon.
@@ -133,6 +134,19 @@ export async function POST(request: Request) {
     where: { visitorId: v, createdAt: { gte: new Date(Date.now() - 60_000) } },
   });
   if (recent >= 60) return done();
+
+  /**
+   * ...but the id is made up by the browser, so a script that invents a new
+   * one each time walked straight past that check, filling the table and
+   * skewing every chart. This counts by device instead: 120 views an hour
+   * is several times what a person browsing the whole site produces.
+   * Answered with the same silent 204 - nothing to learn from it.
+   */
+  const allowance = await takeAllowance(deviceKey(request), 'track', [
+    { max: 120, minutes: 60 },
+    { max: 600, minutes: 24 * 60 },
+  ]);
+  if (!allowance.ok) return done();
 
   /**
    * Who is signed in, for attribution ONLY.

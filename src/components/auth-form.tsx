@@ -129,6 +129,17 @@ export function AuthForm({
         return;
       }
 
+      // Too many requests from this connection - the server says when to
+      // try again. Nothing to do with whether the address has an account.
+      if (res.status === 429) {
+        const data = await res.json().catch(() => ({}));
+        setMessage({
+          kind: 'error',
+          text: data.error ?? 'Too many code requests just now. Please try again in a little while.',
+        });
+        return;
+      }
+
       if (!res.ok) {
         setMessage({
           kind: 'error',
