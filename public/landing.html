@@ -1282,39 +1282,30 @@ document.addEventListener('DOMContentLoaded', function(){
 
       var toH=herdGrid.offsetHeight;
       herdFlip=Flip.from(state,{
-        duration:.7, ease:'power3.inOut', nested:true, prune:true
+        duration:.55, ease:'power3.out', nested:true, prune:true
       });
-      herdHeight=gsap.fromTo(herdGrid,{height:fromH},{height:toH, duration:.7, ease:'power3.inOut', clearProps:'height'});
-      // The details arrive once the photo has mostly grown, one after another.
+      herdHeight=gsap.fromTo(herdGrid,{height:fromH},{height:toH, duration:.55, ease:'power3.out', clearProps:'height'});
+      // The details follow the photo straight away, one after another.
       if(card){
         gsap.fromTo(card.querySelectorAll('.herd-more > *'),
           {opacity:0, y:14},
-          {opacity:1, y:0, duration:.5, ease:'power2.out', stagger:.07, delay:.32, clearProps:'opacity,transform'});
+          {opacity:1, y:0, duration:.4, ease:'power2.out', stagger:.05, delay:.08, clearProps:'opacity,transform'});
       }
     };
 
     // Mouse. Uses the pointer's own movement, never mouseenter: while the
     // cards are moving, one can slide under a still pointer and fire enter
     // events nobody made, which would flick the row between cows.
-    var hoverTimer=null, lastX=-1, lastY=-1;
+    var lastX=-1, lastY=-1;
     herdGrid.addEventListener('pointermove',function(e){
       if(e.pointerType!=='mouse' || !finePointer.matches) return;
       if(e.clientX===lastX && e.clientY===lastY) return;
       lastX=e.clientX; lastY=e.clientY;
       var card=e.target.closest && e.target.closest('.herd-card');
-      clearTimeout(hoverTimer);
-      if(!card || card===herdOpen) return;
-      // A short pause, so sweeping across the row on the way somewhere else
-      // does not open every cow it passes.
-      hoverTimer=setTimeout(function(){ setHerd(card); },110);
+      if(card && card!==herdOpen) setHerd(card);
     });
     herdGrid.addEventListener('pointerleave',function(e){
-      if(e.pointerType!=='mouse' || !finePointer.matches) return;
-      clearTimeout(hoverTimer);
-      hoverTimer=setTimeout(function(){ setHerd(null); },260);
-    });
-    herdGrid.addEventListener('pointerenter',function(e){
-      if(e.pointerType==='mouse') clearTimeout(hoverTimer);
+      if(e.pointerType==='mouse' && finePointer.matches) setHerd(null);
     });
 
     // Touch and keyboard toggle.
