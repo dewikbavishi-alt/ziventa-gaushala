@@ -425,6 +425,12 @@ Color: warm cream ground, deep gaushala-green = trust/tradition, hand-ghee gold 
 <button class="back-to-top" id="backToTop" aria-label="Back to top"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12 7-7 7 7" key="hav0vg"/><path d="M12 19V5" key="x0mq9r"/></svg></button>
 
 
+<!-- GSAP + Flip, for the herd cards. Served from /vendor (copied there by
+     scripts/build-site.mjs) because the CSP allows only same-origin scripts.
+     `defer` runs them before DOMContentLoaded, when the script below starts;
+     if they fail to load, the cards still open and close, without animation. -->
+<script src="/vendor/gsap/gsap.min.js" defer></script>
+<script src="/vendor/gsap/Flip.min.js" defer></script>
 <script>
 document.addEventListener('DOMContentLoaded', function(){
   if(window.lucide){ lucide.createIcons(); }
@@ -559,23 +565,100 @@ document.addEventListener('DOMContentLoaded', function(){
     });
   });
 
-  /* herd pop-ups: a mouse uses :hover in the CSS. A tap toggles .is-open
-     here - tap again or tap elsewhere to close - because :hover sticks on
-     touch screens and would never let go. */
-  var herdCards=Array.prototype.slice.call(document.querySelectorAll('.herd-card'));
-  herdCards.forEach(function(card){
-    card.addEventListener('click',function(e){
-      if(window.matchMedia('(hover:hover) and (pointer:fine)').matches) return;
-      var wasOpen=card.classList.contains('is-open');
-      herdCards.forEach(function(c){ c.classList.remove('is-open'); });
-      if(!wasOpen) card.classList.add('is-open');
-      e.stopPropagation();
+  /* herd: one cow opens at a time, in the layout (see the CSS). A mouse
+     opens a cow by pointing at it and closes it by leaving the row; touch and
+     keyboard toggle it. GSAP Flip records where everything is, the class
+     change re-lays the grid, and Flip animates every card from its old box to
+     its new one - the round photo growing into the large one - while the
+     row's height is tweened alongside so the content below moves smoothly
+     instead of jumping. */
+  var herdGrid=document.getElementById('herdGrid');
+  if(herdGrid){
+    var herdCards=Array.prototype.slice.call(herdGrid.querySelectorAll('.herd-card'));
+    var finePointer=window.matchMedia('(hover:hover) and (pointer:fine)');
+    var herdStill=window.matchMedia('(prefers-reduced-motion: reduce)');
+    var canFlip=function(){ return window.gsap && window.Flip && !herdStill.matches; };
+    if(window.gsap && window.Flip) gsap.registerPlugin(Flip);
+    var herdOpen=null, herdFlip=null, herdHeight=null;
+
+    var setHerd=function(card){
+      if(card===herdOpen) return;
+      var animate=canFlip();
+      var state, fromH;
+      if(animate){
+        // Interrupting is fine: the state is read from where things are now,
+        // mid-flight included, so a quick change of mind just redirects.
+        state=Flip.getState(herdGrid.querySelectorAll('.herd-body, .herd-avatar'),{props:'borderRadius,boxShadow'});
+        fromH=herdGrid.offsetHeight;
+        if(herdFlip) herdFlip.kill();
+        if(herdHeight) herdHeight.kill();
+        herdGrid.style.height='';
+      }
+      herdCards.forEach(function(c){
+        var on=c===card;
+        c.classList.toggle('is-open',on);
+        c.setAttribute('aria-expanded',on?'true':'false');
+      });
+      if(card) herdGrid.setAttribute('data-open',card.getAttribute('data-i'));
+      else herdGrid.removeAttribute('data-open');
+      herdOpen=card;
+      if(!animate) return;
+
+      var toH=herdGrid.offsetHeight;
+      herdFlip=Flip.from(state,{
+        duration:.7, ease:'power3.inOut', nested:true, prune:true
+      });
+      herdHeight=gsap.fromTo(herdGrid,{height:fromH},{height:toH, duration:.7, ease:'power3.inOut', clearProps:'height'});
+      // The details arrive once the photo has mostly grown, one after another.
+      if(card){
+        gsap.fromTo(card.querySelectorAll('.herd-more > *'),
+          {opacity:0, y:14},
+          {opacity:1, y:0, duration:.5, ease:'power2.out', stagger:.07, delay:.32, clearProps:'opacity,transform'});
+      }
+    };
+
+    // Mouse. Uses the pointer's own movement, never mouseenter: while the
+    // cards are moving, one can slide under a still pointer and fire enter
+    // events nobody made, which would flick the row between cows.
+    var hoverTimer=null, lastX=-1, lastY=-1;
+    herdGrid.addEventListener('pointermove',function(e){
+      if(e.pointerType!=='mouse' || !finePointer.matches) return;
+      if(e.clientX===lastX && e.clientY===lastY) return;
+      lastX=e.clientX; lastY=e.clientY;
+      var card=e.target.closest && e.target.closest('.herd-card');
+      clearTimeout(hoverTimer);
+      if(!card || card===herdOpen) return;
+      // A short pause, so sweeping across the row on the way somewhere else
+      // does not open every cow it passes.
+      hoverTimer=setTimeout(function(){ setHerd(card); },110);
     });
-    card.addEventListener('keydown',function(e){ if(e.key==='Escape') card.blur(); });
-  });
-  if(herdCards.length){
-    document.addEventListener('click',function(){
-      herdCards.forEach(function(c){ c.classList.remove('is-open'); });
+    herdGrid.addEventListener('pointerleave',function(e){
+      if(e.pointerType!=='mouse' || !finePointer.matches) return;
+      clearTimeout(hoverTimer);
+      hoverTimer=setTimeout(function(){ setHerd(null); },260);
+    });
+    herdGrid.addEventListener('pointerenter',function(e){
+      if(e.pointerType==='mouse') clearTimeout(hoverTimer);
+    });
+
+    // Touch and keyboard toggle.
+    herdCards.forEach(function(card){
+      card.addEventListener('click',function(e){
+        e.stopPropagation();
+        // A mouse already opened it by pointing; a click only opens, so it
+        // can never shut the cow the pointer is resting on. (Safari's click
+        // has no pointerType - a fine pointer then means a mouse.)
+        var pt=e.pointerType;
+        if(pt==='mouse' || (!pt && finePointer.matches)){ setHerd(card); return; }
+        setHerd(card===herdOpen?null:card);
+      });
+      card.addEventListener('keydown',function(e){
+        if(e.key==='Enter' || e.key===' '){ e.preventDefault(); setHerd(card===herdOpen?null:card); }
+        else if(e.key==='Escape' && herdOpen){ setHerd(null); card.focus(); }
+      });
+    });
+    document.addEventListener('click',function(e){
+      if(herdOpen && !herdGrid.contains(e.target)) setHerd(null);
     });
   }
 

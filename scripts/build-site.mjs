@@ -16,7 +16,7 @@
  * Output:
  *   public/NAME.html     served at /NAME by the rewrite in next.config.ts
  */
-import { readFileSync, writeFileSync, readdirSync, existsSync } from 'node:fs';
+import { readFileSync, writeFileSync, readdirSync, existsSync, mkdirSync, copyFileSync } from 'node:fs';
 import { join, basename } from 'node:path';
 
 const ROOT = process.cwd();
@@ -116,6 +116,26 @@ function build() {
     const out = join(OUT_DIR, basename(file));
     writeFileSync(out, html, 'utf8');
     console.log(`  ${meta.path.padEnd(16)} -> public/${basename(file)}  (${html.length} bytes)`);
+  }
+
+  vendor();
+}
+
+/**
+ * GSAP for the static pages, served from our own domain.
+ *
+ * The Content-Security-Policy in next.config.ts allows scripts from 'self'
+ * only, so a CDN link would be blocked. The files come from the gsap package
+ * in node_modules, which keeps the version in package.json and lets an
+ * `npm update` move it.
+ */
+function vendor() {
+  const from = join(ROOT, 'node_modules', 'gsap', 'dist');
+  const to = join(OUT_DIR, 'vendor', 'gsap');
+  mkdirSync(to, { recursive: true });
+  for (const f of ['gsap.min.js', 'Flip.min.js']) {
+    copyFileSync(join(from, f), join(to, f));
+    console.log(`  vendor           -> public/vendor/gsap/${f}`);
   }
 }
 

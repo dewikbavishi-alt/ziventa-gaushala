@@ -506,7 +506,7 @@ img[data-blur="loaded"]{filter:blur(0);transform:scale(1);}
 
 /* herd */
 .herd{padding:2.7rem 1.5rem;background:var(--green-tint);border-top:1px solid var(--border);}
-.herd-grid{max-width:980px;margin:0 auto;display:grid;grid-template-columns:repeat(4,1fr);gap:1.5rem;text-align:center;}
+.herd-grid{max-width:980px;margin:0 auto;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:1.5rem;text-align:center;}
 /* 2x2 grid quadrant cropping */
 .cell{display:block;position:absolute;overflow:hidden;}
 .cell img{position:absolute;width:204%;height:204%;object-fit:fill;max-width:none;}
@@ -515,90 +515,66 @@ img[data-blur="loaded"]{filter:blur(0);transform:scale(1);}
 .cell-bl img{left:0;top:-104%;transform-origin:25% 75%;}
 .cell-br img{left:-104%;top:-104%;transform-origin:75% 75%;}
 
-.herd-card{transition:transform .25s ease;}
-.herd-card:hover{transform:translateY(-4px);}
+/* Cards. Opening a cow happens IN the layout: its column widens, the round
+   photo grows into a large soft-square one, the details appear beneath, and
+   the other three narrow beside it. Nothing floats over the page, so nothing
+   is ever covered - the section simply grows and the content below moves
+   down with it. The script animates the change with GSAP Flip; everything
+   here is the resting state at either end, so without the script's animation
+   it still opens and closes, just instantly. */
+.herd-grid{align-items:start;transition:none;}
+.herd-card{position:relative;outline:none;cursor:pointer;-webkit-tap-highlight-color:transparent;}
+/* What the Flip animation moves. The card itself carries the scroll reveal,
+   whose animation holds `transform`, so it cannot be animated directly. */
+.herd-body{display:flex;flex-direction:column;align-items:center;}
 .herd-avatar{
-  width:94px;aspect-ratio:1;border-radius:50%;margin:0 auto .7rem;
+  width:94px;aspect-ratio:1;border-radius:50%;margin:0 auto .7rem;flex-shrink:0;
   position:relative;overflow:hidden;background:var(--cream-alt);
   box-shadow:0 10px 20px rgba(58,52,44,.12);
-  transition:transform .3s ease, box-shadow .3s ease;
+  transition:box-shadow .3s ease;
 }
 .herd-avatar .cell{left:50%;top:50%;transform:translate(-50%,-50%);width:100%;aspect-ratio:3/4;}
-.herd-card:hover .herd-avatar{transform:scale(1.08);box-shadow:0 14px 26px rgba(58,52,44,.2);}
+.herd-card:hover .herd-avatar{box-shadow:0 14px 26px rgba(58,52,44,.22);}
+.herd-card:focus-visible .herd-avatar{outline:2px solid var(--gold);outline-offset:4px;}
 .herd-card h3{margin-bottom:.2em;font-size:1.1rem;}
 .herd-card p{font-size:.9rem;}
-
-/* Hover pop-up. The cards above stay exactly as they are; pointing at one
-   grows a soft-square card out of its round photo - origin on the photo's
-   centre, radius easing from a circle to 28px - with the enlarged photo and
-   the details. pointer-events:none so it never blocks the neighbouring cards:
-   moving across the row hands the pop-up from one cow to the next.
-   Its top edge sits level with the top of the round photo, so it opens
-   downward: reaching up above the row, it covered the section's description
-   and heading. And it keeps to its own column (plus the gap either side),
-   so the neighbouring cows' descriptions stay readable beside it. */
-.herd-card{position:relative;outline:none;}
-.herd-card:hover,.herd-card:focus-visible,.herd-card.is-open{z-index:6;}
-.herd-pop{
-  --pop-w:calc(100% + 1.5rem);--pop-h:330px;
-  position:absolute;left:50%;top:0;width:var(--pop-w);height:var(--pop-h);margin-left:calc(var(--pop-w) / -2);
-  border-radius:50%;overflow:hidden;pointer-events:none;text-align:left;
-  background:var(--cream-alt);box-shadow:0 28px 60px rgba(36,56,45,.32), 0 0 0 1px rgba(255,255,255,.5) inset;
-  opacity:0;transform:translateY(16px) scale(.3);transform-origin:50% 47px;
-  transition:transform .55s cubic-bezier(.22,1,.36,1), border-radius .55s cubic-bezier(.22,1,.36,1), opacity .3s ease;
-}
-.herd-pop-photo{position:absolute;inset:0;}
-.herd-pop-photo .cell{
-  left:0;top:50%;width:100%;aspect-ratio:3/4;
-  transform:translateY(-50%) scale(1.15);transition:transform .9s cubic-bezier(.22,1,.36,1);
-}
-.herd-pop-photo::after{
-  content:"";position:absolute;inset:0;
-  background:linear-gradient(180deg, rgba(20,30,24,0) 34%, rgba(20,30,24,.45) 60%, rgba(20,30,24,.88) 100%);
-}
-.herd-pop-info{position:absolute;left:0;right:0;bottom:0;padding:1.1rem 1.25rem 1.2rem;color:var(--cream);}
-.herd-pop-info > *{opacity:0;transform:translateY(10px);transition:opacity .35s ease, transform .5s cubic-bezier(.22,1,.36,1);}
+.herd-more{display:none;width:100%;text-align:left;}
 .herd-tag{
   display:inline-block;padding:.3em .8em;border-radius:999px;
   font-size:.66rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase;
   background:var(--gold);color:#fff;
 }
-.herd-pop-name{margin:.4rem 0 .15rem;font-family:var(--font-display);font-size:1.6rem;font-weight:700;line-height:1.1;color:var(--cream);}
-.herd-pop-text{margin:0;font-size:.86rem;line-height:1.45;color:rgba(251,246,236,.88);}
-.herd-facts{display:flex;flex-wrap:wrap;gap:.4rem;margin:0;padding:.65rem 0 0;list-style:none;}
+.herd-more-text{margin:.55rem 0 0;font-size:.9rem;line-height:1.55;color:var(--ink-soft);}
+.herd-facts{display:flex;flex-wrap:wrap;gap:.4rem;margin:0;padding:.7rem 0 0;list-style:none;}
 .herd-facts li{
-  padding:.25em .75em;border-radius:999px;font-size:.72rem;color:var(--cream);
-  border:1px solid rgba(251,246,236,.35);background:rgba(251,246,236,.1);
+  padding:.25em .75em;border-radius:999px;font-size:.72rem;color:var(--green-deep);
+  border:1px solid var(--border);background:var(--card-bg);
 }
 
-.herd-card:focus-visible .herd-pop,.herd-card.is-open .herd-pop{opacity:1;transform:none;border-radius:28px;}
-.herd-card:focus-visible .herd-pop-photo .cell,.herd-card.is-open .herd-pop-photo .cell{transform:translateY(-50%) scale(1);}
-.herd-card:focus-visible .herd-pop-info > *,.herd-card.is-open .herd-pop-info > *{opacity:1;transform:none;}
-/* Only a real mouse gets :hover - on touch it sticks after a tap, so taps go
-   through .is-open in the script instead. */
-@media (hover:hover) and (pointer:fine){
-  .herd-card:hover .herd-pop{opacity:1;transform:none;border-radius:28px;}
-  .herd-card:hover .herd-pop-photo .cell{transform:translateY(-50%) scale(1);}
-  .herd-card:hover .herd-pop-info > *{opacity:1;transform:none;}
+/* Open. The widened column comes from the grid, one rule per position. */
+.herd-grid[data-open="0"]{grid-template-columns:minmax(0,2.4fr) repeat(3,minmax(0,1fr));}
+.herd-grid[data-open="1"]{grid-template-columns:minmax(0,1fr) minmax(0,2.4fr) repeat(2,minmax(0,1fr));}
+.herd-grid[data-open="2"]{grid-template-columns:repeat(2,minmax(0,1fr)) minmax(0,2.4fr) minmax(0,1fr);}
+.herd-grid[data-open="3"]{grid-template-columns:repeat(3,minmax(0,1fr)) minmax(0,2.4fr);}
+.herd-card.is-open{cursor:default;}
+.herd-card.is-open .herd-body{align-items:flex-start;text-align:left;}
+.herd-card.is-open .herd-avatar{
+  width:100%;aspect-ratio:5/4;border-radius:24px;margin:0 0 1rem;
+  box-shadow:0 22px 44px rgba(36,56,45,.24);
 }
-/* Details follow the card open, one after another. */
-.herd-pop-info > :nth-child(1){transition-delay:.14s;}
-.herd-pop-info > :nth-child(2){transition-delay:.19s;}
-.herd-pop-info > :nth-child(3){transition-delay:.24s;}
-.herd-pop-info > :nth-child(4){transition-delay:.29s;}
-/* ...but leave together, so closing is quick. */
-.herd-card:not(:hover):not(.is-open):not(:focus-visible) .herd-pop-info > *{transition-delay:0s;}
+.herd-card.is-open h3{font-size:1.5rem;margin-bottom:.35rem;}
+.herd-card.is-open .herd-short{display:none;}
+.herd-card.is-open .herd-more{display:block;}
+/* The others step back a little so the open one leads. */
+.herd-grid[data-open] .herd-card:not(.is-open) .herd-body{opacity:.72;transition:opacity .4s ease;}
+.herd-grid[data-open] .herd-card:not(.is-open):hover .herd-body{opacity:1;}
 
-/* Two columns: a centred pop-up would run off the screen edge, so it grows
-   from the outer side of each card instead. */
+/* Two columns: there is no room to widen a column, so the open cow takes the
+   whole row and the others flow around it. */
 @media (max-width:900px){
-  .herd-pop{--pop-w:min(330px, calc(100vw - 2.4rem));--pop-h:var(--pop-w);}
-  .herd-card:nth-child(odd) .herd-pop{left:0;margin-left:0;transform-origin:25% 47px;}
-  .herd-card:nth-child(even) .herd-pop{left:auto;right:0;margin-left:0;transform-origin:75% 47px;}
-}
-
-@media (prefers-reduced-motion: reduce){
-  .herd-pop,.herd-pop-photo .cell,.herd-pop-info > *{transition:opacity .2s ease;transform:none !important;}
+  .herd-grid[data-open]{grid-template-columns:repeat(2,minmax(0,1fr));}
+  .herd-card.is-open{grid-column:1 / -1;}
+  .herd-card.is-open .herd-avatar{aspect-ratio:4/3;}
 }
 
 /* gallery */

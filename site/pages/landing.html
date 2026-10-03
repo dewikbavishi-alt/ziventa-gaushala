@@ -369,59 +369,59 @@ path: /
     <h2>Our Gir cows, by name</h2>
     <p class="section-sub">Every member's ghee traces back to a small herd of well-cared-for Gir cows — each one known, named, and looked after individually.</p>
   </div>
-  <div class="herd-grid">
-    <div class="herd-card reveal" tabindex="0">
-      <div class="herd-avatar"><span class="cell cell-tl"><img src="assets/ziventa-05.jpg" alt="Kamdhenu, a Gir cow at Ziventa Nutriments" loading="lazy"></span></div>
-      <h3>Kamdhenu</h3>
-      <p>Eldest of the herd, gentle and unhurried.</p>
-      <div class="herd-pop">
-        <div class="herd-pop-photo"><span class="cell cell-tl"><img src="assets/ziventa-05.jpg" alt="" loading="lazy"></span></div>
-        <div class="herd-pop-info">
+  <!--
+    Each cow opens IN the layout rather than over it: the round photo grows
+    into a large soft-square one with the details beneath, the other three
+    narrow to make room, and the section's height follows - so nothing is
+    ever covered. GSAP Flip animates the change (script in the shell); the
+    open state itself is plain CSS, so it still works without the script's
+    animation.
+  -->
+  <div class="herd-grid" id="herdGrid">
+    <div class="herd-card reveal" tabindex="0" role="button" aria-expanded="false" data-i="0">
+      <div class="herd-body">
+        <div class="herd-avatar"><span class="cell cell-tl"><img src="assets/ziventa-05.jpg" alt="Kamdhenu, a Gir cow at Ziventa Nutriments" loading="lazy"></span></div>
+        <h3>Kamdhenu</h3>
+        <p class="herd-short">Eldest of the herd, gentle and unhurried.</p>
+        <div class="herd-more">
           <span class="herd-tag">Eldest</span>
-          <p class="herd-pop-name">Kamdhenu</p>
-          <p class="herd-pop-text">Eldest of the herd, gentle and unhurried. The one the younger cows settle beside. She takes her time over everything, and the herd takes its pace from her.</p>
+          <p class="herd-more-text">Eldest of the herd, gentle and unhurried. The one the younger cows settle beside. She takes her time over everything, and the herd takes its pace from her.</p>
           <ul class="herd-facts"><li>Gir breed</li><li>Ziventa Nutriments®</li></ul>
         </div>
       </div>
     </div>
-    <div class="herd-card reveal" tabindex="0">
-      <div class="herd-avatar"><span class="cell cell-tr"><img src="assets/ziventa-05.jpg" alt="Radha, a Gir cow at Ziventa Nutriments" loading="lazy"></span></div>
-      <h3>Radha</h3>
-      <p>Calm-eyed, favourite of the caretakers.</p>
-      <div class="herd-pop">
-        <div class="herd-pop-photo"><span class="cell cell-tr"><img src="assets/ziventa-05.jpg" alt="" loading="lazy"></span></div>
-        <div class="herd-pop-info">
+    <div class="herd-card reveal" tabindex="0" role="button" aria-expanded="false" data-i="1">
+      <div class="herd-body">
+        <div class="herd-avatar"><span class="cell cell-tr"><img src="assets/ziventa-05.jpg" alt="Radha, a Gir cow at Ziventa Nutriments" loading="lazy"></span></div>
+        <h3>Radha</h3>
+        <p class="herd-short">Calm-eyed, favourite of the caretakers.</p>
+        <div class="herd-more">
           <span class="herd-tag">Caretakers’ favourite</span>
-          <p class="herd-pop-name">Radha</p>
-          <p class="herd-pop-text">Calm-eyed, favourite of the caretakers. Quiet and trusting, she is the easiest of the four to sit with.</p>
+          <p class="herd-more-text">Calm-eyed, favourite of the caretakers. Quiet and trusting, she is the easiest of the four to sit with.</p>
           <ul class="herd-facts"><li>Gir breed</li><li>Ziventa Nutriments®</li></ul>
         </div>
       </div>
     </div>
-    <div class="herd-card reveal" tabindex="0">
-      <div class="herd-avatar"><span class="cell cell-bl"><img src="assets/ziventa-05.jpg" alt="Ganga, a Gir cow at Ziventa Nutriments" loading="lazy"></span></div>
-      <h3>Ganga</h3>
-      <p>Youngest, full of energy in the mornings.</p>
-      <div class="herd-pop">
-        <div class="herd-pop-photo"><span class="cell cell-bl"><img src="assets/ziventa-05.jpg" alt="" loading="lazy"></span></div>
-        <div class="herd-pop-info">
+    <div class="herd-card reveal" tabindex="0" role="button" aria-expanded="false" data-i="2">
+      <div class="herd-body">
+        <div class="herd-avatar"><span class="cell cell-bl"><img src="assets/ziventa-05.jpg" alt="Ganga, a Gir cow at Ziventa Nutriments" loading="lazy"></span></div>
+        <h3>Ganga</h3>
+        <p class="herd-short">Youngest, full of energy in the mornings.</p>
+        <div class="herd-more">
           <span class="herd-tag">Youngest</span>
-          <p class="herd-pop-name">Ganga</p>
-          <p class="herd-pop-text">Youngest, full of energy in the mornings. First to the fodder and last to settle down. Her mornings are the liveliest part of the day at the gaushala.</p>
+          <p class="herd-more-text">Youngest, full of energy in the mornings. First to the fodder and last to settle down. Her mornings are the liveliest part of the day at the gaushala.</p>
           <ul class="herd-facts"><li>Gir breed</li><li>Ziventa Nutriments®</li></ul>
         </div>
       </div>
     </div>
-    <div class="herd-card reveal" tabindex="0">
-      <div class="herd-avatar"><span class="cell cell-br"><img src="assets/ziventa-05.jpg" alt="Nandini, a Gir cow at Ziventa Nutriments" loading="lazy"></span></div>
-      <h3>Nandini</h3>
-      <p>Steady producer, mother of two calves.</p>
-      <div class="herd-pop">
-        <div class="herd-pop-photo"><span class="cell cell-br"><img src="assets/ziventa-05.jpg" alt="" loading="lazy"></span></div>
-        <div class="herd-pop-info">
+    <div class="herd-card reveal" tabindex="0" role="button" aria-expanded="false" data-i="3">
+      <div class="herd-body">
+        <div class="herd-avatar"><span class="cell cell-br"><img src="assets/ziventa-05.jpg" alt="Nandini, a Gir cow at Ziventa Nutriments" loading="lazy"></span></div>
+        <h3>Nandini</h3>
+        <p class="herd-short">Steady producer, mother of two calves.</p>
+        <div class="herd-more">
           <span class="herd-tag">Mother of two</span>
-          <p class="herd-pop-name">Nandini</p>
-          <p class="herd-pop-text">Steady producer, mother of two calves. Calm, regular and dependable, day in and day out.</p>
+          <p class="herd-more-text">Steady producer, mother of two calves. Calm, regular and dependable, day in and day out.</p>
           <ul class="herd-facts"><li>Gir breed</li><li>Ziventa Nutriments®</li></ul>
         </div>
       </div>
