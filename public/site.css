@@ -1824,23 +1824,24 @@ body.zv-hide-chat .zv-chat{
 .page-leave:not(.on) *{animation-play-state:paused !important;}
 .pl-sun{fill:var(--green);opacity:.16;}
 .pl-ground{fill:none;stroke:var(--ink);stroke-width:1.6;stroke-linecap:round;opacity:.2;}
-/* The hero's cows are filled from a gradient defined inside the hero's own
-   SVG, which a page without a hero does not have. */
-.page-leave .zc-body,.page-leave .zc-neck,.page-leave .zc-face{fill:#FFFDF8;stroke:#BDB498;}
-.page-leave .zc-leg{stroke:#BDB498;}
-.page-leave .zc-tailline{stroke:#CFC7AE;}
-.pl-head{animation:plGraze 5s ease-in-out infinite;}
+.page-leave .zc-shadow{fill:#3E4A2E;opacity:.18;}
+/* The head and neck piece of the cow picture turns at the top of the
+   shoulders - 54% across and 20% down the (mirrored) picture - where the cut
+   between the two pieces meets the back, so the back line never steps. A
+   smaller nod than the drawn cow's neck made, for the same reason: one
+   picture bends less gracefully than a drawn neck. Same rhythm. */
+.pl-head{transform-box:fill-box;transform-origin:54% 20%;animation:plGraze 5s ease-in-out infinite;}
 /* Down to the grass, a few tugs at it, then up to chew. */
 @keyframes plGraze{
-  0%,100%{transform:rotate(2deg);}
-  16%{transform:rotate(24deg);}
-  24%{transform:rotate(20deg);}
-  32%{transform:rotate(24deg);}
-  40%{transform:rotate(20deg);}
-  48%{transform:rotate(24deg);}
-  56%{transform:rotate(20deg);}
-  64%{transform:rotate(24deg);}
-  82%{transform:rotate(2deg);}
+  0%,100%{transform:rotate(1deg);}
+  16%{transform:rotate(14deg);}
+  24%{transform:rotate(11.5deg);}
+  32%{transform:rotate(14deg);}
+  40%{transform:rotate(11.5deg);}
+  48%{transform:rotate(14deg);}
+  56%{transform:rotate(11.5deg);}
+  64%{transform:rotate(14deg);}
+  82%{transform:rotate(1deg);}
 }
 .page-leave-text{
   margin:0;font-family:var(--font-display);font-size:1.15rem;color:var(--ink);

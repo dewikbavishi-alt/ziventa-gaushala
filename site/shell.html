@@ -2238,29 +2238,35 @@ document.addEventListener('DOMContentLoaded', function(){
   <svg viewBox="-25 8 300 150" aria-hidden="true" focusable="false">
     <circle class="pl-sun" cx="125" cy="82" r="78"/>
     <path class="pl-ground" d="M-12 140 H262"/>
-    <ellipse class="zc-shadow" cx="104" cy="139" rx="96" ry="7"/>
-    <path class="zc-leg-far" d="M48 84 h14 v52 h-14 z"/>
-    <path class="zc-leg-far" d="M150 84 h14 v52 h-14 z"/>
-    <g class="zc-tail">
-      <path class="zc-tailline" d="M18 70 C8 88 8 108 16 124"/>
-      <path class="zc-tuft" d="M16 120 C23 125 23 136 16 141 C9 136 9 125 16 120 Z"/>
-    </g>
-    <path class="zc-body" d="M14 74 C14 52 36 40 64 40 C86 28 112 28 128 42 C156 45 182 52 194 68 C202 80 200 92 190 96 C158 100 112 102 76 101 C42 100 18 94 14 84 Z"/>
-    <path class="zc-shade" d="M64 40 C86 28 112 28 128 42 C108 36 84 36 64 40 Z"/>
-    <path class="zc-leg" d="M56 88 h15 v50 h-15 z"/>
-    <path class="zc-leg" d="M158 88 h15 v50 h-15 z"/>
-    <rect class="zc-hoof" x="55" y="133" width="17" height="6" rx="2"/>
-    <rect class="zc-hoof" x="157" y="133" width="17" height="6" rx="2"/>
-    <ellipse class="zc-udder" cx="92" cy="106" rx="15" ry="9"/>
-    <path class="zc-teat" d="M85 114 v7 M99 114 v7"/>
-    <g class="zc-head pl-head">
-      <path class="zc-neck" d="M180 58 C198 62 212 76 218 92 C210 100 196 102 186 96 C182 82 176 70 168 64 Z"/>
-      <path class="zc-face" d="M210 86 C226 84 242 92 245 105 C247 116 238 123 225 121 C210 118 200 109 199 98 C198 90 202 86 210 86 Z"/>
-      <ellipse class="zc-muzzle" cx="238" cy="114" rx="9" ry="6"/>
-      <path class="zc-ear" d="M204 86 C196 78 184 78 179 84 C185 92 196 94 204 89 Z"/>
-      <path class="zc-horn" d="M208 80 C203 63 212 51 223 48 C220 60 216 70 216 82 Z"/>
-      <path class="zc-horn" d="M196 83 C188 70 191 56 200 51 C199 63 200 73 203 82 Z"/>
-      <circle class="zc-eye" cx="221" cy="100" r="3"/>
+    <defs>
+      <!-- The same display-only treatment as the hero's cows (see there):
+           the picture's white backdrop made see-through and its pale rim
+           trimmed, and a stray grey corner mark cropped. Defined here too,
+           because the veil also serves pages that have no hero. -->
+      <filter id="plCowKey" x="0" y="0" width="1" height="1" color-interpolation-filters="sRGB">
+        <feColorMatrix in="SourceGraphic" type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  -14 -14 -14 0 39.2" result="key"/>
+        <feMorphology in="key" operator="erode" radius="1.1" result="trim"/>
+        <feComposite in="SourceGraphic" in2="trim" operator="in"/>
+      </filter>
+      <!-- The picture is shown in two pieces so the head can graze while the
+           legs stay planted: the body (everything but the head and neck,
+           and without the grey corner mark), and the head and neck on their
+           own, overlapping the body a little so no gap opens as it dips.
+           In the picture's own coordinates, where the cow faces left. -->
+      <clipPath id="plBodyClip" clipPathUnits="objectBoundingBox">
+        <polygon points="0.45,0 1,0 1,1 0.08,1 0.08,0.92 0,0.92 0,0.58 0.27,0.58 0.38,0.45 0.45,0.21"/>
+      </clipPath>
+      <clipPath id="plHeadClip" clipPathUnits="objectBoundingBox">
+        <polygon points="0,0 0.47,0 0.47,0.2 0.41,0.45 0.31,0.63 0,0.63"/>
+      </clipPath>
+    </defs>
+    <ellipse class="zc-shadow" cx="125" cy="139" rx="96" ry="7"/>
+    <!-- Facing the grass on the right. The body stands still; the head
+         and neck dip to the grass with the same animation the drawn cow's
+         head had (plGraze). -->
+    <image href="/assets/cow.jpeg" x="20.0" y="-15.0" width="210.0" height="172.1" transform="matrix(-1 0 0 1 250.0 0)" preserveAspectRatio="xMidYMid meet" filter="url(#plCowKey)" clip-path="url(#plBodyClip)"/>
+    <g class="pl-head">
+      <image href="/assets/cow.jpeg" x="20.0" y="-15.0" width="210.0" height="172.1" transform="matrix(-1 0 0 1 250.0 0)" preserveAspectRatio="xMidYMid meet" filter="url(#plCowKey)" clip-path="url(#plHeadClip)"/>
     </g>
     <g class="zg zg-a">
       <path d="M212 141 c4 -11 3 -18 1 -23 M212 141 c-4 -10 -5 -15 -8 -19 M212 141 c8 -10 11 -15 13 -19"/>
