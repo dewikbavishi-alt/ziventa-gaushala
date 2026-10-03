@@ -33,7 +33,7 @@ const pass = process.env.SMTP_PASS;
 // Same rule as fromAddress() in src/lib/email.ts: fall back to the account
 // doing the sending, never to an address nobody owns. A test that sends from
 // a made-up address tests something the real code would never do.
-const from = process.env.MAIL_FROM?.trim() || `Ziventa Gaushala <${user}>`;
+const from = process.env.MAIL_FROM?.trim() || `Ziventa Nutriments <${user}>`;
 
 const missing = [
   !host && 'SMTP_HOST',

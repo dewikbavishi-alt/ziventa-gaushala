@@ -283,7 +283,7 @@ export function AuthForm({
           <h1>
             <a
               href="/"
-              aria-label="Ziventa Gaushala home"
+              aria-label="Ziventa Nutriments home"
               className="inline-flex flex-col items-center"
             >
               {/* Decorative: the wordmark below already names the brand. */}
@@ -304,7 +304,7 @@ export function AuthForm({
                 className="mx-auto h-8 w-auto"
               />
               <span className="mt-1 block text-[0.6rem] font-semibold tracking-[0.42em] text-[#8F6A1E] uppercase">
-                Gaushala
+                Nutriments<sup className="ml-[0.1em] text-[0.75em] tracking-normal">®</sup>
               </span>
             </a>
           </h1>

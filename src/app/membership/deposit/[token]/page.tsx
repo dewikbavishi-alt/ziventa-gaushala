@@ -22,13 +22,13 @@ function Shell({ children }: { children: React.ReactNode }) {
     <div className="flex min-h-screen flex-col bg-[#FBF6EC]">
       <main className="flex flex-1 items-center justify-center px-4 py-12">
         <div className="w-full max-w-md">
-          <a href="/" aria-label="Ziventa Gaushala home" className="mb-8 flex flex-col items-center">
+          <a href="/" aria-label="Ziventa Nutriments home" className="mb-8 flex flex-col items-center">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img src="/logo/ziventa-symbol.svg" alt="" width={100} height={100} className="mb-3 h-14 w-14" />
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img src="/logo/ziventa-logo.svg" alt="Ziventa" width={329} height={86} className="h-8 w-auto" />
             <span className="mt-1 block text-[0.6rem] font-semibold tracking-[0.42em] text-[#8F6A1E] uppercase">
-              Gaushala
+              Nutriments<sup className="ml-[0.1em] text-[0.75em] tracking-normal">®</sup>
             </span>
           </a>
           {children}

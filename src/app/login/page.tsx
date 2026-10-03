@@ -4,7 +4,7 @@ import { safeNext } from '@/lib/safe-next';
 
 export const metadata: Metadata = {
   title: 'Sign in',
-  description: 'Sign in to your Ziventa Gaushala account.',
+  description: 'Sign in to your Ziventa Nutriments account.',
 };
 
 /**

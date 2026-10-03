@@ -93,7 +93,7 @@ function htmlShell(heading: string, rows: string, footer: string): string {
   <table role="presentation" cellpadding="0" cellspacing="0" style="max-width:560px;margin:0 auto;background:#ffffff;border:1px solid #e6ded0;border-radius:12px;">
     <tr><td style="padding:24px;">
       <img src="${logoUrl()}" alt="Ziventa" width="220" height="58" style="display:block;margin:0 0 6px;border:0;outline:none;text-decoration:none;height:auto;max-width:220px;">
-      <p style="margin:0 0 18px;font-size:10px;letter-spacing:4px;text-transform:uppercase;color:#8F6A1E;">Gaushala</p>
+      <p style="margin:0 0 18px;font-size:10px;letter-spacing:4px;text-transform:uppercase;color:#8F6A1E;">Nutriments<sup style="font-size:8px;letter-spacing:0;">&reg;</sup></p>
       <h1 style="margin:0 0 16px;font-size:18px;color:#1E4A35;">${escapeHtml(heading)}</h1>
       ${rows}
       <p style="margin:24px 0 0;padding-top:16px;border-top:1px solid #efe7da;font-size:12px;color:#6b7d72;">
@@ -138,7 +138,7 @@ function fromAddress(): string {
    * already refuses to send without it, so by the time this runs it is there.
    */
   const account = process.env.SMTP_USER?.trim();
-  if (account) return `Ziventa Gaushala <${account}>`;
+  if (account) return `Ziventa Nutriments <${account}>`;
 
   // Unreachable through sendEmail, which checks smtpConfigured() first. Kept
   // honest rather than inventing an address that cannot work.
@@ -333,7 +333,7 @@ export function customerOrderEmail(order: OrderEmailData): EmailMessage {
        <p style="margin:16px 0 0;font-size:14px;">
          No payment has been taken yet. We confirm every order by phone first.
        </p>`,
-      'Ziventa Gaushala',
+      'Ziventa Nutriments®',
     ),
     text: [
       `Dear ${order.contactName},`,
@@ -354,7 +354,7 @@ export function customerOrderEmail(order: OrderEmailData): EmailMessage {
       '',
       'No payment has been taken yet. We confirm every order by phone first.',
       '',
-      'Ziventa Gaushala',
+      'Ziventa Nutriments®',
     ].join('\n'),
   };
 }
@@ -442,7 +442,7 @@ export function authCodeEmail(params: {
          If you did not ask to sign in, you can ignore this email - nothing will happen
          unless the code is entered. Never share it with anyone, including us.
        </p>`,
-      'Ziventa Gaushala',
+      'Ziventa Nutriments®',
     ),
     text: [
       heading,
@@ -458,7 +458,7 @@ export function authCodeEmail(params: {
       'If you did not ask to sign in, you can ignore this email - nothing will',
       'happen unless the code is entered. Never share it with anyone, including us.',
       '',
-      'Ziventa Gaushala',
+      'Ziventa Nutriments®',
     ].join('\n'),
   };
 }
@@ -499,7 +499,7 @@ export function customerLeadEmail(lead: LeadEmailData): EmailMessage {
          nothing to pay until then.
        </p>
        <p style="margin:0;font-size:14px;">We will call you shortly on the number you gave us.</p>`,
-      'Ziventa Gaushala',
+      'Ziventa Nutriments®',
     ),
     text: [
       `Dear ${lead.fullName},`,
@@ -513,7 +513,7 @@ export function customerLeadEmail(lead: LeadEmailData): EmailMessage {
       '',
       'We will call you shortly on the number you gave us.',
       '',
-      'Ziventa Gaushala',
+      'Ziventa Nutriments®',
     ].join('\n'),
   };
 }
@@ -559,7 +559,7 @@ export function membershipDepositEmail(params: {
        <p style="margin:12px 0 0;font-size:14px;">
          The deposit is fully refundable and simply holds your seat in the founding circle.
        </p>`,
-      'Ziventa Gaushala',
+      'Ziventa Nutriments®',
     ),
     text: [
       `Dear ${params.fullName},`,
@@ -576,7 +576,7 @@ export function membershipDepositEmail(params: {
       'The deposit is fully refundable and simply holds your seat in the',
       'founding circle.',
       '',
-      'Ziventa Gaushala',
+      'Ziventa Nutriments®',
     ].join('\n'),
   };
 }
@@ -605,7 +605,7 @@ export function membershipActiveEmail(params: {
        <p style="margin:0;font-size:14px;">
          Thank you for standing behind our cows. We will be in touch before each batch.
        </p>`,
-      'Ziventa Gaushala',
+      'Ziventa Nutriments®',
     ),
     text: [
       `Dear ${params.fullName},`,
@@ -620,7 +620,7 @@ export function membershipActiveEmail(params: {
       '',
       'Thank you for standing behind our cows.',
       '',
-      'Ziventa Gaushala',
+      'Ziventa Nutriments®',
     ].join('\n'),
   };
 }

@@ -27,7 +27,7 @@ import {
 
 // Absolute: the admin layout's "%s | Ziventa Admin" template applies to the
 // pages BELOW it, not to this one sitting in the same folder, which would
-// otherwise fall back to the shop's "| Ziventa Gaushala".
+// otherwise fall back to the shop's "| Ziventa Nutriments".
 export const metadata = { title: { absolute: 'Dashboard | Ziventa Admin' } };
 
 function greeting(): string {

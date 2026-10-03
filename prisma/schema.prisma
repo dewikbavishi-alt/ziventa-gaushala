@@ -1,4 +1,4 @@
-// Ziventa Gaushala data model.
+// Ziventa Nutriments data model.
 //
 // Division of responsibility with Supabase:
 //   Supabase Auth owns the `auth.users` table and everything to do with

@@ -4,7 +4,7 @@ import { safeNext } from '@/lib/safe-next';
 
 export const metadata: Metadata = {
   title: 'Create an account',
-  description: 'Create your Ziventa Gaushala account to order ghee and track your membership.',
+  description: 'Create your Ziventa Nutriments account to order ghee and track your membership.',
 };
 
 /**

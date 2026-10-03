@@ -36,7 +36,7 @@ export function SiteFooter() {
         <div>
           <a
             href="/#top"
-            aria-label="Ziventa Gaushala home"
+            aria-label="Ziventa Nutriments home"
             className="inline-flex items-center gap-[0.52em] rounded focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#BF8F3A]"
           >
             {/*
@@ -69,7 +69,7 @@ export function SiteFooter() {
                 className="block h-[30px] w-auto"
               />
               <span className="-mr-[0.42em] text-[0.56rem] font-semibold tracking-[0.42em] text-[#BF8F3A] uppercase">
-                Gaushala
+                Nutriments<sup className="ml-[0.1em] text-[0.75em] tracking-normal">®</sup>
               </span>
             </span>
           </a>
@@ -209,7 +209,7 @@ export function SiteFooter() {
       </div>
 
       <div className="mx-auto mt-10 max-w-[1060px] border-t border-white/12 pt-6 text-[0.82rem] text-[#FBF6EC]/55">
-        <p>&copy; 2026 Ziventa Gaushala. All rights reserved.</p>
+        <p>&copy; 2026 Ziventa Nutriments®. All rights reserved.</p>
       </div>
     </footer>
   );

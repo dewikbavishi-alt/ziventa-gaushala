@@ -17,7 +17,7 @@ import {
 
 export const metadata: Metadata = {
   title: 'Your account',
-  description: 'Your Ziventa Gaushala orders, addresses and Gir Gold Club membership.',
+  description: 'Your Ziventa Nutriments orders, addresses and Gir Gold Club membership.',
 };
 
 /** Two letters for the avatar. Falls back through name, email, then nothing. */
