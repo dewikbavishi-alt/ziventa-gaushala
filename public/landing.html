@@ -253,9 +253,19 @@ Color: warm cream ground, deep gaushala-green = trust/tradition, hand-ghee gold 
         <linearGradient id="zgFore" x1="0" y1="0" x2="0" y2="1">
           <stop offset="0" stop-color="#6E8858"/><stop offset="1" stop-color="#556E45"/>
         </linearGradient>
-        <linearGradient id="zgCow" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0" stop-color="#FFFEFA"/><stop offset=".62" stop-color="#F6F2E6"/><stop offset="1" stop-color="#DED8C6"/>
-        </linearGradient>
+        <!-- Shows the cow picture without its white backdrop. The file itself is
+             untouched: this only decides, at display time, that near-white
+             pixels are see-through (alpha = 29.4 - 10*(r+g+b), clamped), so
+             the cow sits on the hillside instead of in a white box. -->
+        <filter id="zgCowKey" x="0" y="0" width="1" height="1" color-interpolation-filters="sRGB">
+          <feColorMatrix type="matrix" values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  -10 -10 -10 0 29.4"/>
+        </filter>
+        <!-- Leaves out a grey mark in the picture's bottom-left corner - a
+             leftover from wherever the image was captured, not part of the
+             cow. Again a display crop only. -->
+        <clipPath id="zgCowClip" clipPathUnits="objectBoundingBox">
+          <polygon points="0,0 1,0 1,1 0.08,1 0.08,0.92 0,0.92"/>
+        </clipPath>
         <linearGradient id="zgSkirt" x1="0" y1="0" x2="0" y2="1">
           <stop offset="0" stop-color="#F6D26A"/><stop offset="1" stop-color="#E0AE33"/>
         </linearGradient>
@@ -307,96 +317,29 @@ Color: warm cream ground, deep gaushala-green = trust/tradition, hand-ghee gold 
 
       <g transform="translate(112,168) scale(0.62)">
         <ellipse class="zc-shadow" cx="104" cy="104" rx="96" ry="9"/>
-        <path class="zc-body" d="M14 78 C14 58 34 46 62 46 C84 36 108 36 124 48 C152 50 178 56 190 72 C198 84 194 96 182 100 C150 104 108 106 74 105 C40 104 18 98 14 88 Z"/>
-        <path class="zc-shade" d="M62 46 C84 36 108 36 124 48 C106 43 82 43 62 46 Z"/>
-        <ellipse class="zc-udder" cx="86" cy="104" rx="14" ry="8"/>
-        <g class="zc-head zc-head-a">
-          <path class="zc-neck" d="M176 62 C196 62 212 70 220 82 C214 92 200 96 188 92 C182 80 176 72 168 68 Z"/>
-          <path class="zc-face" d="M214 66 C230 66 244 74 246 86 C247 96 238 102 226 100 C212 98 202 90 200 79 C199 71 205 66 214 66 Z"/>
-          <ellipse class="zc-muzzle" cx="239" cy="94" rx="9" ry="6"/>
-          <path class="zc-ear" d="M206 66 C198 58 186 58 181 63 C186 71 197 74 206 69 Z"/>
-          <path class="zc-horn" d="M210 60 C205 44 213 32 224 29 C221 41 217 51 217 62 Z"/>
-          <path class="zc-horn" d="M198 63 C190 50 193 37 202 32 C201 43 202 53 205 62 Z"/>
-          <circle class="zc-eye" cx="222" cy="80" r="3"/>
+        <g class="zc-pic zc-pic-a">
+          <image href="/assets/cow.jpeg" x="-1.0" y="-50.0" width="210" height="172.1" preserveAspectRatio="xMidYMid meet" filter="url(#zgCowKey)" clip-path="url(#zgCowClip)"/>
         </g>
       </g>
 
       <g transform="translate(600,152) scale(0.72)">
         <ellipse class="zc-shadow" cx="104" cy="136" rx="96" ry="9"/>
-        <path class="zc-leg-far" d="M48 84 h14 v52 h-14 z"/>
-        <path class="zc-leg-far" d="M150 84 h14 v52 h-14 z"/>
-        <g class="zc-tail zc-tail-b">
-          <path class="zc-tailline" d="M18 70 C8 88 8 108 16 124"/>
-          <path class="zc-tuft" d="M16 120 C23 125 23 136 16 141 C9 136 9 125 16 120 Z"/>
-        </g>
-        <path class="zc-body" d="M14 74 C14 52 36 40 64 40 C86 28 112 28 128 42 C156 45 182 52 194 68 C202 80 200 92 190 96 C158 100 112 102 76 101 C42 100 18 94 14 84 Z"/>
-        <path class="zc-shade" d="M64 40 C86 28 112 28 128 42 C108 36 84 36 64 40 Z"/>
-        <path class="zc-leg" d="M56 88 h15 v50 h-15 z"/>
-        <path class="zc-leg" d="M158 88 h15 v50 h-15 z"/>
-        <rect class="zc-hoof" x="55" y="133" width="17" height="6" rx="2"/>
-        <rect class="zc-hoof" x="157" y="133" width="17" height="6" rx="2"/>
-        <ellipse class="zc-udder" cx="92" cy="106" rx="15" ry="9"/>
-        <path class="zc-teat" d="M85 114 v7 M99 114 v7"/>
-        <g class="zc-head zc-head-b">
-          <path class="zc-neck" d="M180 58 C198 62 212 76 218 92 C210 100 196 102 186 96 C182 82 176 70 168 64 Z"/>
-          <path class="zc-face" d="M210 86 C226 84 242 92 245 105 C247 116 238 123 225 121 C210 118 200 109 199 98 C198 90 202 86 210 86 Z"/>
-          <ellipse class="zc-muzzle" cx="238" cy="114" rx="9" ry="6"/>
-          <path class="zc-ear" d="M204 86 C196 78 184 78 179 84 C185 92 196 94 204 89 Z"/>
-          <path class="zc-horn" d="M208 80 C203 63 212 51 223 48 C220 60 216 70 216 82 Z"/>
-          <path class="zc-horn" d="M196 83 C188 70 191 56 200 51 C199 63 200 73 203 82 Z"/>
-          <circle class="zc-eye" cx="221" cy="100" r="3"/>
+        <g class="zc-pic zc-pic-b">
+          <image href="/assets/cow.jpeg" x="-18.5" y="-40.7" width="245" height="200.8" preserveAspectRatio="xMidYMid meet" filter="url(#zgCowKey)" clip-path="url(#zgCowClip)"/>
         </g>
       </g>
 
       <g transform="translate(930,178) scale(0.6)">
         <ellipse class="zc-shadow" cx="104" cy="136" rx="96" ry="9"/>
-        <path class="zc-leg-far" d="M48 84 h14 v52 h-14 z"/>
-        <path class="zc-leg-far" d="M150 84 h14 v52 h-14 z"/>
-        <g class="zc-tail zc-tail-c">
-          <path class="zc-tailline" d="M18 70 C8 88 8 108 16 124"/>
-          <path class="zc-tuft" d="M16 120 C23 125 23 136 16 141 C9 136 9 125 16 120 Z"/>
-        </g>
-        <path class="zc-body" d="M14 74 C14 52 36 40 64 40 C86 28 112 28 128 42 C156 45 182 52 194 68 C202 80 200 92 190 96 C158 100 112 102 76 101 C42 100 18 94 14 84 Z"/>
-        <path class="zc-shade" d="M64 40 C86 28 112 28 128 42 C108 36 84 36 64 40 Z"/>
-        <path class="zc-leg" d="M56 88 h15 v50 h-15 z"/>
-        <path class="zc-leg" d="M158 88 h15 v50 h-15 z"/>
-        <rect class="zc-hoof" x="55" y="133" width="17" height="6" rx="2"/>
-        <rect class="zc-hoof" x="157" y="133" width="17" height="6" rx="2"/>
-        <g class="zc-head zc-head-c">
-          <path class="zc-neck" d="M180 58 C198 62 212 76 218 92 C210 100 196 102 186 96 C182 82 176 70 168 64 Z"/>
-          <path class="zc-face" d="M210 86 C226 84 242 92 245 105 C247 116 238 123 225 121 C210 118 200 109 199 98 C198 90 202 86 210 86 Z"/>
-          <ellipse class="zc-muzzle" cx="238" cy="114" rx="9" ry="6"/>
-          <path class="zc-ear" d="M204 86 C196 78 184 78 179 84 C185 92 196 94 204 89 Z"/>
-          <path class="zc-horn" d="M208 80 C203 63 212 51 223 48 C220 60 216 70 216 82 Z"/>
-          <path class="zc-horn" d="M196 83 C188 70 191 56 200 51 C199 63 200 73 203 82 Z"/>
-          <circle class="zc-eye" cx="221" cy="100" r="3"/>
+        <g class="zc-pic zc-pic-c">
+          <image href="/assets/cow.jpeg" x="-18.5" y="-40.7" width="245" height="200.8" preserveAspectRatio="xMidYMid meet" filter="url(#zgCowKey)" clip-path="url(#zgCowClip)"/>
         </g>
       </g>
 
       <g transform="translate(268,212)">
-        <ellipse class="zc-shadow" cx="110" cy="126" rx="104" ry="9"/>
-        <path class="zc-leg-far" d="M52 78 h14 v48 h-14 z"/>
-        <path class="zc-leg-far" d="M154 78 h14 v48 h-14 z"/>
-        <g class="zc-tail zc-tail-a">
-          <path class="zc-tailline" d="M18 64 C8 82 8 102 16 118"/>
-          <path class="zc-tuft" d="M16 114 C23 119 23 130 16 135 C9 130 9 119 16 114 Z"/>
-        </g>
-        <path class="zc-body" d="M14 68 C14 46 36 34 64 34 C86 22 112 22 128 36 C156 39 182 46 194 62 C202 74 200 86 190 90 C158 94 112 96 76 95 C42 94 18 88 14 78 Z"/>
-        <path class="zc-shade" d="M64 34 C86 22 112 22 128 36 C108 30 84 30 64 34 Z"/>
-        <path class="zc-leg" d="M60 82 h16 v44 h-16 z"/>
-        <path class="zc-leg" d="M162 82 h16 v44 h-16 z"/>
-        <rect class="zc-hoof" x="59" y="121" width="18" height="6" rx="2"/>
-        <rect class="zc-hoof" x="161" y="121" width="18" height="6" rx="2"/>
-        <ellipse class="zc-udder" cx="92" cy="100" rx="18" ry="10"/>
-        <path class="zc-teat" d="M84 108 v7 M100 108 v7"/>
-        <g class="zc-head zc-head-d">
-          <path class="zc-neck" d="M180 52 C200 52 216 60 224 74 C218 84 202 88 190 84 C184 70 178 62 170 58 Z"/>
-          <path class="zc-face" d="M218 56 C234 56 248 64 250 77 C251 88 242 94 229 92 C214 90 204 82 203 70 C202 62 208 56 218 56 Z"/>
-          <ellipse class="zc-muzzle" cx="243" cy="85" rx="9" ry="6"/>
-          <path class="zc-ear" d="M210 56 C202 47 189 47 184 53 C190 61 201 64 210 58 Z"/>
-          <path class="zc-horn" d="M214 50 C209 32 218 19 230 16 C227 29 223 39 223 52 Z"/>
-          <path class="zc-horn" d="M201 53 C193 39 196 25 206 20 C205 32 206 42 209 52 Z"/>
-          <circle class="zc-eye" cx="227" cy="70" r="3.2"/>
+        <ellipse class="zc-shadow" cx="39" cy="126" rx="92" ry="9"/>
+        <g class="zc-pic zc-pic-d">
+          <image href="/assets/cow.jpeg" x="-78.5" y="-45.4" width="235" height="192.6" preserveAspectRatio="xMidYMid meet" filter="url(#zgCowKey)" clip-path="url(#zgCowClip)"/>
         </g>
         <g class="zw">
           <path class="zw-squirt" d="M86 112 C87 118 88 122 89 128"/>

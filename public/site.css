@@ -317,6 +317,20 @@ img[data-blur="loaded"]{filter:blur(0);transform:scale(1);}
 .zc-udder{fill:#F3B9C4;stroke:#E09FAD;stroke-width:1.5;}
 .zc-teat{fill:none;stroke:#EFAAB8;stroke-width:6;stroke-linecap:round;}
 
+/* The cow pictures. One still image cannot move its head or tail the way
+   the drawn cows did, so each one shifts its weight instead: a slow lean
+   from the hooves and a breath, out of step with its neighbours so the herd
+   never moves as one. */
+.zc-pic{transform-box:fill-box;transform-origin:50% 92%;animation:zCowIdle 7s ease-in-out infinite;}
+.zc-pic-a{animation-duration:8.4s;animation-delay:-3.1s;}
+.zc-pic-b{animation-duration:6.6s;animation-delay:-1.2s;}
+.zc-pic-c{animation-duration:7.8s;animation-delay:-4.6s;}
+.zc-pic-d{animation-duration:9.2s;animation-delay:-2.2s;}
+@keyframes zCowIdle{
+  0%,100%{transform:rotate(0deg) scale(1,1);}
+  30%{transform:rotate(-.8deg) scale(1.006,1.014);}
+  60%{transform:rotate(.5deg) scale(1,1.004);}
+}
 .zc-tail{transform-box:fill-box;transform-origin:22% 0%;animation:zTail 3.8s ease-in-out infinite;}
 .zc-tail-b{animation-duration:4.6s;animation-delay:-1.4s;}
 .zc-tail-c{animation-duration:3.2s;animation-delay:-2.3s;}
