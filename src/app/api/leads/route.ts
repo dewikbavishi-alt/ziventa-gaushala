@@ -62,7 +62,7 @@ export async function POST(request: Request) {
   if (!device.ok) {
     return NextResponse.json(
       {
-        error: `We have had several requests from this connection already. Please try again ${waitPhrase(device.retryMinutes)}, or email girbyziventagaushala@gmail.com.`,
+        error: `We have had several requests from this connection already. Please try again ${waitPhrase(device.retryMinutes)}, or email girbyziventa@gmail.com.`,
       },
       { status: 429 },
     );

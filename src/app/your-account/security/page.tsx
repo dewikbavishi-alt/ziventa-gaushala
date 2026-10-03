@@ -68,9 +68,9 @@ export default async function SecurityPage() {
             To change the email address on your account, write to{' '}
             <a
               className="font-medium break-words underline underline-offset-2"
-              href="mailto:girbyziventagaushala@gmail.com?subject=Change%20my%20account%20email"
+              href="mailto:girbyziventa@gmail.com?subject=Change%20my%20account%20email"
             >
-              girbyziventagaushala@gmail.com
+              girbyziventa@gmail.com
             </a>{' '}
             and we will move your orders across for you.
           </p>
