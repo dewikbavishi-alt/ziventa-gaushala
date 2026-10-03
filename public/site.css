@@ -532,15 +532,19 @@ img[data-blur="loaded"]{filter:blur(0);transform:scale(1);}
    grows a soft-square card out of its round photo - origin on the photo's
    centre, radius easing from a circle to 28px - with the enlarged photo and
    the details. pointer-events:none so it never blocks the neighbouring cards:
-   moving across the row hands the pop-up from one cow to the next. */
+   moving across the row hands the pop-up from one cow to the next.
+   Its top edge sits level with the top of the round photo, so it opens
+   downward: reaching up above the row, it covered the section's description
+   and heading. And it keeps to its own column (plus the gap either side),
+   so the neighbouring cows' descriptions stay readable beside it. */
 .herd-card{position:relative;outline:none;}
 .herd-card:hover,.herd-card:focus-visible,.herd-card.is-open{z-index:6;}
 .herd-pop{
-  --pop:330px;
-  position:absolute;left:50%;top:-88px;width:var(--pop);height:var(--pop);margin-left:calc(var(--pop) / -2);
+  --pop-w:calc(100% + 1.5rem);--pop-h:330px;
+  position:absolute;left:50%;top:0;width:var(--pop-w);height:var(--pop-h);margin-left:calc(var(--pop-w) / -2);
   border-radius:50%;overflow:hidden;pointer-events:none;text-align:left;
   background:var(--cream-alt);box-shadow:0 28px 60px rgba(36,56,45,.32), 0 0 0 1px rgba(255,255,255,.5) inset;
-  opacity:0;transform:translateY(16px) scale(.3);transform-origin:50% 135px;
+  opacity:0;transform:translateY(16px) scale(.3);transform-origin:50% 47px;
   transition:transform .55s cubic-bezier(.22,1,.36,1), border-radius .55s cubic-bezier(.22,1,.36,1), opacity .3s ease;
 }
 .herd-pop-photo{position:absolute;inset:0;}
@@ -588,9 +592,9 @@ img[data-blur="loaded"]{filter:blur(0);transform:scale(1);}
 /* Two columns: a centred pop-up would run off the screen edge, so it grows
    from the outer side of each card instead. */
 @media (max-width:900px){
-  .herd-pop{--pop:min(330px, calc(100vw - 2.4rem));}
-  .herd-card:nth-child(odd) .herd-pop{left:0;margin-left:0;transform-origin:25% 135px;}
-  .herd-card:nth-child(even) .herd-pop{left:auto;right:0;margin-left:0;transform-origin:75% 135px;}
+  .herd-pop{--pop-w:min(330px, calc(100vw - 2.4rem));--pop-h:var(--pop-w);}
+  .herd-card:nth-child(odd) .herd-pop{left:0;margin-left:0;transform-origin:25% 47px;}
+  .herd-card:nth-child(even) .herd-pop{left:auto;right:0;margin-left:0;transform-origin:75% 47px;}
 }
 
 @media (prefers-reduced-motion: reduce){
