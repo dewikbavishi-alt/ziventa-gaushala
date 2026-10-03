@@ -368,7 +368,7 @@ export function AuthForm({
                     required
                     value={fullName}
                     onChange={(e) => setFullName(e.target.value)}
-                    placeholder="Dewik Bavishi"
+                    placeholder="Your name"
                     className="mt-1 w-full rounded-lg border border-[#2F4A3D]/20 min-h-[44px] px-3 py-2 text-[#2F4A3D] outline-none focus:border-[#D9A92B] focus:ring-2 focus:ring-[#D9A92B]/30"
                   />
                 </label>

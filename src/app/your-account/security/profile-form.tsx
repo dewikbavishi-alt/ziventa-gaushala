@@ -36,7 +36,7 @@ export function ProfileForm({
           defaultValue={fullName}
           autoComplete="name"
           maxLength={120}
-          placeholder="Dewik Bavishi"
+          placeholder="Your name"
           className="mt-1 w-full rounded-lg border border-[#2F4A3D]/20 px-3 py-2 text-[#2F4A3D] outline-none focus:border-[#C08A2E] focus:ring-2 focus:ring-[#C08A2E]/30"
         />
       </div>
