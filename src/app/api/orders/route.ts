@@ -10,6 +10,7 @@ import {
 } from '@/lib/orders';
 import { getCurrentUser } from '@/lib/supabase/server';
 import { syncCustomer } from '@/lib/auth';
+import { deviceKey, takeAllowance, waitPhrase } from '@/lib/throttle';
 import { attachAddressToCustomer } from '@/lib/addresses';
 import { releaseOrderById, sendOrderEmails } from '@/lib/payments/confirm';
 import {
@@ -82,6 +83,47 @@ export async function POST(request: Request) {
     );
   }
   const input = parsed.data;
+
+  /**
+   * Limits, before anything is reserved or emailed.
+   *
+   * Without them a script could place orders without end: each one holds
+   * stock until someone cancels it - enough to show "Out of stock" to real
+   * customers - and emails a confirmation to whatever address it typed, which
+   * turns our domain into a spammer and sinks our own mail into spam folders.
+   *
+   * Per device: generous enough for a real customer retrying a payment that
+   * failed, far short of what a script needs. Per recipient: one address can
+   * be sent at most a handful of orders a day, however many devices ask.
+   */
+  const device = await takeAllowance(deviceKey(request), 'order', [
+    { max: 8, minutes: 60 },
+    { max: 20, minutes: 24 * 60 },
+  ]);
+  if (!device.ok) {
+    return NextResponse.json(
+      {
+        error: `Too many orders from this connection just now. Please try again ${waitPhrase(device.retryMinutes)}, or call us on +91 90335 25352 and we will take it by phone.`,
+      },
+      { status: 429 },
+    );
+  }
+
+  const sentToday = await prisma.order.count({
+    where: {
+      contactEmail: input.customer.email.toLowerCase(),
+      placedAt: { gte: new Date(Date.now() - 24 * 60 * 60 * 1000) },
+    },
+  });
+  if (sentToday >= 5) {
+    return NextResponse.json(
+      {
+        error:
+          'That email address has had several orders today already. Please call us on +91 90335 25352 and we will sort it out.',
+      },
+      { status: 429 },
+    );
+  }
 
   /**
    * Who is ordering, if they happen to be signed in.

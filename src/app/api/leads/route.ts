@@ -3,6 +3,7 @@ import { z } from 'zod';
 import { prisma } from '@/lib/prisma';
 import { businessLeadEmail, customerLeadEmail, sendEmail } from '@/lib/email';
 import { generateReservationReference } from '@/lib/orders';
+import { deviceKey, takeAllowance, waitPhrase } from '@/lib/throttle';
 
 /** What the "Reserve Your Membership" form on the landing page sends. */
 const leadSchema = z.object({
@@ -47,6 +48,38 @@ export async function POST(request: Request) {
   if (company) return NextResponse.json({ ok: true }, { status: 201 });
 
   const email = data.email.toLowerCase();
+
+  /**
+   * Per device. The trap field and the ten-minute check below only catch a
+   * careless bot or one family pressing twice; a script changing the email
+   * each time sailed past both, and every submission sends two emails - one
+   * of them to whatever address it typed.
+   */
+  const device = await takeAllowance(deviceKey(request), 'lead', [
+    { max: 3, minutes: 60 },
+    { max: 10, minutes: 24 * 60 },
+  ]);
+  if (!device.ok) {
+    return NextResponse.json(
+      {
+        error: `We have had several requests from this connection already. Please try again ${waitPhrase(device.retryMinutes)}, or email girbyziventagaushala@gmail.com.`,
+      },
+      { status: 429 },
+    );
+  }
+
+  /**
+   * Per recipient: past a few a day, an address gets no more mail from this
+   * form, whoever is asking. The reply looks the same as success, so it tells
+   * a script nothing, and a real family who already registered has their
+   * reservation already.
+   */
+  const today = await prisma.lead.count({
+    where: { email, createdAt: { gte: new Date(Date.now() - 24 * 60 * 60 * 1000) } },
+  });
+  if (today >= 3) {
+    return NextResponse.json({ ok: true, duplicate: true, confirmationSent: false }, { status: 200 });
+  }
 
   /**
    * Same person, same form, within ten minutes - hand back what they already
