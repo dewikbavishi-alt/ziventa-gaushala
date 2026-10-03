@@ -92,8 +92,8 @@ function htmlShell(heading: string, rows: string, footer: string): string {
 <html><body style="margin:0;padding:24px;background:#FBF6EC;font-family:-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;color:#2F4A3D;">
   <table role="presentation" cellpadding="0" cellspacing="0" style="max-width:560px;margin:0 auto;background:#ffffff;border:1px solid #e6ded0;border-radius:12px;">
     <tr><td style="padding:24px;">
-      <img src="${logoUrl()}" alt="Ziventa" width="220" height="58" style="display:block;margin:0 0 6px;border:0;outline:none;text-decoration:none;height:auto;max-width:220px;">
-      <p style="margin:0 0 18px;font-size:10px;letter-spacing:4px;text-transform:uppercase;color:#8F6A1E;">Nutriments<sup style="font-size:8px;letter-spacing:0;">&reg;</sup></p>
+      <img src="${logoUrl()}" alt="Ziventa" width="238" height="58" style="display:block;margin:0 0 6px;border:0;outline:none;text-decoration:none;height:auto;max-width:238px;">
+      <p style="margin:0 0 18px;font-size:10px;letter-spacing:4px;text-transform:uppercase;color:#8F6A1E;">Nutriments</p>
       <h1 style="margin:0 0 16px;font-size:18px;color:#1E4A35;">${escapeHtml(heading)}</h1>
       ${rows}
       <p style="margin:24px 0 0;padding-top:16px;border-top:1px solid #efe7da;font-size:12px;color:#6b7d72;">

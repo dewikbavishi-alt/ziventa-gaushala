@@ -26,9 +26,9 @@ function Shell({ children }: { children: React.ReactNode }) {
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img src="/logo/ziventa-symbol.svg" alt="" width={100} height={100} className="mb-3 h-14 w-14" />
             {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src="/logo/ziventa-logo.svg" alt="Ziventa" width={329} height={86} className="h-8 w-auto" />
+            <img src="/logo/ziventa-logo.svg" alt="Ziventa" width={353} height={86} className="h-8 w-auto" />
             <span className="mt-1 block text-[0.6rem] font-semibold tracking-[0.42em] text-[#8F6A1E] uppercase">
-              Nutriments<sup className="ml-[0.1em] text-[0.75em] tracking-normal">®</sup>
+              Nutriments
             </span>
           </a>
           {children}

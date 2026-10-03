@@ -64,12 +64,12 @@ export function SiteFooter() {
               <img
                 src="/logo/ziventa-logo-light.svg"
                 alt="Ziventa"
-                width={329}
+                width={353}
                 height={86}
                 className="block h-[30px] w-auto"
               />
               <span className="-mr-[0.42em] text-[0.56rem] font-semibold tracking-[0.42em] text-[#BF8F3A] uppercase">
-                Nutriments<sup className="ml-[0.1em] text-[0.75em] tracking-normal">®</sup>
+                Nutriments
               </span>
             </span>
           </a>

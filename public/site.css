@@ -173,8 +173,6 @@ img[data-blur="loaded"]{filter:blur(0);transform:scale(1);}
   /* The trailing letter-space pushes the word off-centre; pull it back. */
   margin-right:-.42em;line-height:1;
 }
-/* The registered mark, raised and small; it must not take the tracking. */
-.brand-sub sup{font-size:.8em;letter-spacing:0;line-height:0;vertical-align:super;}
 .main-nav{display:flex;align-items:center;gap:1.6rem;}
 .nav-link{
   position:relative;text-decoration:none;color:var(--ink-soft);font-weight:500;font-size:.94rem;
@@ -235,7 +233,7 @@ img[data-blur="loaded"]{filter:blur(0);transform:scale(1);}
   margin:0 auto 1.1rem;line-height:1;
 }
 .hero-logo-mark{
-  width:clamp(190px,27vw,290px);height:auto;display:block;
+  width:clamp(204px,29vw,312px);height:auto;display:block;
 }
 .hero-logo-tag{
   display:flex;align-items:center;gap:.7em;

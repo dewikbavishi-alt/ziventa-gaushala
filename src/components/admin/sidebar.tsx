@@ -197,7 +197,7 @@ export function Sidebar({ email }: { email: string }) {
       <img
         src={compact ? '/logo/ziventa-symbol.svg' : '/logo/ziventa-logo-light.svg'}
         alt="Ziventa"
-        width={compact ? 100 : 329}
+        width={compact ? 100 : 353}
         height={compact ? 100 : 86}
         className={compact ? 'h-7 w-7' : 'h-6 w-auto'}
       />
@@ -214,7 +214,7 @@ export function Sidebar({ email }: { email: string }) {
           <img
             src="/logo/ziventa-logo-light.svg"
             alt="Ziventa"
-            width={329}
+            width={353}
             height={86}
             className="h-5 w-auto"
           />

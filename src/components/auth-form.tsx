@@ -299,12 +299,12 @@ export function AuthForm({
               <img
                 src="/logo/ziventa-logo.svg"
                 alt="Ziventa"
-                width={329}
+                width={353}
                 height={86}
                 className="mx-auto h-8 w-auto"
               />
               <span className="mt-1 block text-[0.6rem] font-semibold tracking-[0.42em] text-[#8F6A1E] uppercase">
-                Nutriments<sup className="ml-[0.1em] text-[0.75em] tracking-normal">®</sup>
+                Nutriments
               </span>
             </a>
           </h1>
