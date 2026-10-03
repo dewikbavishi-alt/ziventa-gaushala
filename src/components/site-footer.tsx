@@ -151,16 +151,9 @@ export function SiteFooter() {
             <strong className="mb-1 block font-semibold text-[#FBF6EC]/85">
               Aarya Gir Nutriments
             </strong>
-            Plot No 21, Village: Khari
-            <br />
-            Taluka: Bagasara, Dist. Amreli
-            <br />
-            Gujarat, 365456, India
-          </address>
-          <div className="flex flex-col gap-[0.7em]">
             {/*
-              The address was the one contact detail that did nothing, so it
-              now opens a map like the phone dials and the mail opens.
+              The address itself is the map link, pin beside it, so there is
+              no separate "Get directions" line.
 
               The query is the ADDRESS ONLY, and must stay that way. Leading it
               with "Aarya Gir Nutriments" was tried and sent people to a hotel:
@@ -175,14 +168,23 @@ export function SiteFooter() {
               href="https://www.google.com/maps/search/?api=1&query=Plot+No+21%2C+Khari%2C+Bagasara%2C+Amreli%2C+Gujarat+365456"
               target="_blank"
               rel="noopener noreferrer"
-              className={COL_LINK}
+              aria-label="Plot No 21, Village: Khari, Taluka: Bagasara, Dist. Amreli, Gujarat, 365456, India - open in Google Maps"
+              className="group flex items-start gap-2 rounded transition hover:text-[#FBF6EC] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#BF8F3A]"
             >
-              <svg {...ICON}>
+              <svg {...ICON} className={`${ICON.className} mt-[0.3em] text-[#BF8F3A]`}>
                 <path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0z" />
                 <circle cx="12" cy="10" r="3" />
               </svg>
-              Get directions
+              <span className="underline-offset-[3px] group-hover:underline">
+                Plot No 21, Village: Khari
+                <br />
+                Taluka: Bagasara, Dist. Amreli
+                <br />
+                Gujarat, 365456, India
+              </span>
             </a>
+          </address>
+          <div className="flex flex-col gap-[0.7em]">
             {/* tel: and mailto: so a phone dials or opens mail on one tap. The
                 number is spaced for reading; the href keeps it unbroken. */}
             <a href="tel:+919033525352" className={COL_LINK}>

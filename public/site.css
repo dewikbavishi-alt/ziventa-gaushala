@@ -954,6 +954,12 @@ body.zv-member .price-hint-member{display:block;text-decoration:line-through;}
 .footer-col a{display:flex;align-items:center;gap:.5em;text-decoration:none;color:rgba(251,246,236,.78);font-size:.92rem;margin-bottom:.7em;}
 .footer-col a:hover{color:var(--cream);}
 .footer-col a svg{width:15px;height:15px;}
+/* The address is the map link. It keeps the address's own size and colour,
+   and the pin sits at the first line rather than centred on all three. */
+.footer-col .footer-map{align-items:flex-start;font-size:inherit;color:inherit;margin:0;}
+.footer-col .footer-map svg{flex-shrink:0;margin-top:.3em;color:var(--gold);}
+.footer-col .footer-map:hover{color:var(--cream);}
+.footer-col .footer-map:hover span{text-decoration:underline;text-underline-offset:3px;}
 .footer-bottom{max-width:1060px;margin:2.5rem auto 0;padding-top:1.5rem;border-top:1px solid rgba(255,255,255,.12);font-size:.82rem;color:rgba(251,246,236,.55);}
 
 /* back to top */
@@ -1390,6 +1396,7 @@ body.zv-member .price-hint-member{display:block;text-decoration:line-through;}
      moving it. margin-bottom goes, because the added height now supplies the
      spacing the list used to get from the margin. */
   .footer-col a{min-height:44px;margin-bottom:0;}
+  .footer-col .footer-map{min-height:0;}
   .text-link{min-height:44px;}
 
   /* The dot moves into a pseudo-element so the button itself can be a 44px

@@ -906,16 +906,12 @@ Color: warm cream ground, deep gaushala-green = trust/tradition, hand-ghee gold 
         announced as such. Browsers italicise it by default, so the CSS undoes
         that.
       -->
-      <address class="footer-address">
-        <strong>Aarya Gir Nutriments</strong>
-        Plot No 21, Village: Khari<br>
-        Taluka: Bagasara, Dist. Amreli<br>
-        Gujarat, 365456, India
-      </address>
       <!--
-        The address was the one contact detail that did nothing. The phone
-        dials and the mail opens, but "Plot No 21, Village: Khari" left anyone
-        wanting to visit to retype it into a maps app by hand.
+        The address itself is the map link, pin beside it, so there is no
+        separate "Get directions" line. It used to be the one contact detail
+        that did nothing: the phone dials and the mail opens, but "Plot No 21,
+        Village: Khari" left anyone wanting to visit to retype it into a maps
+        app by hand.
 
         The query is the ADDRESS ONLY. Putting "Aarya Gir Nutriments" in front
         of it was tried and was actively harmful: the business is not on
@@ -930,7 +926,12 @@ Color: warm cream ground, deep gaushala-green = trust/tradition, hand-ghee gold 
         this whole URL with the share link from that listing and the pin
         becomes exact. Never re-add the business name to a search query.
       -->
-      <a href="https://www.google.com/maps/search/?api=1&amp;query=Plot+No+21%2C+Khari%2C+Bagasara%2C+Amreli%2C+Gujarat+365456" target="_blank" rel="noopener noreferrer"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0z"/><circle cx="12" cy="10" r="3"/></svg> Get directions</a>
+      <address class="footer-address">
+        <strong>Aarya Gir Nutriments</strong>
+        <a class="footer-map" href="https://www.google.com/maps/search/?api=1&amp;query=Plot+No+21%2C+Khari%2C+Bagasara%2C+Amreli%2C+Gujarat+365456" target="_blank" rel="noopener noreferrer" aria-label="Plot No 21, Village: Khari, Taluka: Bagasara, Dist. Amreli, Gujarat, 365456, India - open in Google Maps"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0z"/><circle cx="12" cy="10" r="3"/></svg><span>Plot No 21, Village: Khari<br>
+        Taluka: Bagasara, Dist. Amreli<br>
+        Gujarat, 365456, India</span></a>
+      </address>
       <!-- tel: and mailto: so a phone dials or opens mail on one tap. The
            number is spaced for reading; the href keeps it unbroken. -->
       <a href="tel:+919033525352"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg> +91 90335 25352</a>
@@ -2599,7 +2600,7 @@ document.addEventListener('DOMContentLoaded', function(){
     },
     {
       test:/\b(contact|e-?mail|instagram|reach (you|us)|phone( number)?|call you|address|visit|location|directions|where are you|how to reach|talk to (someone|a human|you))\b/i,
-      reply:'<p><strong>Call or WhatsApp</strong> <a href="tel:+919033525352">+91 90335 25352</a><br><strong>Email</strong> <a href="mailto:girbyziventagaushala@gmail.com">girbyziventagaushala@gmail.com</a><br><strong>Instagram</strong> <a href="https://instagram.com/ziventagaushala" target="_blank" rel="noopener noreferrer">@ziventagaushala</a>, for daily glimpses of the herd</p><p><strong>The gaushala</strong><br>Aarya Gir Nutriments<br>Plot No 21, Village: Khari<br>Taluka: Bagasara, Dist. Amreli<br>Gujarat 365456</p><p>Visiting in person is one of the Gir Gold Club benefits — members are welcome to come and see the herd. Do call before setting off so someone is there to show you round.</p><a class="zv-cta" href="https://www.google.com/maps/search/?api=1&amp;query=Plot+No+21%2C+Khari%2C+Bagasara%2C+Amreli%2C+Gujarat+365456" target="_blank" rel="noopener noreferrer">Get directions <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14" key="1ays0h"/><path d="m12 5 7 7-7 7" key="xquz4c"/></svg></a>'
+      reply:'<p><strong>Call or WhatsApp</strong> <a href="tel:+919033525352">+91 90335 25352</a><br><strong>Email</strong> <a href="mailto:girbyziventagaushala@gmail.com">girbyziventagaushala@gmail.com</a><br><strong>Instagram</strong> <a href="https://instagram.com/ziventagaushala" target="_blank" rel="noopener noreferrer">@ziventagaushala</a>, for daily glimpses of the herd</p><p><strong>The gaushala</strong><br>Aarya Gir Nutriments<br><a href="https://www.google.com/maps/search/?api=1&amp;query=Plot+No+21%2C+Khari%2C+Bagasara%2C+Amreli%2C+Gujarat+365456" target="_blank" rel="noopener noreferrer"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0z"/><circle cx="12" cy="10" r="3"/></svg> Plot No 21, Village: Khari<br>Taluka: Bagasara, Dist. Amreli<br>Gujarat 365456</a></p><p>Visiting in person is one of the Gir Gold Club benefits — members are welcome to come and see the herd. Do call before setting off so someone is there to show you round.</p>'
     },
   ];
   var FALLBACK = '<p>I can only help with questions about Ziventa Gaushala — the Gir Gold Club membership, our Bilona ghee, or the gaushala itself — and I don\'t have an answer for that one within what\'s on this site. For anything else, please email <a href="mailto:girbyziventagaushala@gmail.com">girbyziventagaushala@gmail.com</a> or message <a href="https://instagram.com/ziventagaushala" target="_blank" rel="noopener noreferrer">@ziventagaushala</a> on Instagram.</p>';
