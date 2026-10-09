@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server';
 import { z } from 'zod';
 import { prisma } from '@/lib/prisma';
 import { accountExists, adminClient } from '@/lib/supabase/admin';
-import { authCodeEmail, sendEmail } from '@/lib/email';
+import { authCodeEmail, maskEmail, sendEmail } from '@/lib/email';
 import { deviceKey, takeAllowance, waitPhrase } from '@/lib/throttle';
 
 /**
@@ -112,7 +112,7 @@ export async function POST(request: Request) {
   });
 
   if (recent >= MAX_PER_WINDOW || today >= MAX_PER_DAY) {
-    console.warn(`[auth-code] throttled ${email}: ${recent} in ${WINDOW_MINUTES}m, ${today} today`);
+    console.warn(`[auth-code] throttled ${maskEmail(email)}: ${recent} in ${WINDOW_MINUTES}m, ${today} today`);
     return generic();
   }
 
@@ -133,7 +133,7 @@ export async function POST(request: Request) {
      * new empty account and leave them thinking their orders had disappeared.
      */
     if (!isSignup && !exists) {
-      console.warn(`[auth-code] no account for ${email}; refusing to create one`);
+      console.warn(`[auth-code] no account for ${maskEmail(email)}; refusing to create one`);
       return generic();
     }
 
@@ -175,7 +175,7 @@ export async function POST(request: Request) {
         user_metadata: parsed.data.fullName ? { full_name: parsed.data.fullName } : undefined,
       });
       if (createError) {
-        console.warn(`[auth-code] createUser for ${email}: ${createError.message}`);
+        console.warn(`[auth-code] createUser for ${maskEmail(email)}: ${createError.message}`);
         return generic();
       }
     }
@@ -188,7 +188,7 @@ export async function POST(request: Request) {
     if (error || !data?.properties?.email_otp) {
       // Usually "user not found" - a private fact. Logged for us, generic to
       // them.
-      console.warn(`[auth-code] generateLink failed for ${email}: ${error?.message ?? 'no code'}`);
+      console.warn(`[auth-code] generateLink failed for ${maskEmail(email)}: ${error?.message ?? 'no code'}`);
       return generic();
     }
 
@@ -207,7 +207,7 @@ export async function POST(request: Request) {
   const result = await sendEmail(authCodeEmail({ to: email, code, isSignup }));
 
   if (!result.delivered) {
-    console.error(`[auth-code] send failed for ${email}: ${result.reason}`);
+    console.error(`[auth-code] send failed for ${maskEmail(email)}: ${result.reason}`);
     // Still generic to the caller - the reason names our mail server.
   }
 

@@ -50,6 +50,20 @@ export function escapeHtml(value: string): string {
 }
 
 /**
+ * An address as it may appear in a log line: `ra***@gmail.com`.
+ *
+ * Vercel keeps logs, and anyone with access to the project can read them, so
+ * a customer's full address does not belong there. The first two characters
+ * and the domain are enough to tell which attempt was which when debugging,
+ * and not enough to email anybody.
+ */
+export function maskEmail(value: string): string {
+  const at = value.lastIndexOf('@');
+  if (at < 1) return '***';
+  return `${value.slice(0, Math.min(2, at))}***${value.slice(at)}`;
+}
+
+/**
  * Strip anything that could break out of a header line.
  *
  * A subject or reply-to built from user input is a header-injection risk: a
@@ -222,7 +236,7 @@ export async function sendEmail(message: EmailMessage): Promise<EmailResult> {
   const describe = message.sensitive ? '(withheld)' : JSON.stringify(message.subject);
 
   if (!smtpConfigured()) {
-    console.log(`[email:not-configured] to=${message.to} subject=${describe}`);
+    console.log(`[email:not-configured] to=${maskEmail(message.to)} subject=${describe}`);
     return { delivered: false, reason: 'SMTP is not configured; logged only' };
   }
 
@@ -242,7 +256,8 @@ export async function sendEmail(message: EmailMessage): Promise<EmailResult> {
     // A server can accept the connection and still refuse the recipient, which
     // is not an exception - it comes back in `rejected`.
     if (info.rejected?.length) {
-      return { delivered: false, reason: `Rejected by mail server: ${info.rejected.join(', ')}` };
+      const who = info.rejected.map((r) => maskEmail(String(r))).join(', ');
+      return { delivered: false, reason: `Rejected by mail server: ${who}` };
     }
 
     return { delivered: true };
@@ -250,7 +265,7 @@ export async function sendEmail(message: EmailMessage): Promise<EmailResult> {
     // Never rethrow. The order or enquiry is already in the database, and
     // losing it because a mail server hiccuped would be the worse failure.
     const reason = (err as Error).message;
-    console.error(`[email:failed] to=${message.to} subject=${describe} reason=${reason}`);
+    console.error(`[email:failed] to=${maskEmail(message.to)} subject=${describe} reason=${reason}`);
     return { delivered: false, reason };
   }
 }
