@@ -609,15 +609,22 @@ img[data-blur="loaded"]{filter:blur(0);transform:scale(1);}
  * those rules on purpose - `.cell img` and `.cell-full img` have identical
  * specificity, so order is what decides.
  *
- * 20% horizontally, not centred. The card is a 3:4 portrait and the photo a
- * 4:3 landscape, so cover keeps the full height and crops 44% of the width.
- * Centred, that cut through her muzzle; from 20% her head is whole, at the
- * cost of a sliver of the cow beside her - which is what a shed looks like.
- * The open card is 5:4, near enough the photo's own shape that almost
- * nothing is cropped there. */
+ * --focus says where the animal's HEAD is, as a percentage across the
+ * photograph, and each card sets its own. It belongs to the picture rather
+ * than to the layout: these are 4:3 landscapes going into a 3:4 portrait, so
+ * cover keeps the full height and crops 44% of the width, and where that cut
+ * falls decides whether a face survives it. Centred cut through Lata's muzzle
+ * and removed Gauri's head almost entirely - they need 20% and 70%.
+ *
+ * A custom property rather than a class per cow, so the next photograph
+ * brings its own number and needs no new rule. 50% if none is given.
+ *
+ * Note the avatar crops this a SECOND time - a circle when closed, a 5:4
+ * window when open - so the visible area is never the 3:4 crop itself. Worth
+ * rendering both before trusting a value. */
 .cell-full img{
   position:absolute;left:0;top:0;width:100%;height:100%;
-  object-fit:cover;object-position:20% 50%;
+  object-fit:cover;object-position:var(--focus,50%) 50%;
 }
 
 /* Cards. Opening a cow happens IN the layout: its column widens, the round
