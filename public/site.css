@@ -434,8 +434,14 @@ img[data-blur="loaded"]{filter:blur(0);transform:scale(1);}
 @keyframes zTail{0%,100%{transform:rotate(-7deg);}50%{transform:rotate(7deg);}}
 @keyframes zGraze{0%,100%{transform:rotate(0deg);}45%{transform:rotate(4deg);}}
 @keyframes zLook{0%,72%,100%{transform:rotate(0deg);}84%{transform:rotate(-3.5deg);}}
-@keyframes zArm1{0%,100%{transform:rotate(-3deg);}50%{transform:rotate(4deg);}}
-@keyframes zArm2{0%,100%{transform:rotate(4deg);}50%{transform:rotate(-3deg);}}
+/* A squeeze, not a swing. At -3deg/+4deg the hands travelled about twelve
+   units vertically while the teats they are meant to be holding are barely
+   five long, so for most of the cycle they were off the cow entirely. The
+   arms are long, so a small angle is a large movement at the hand: +-1.5deg
+   keeps the fists on the teats the whole way round and still reads as
+   pulling. */
+@keyframes zArm1{0%,100%{transform:rotate(-1deg);}50%{transform:rotate(1.5deg);}}
+@keyframes zArm2{0%,100%{transform:rotate(1.5deg);}50%{transform:rotate(-1deg);}}
 @keyframes zSquirt{0%{opacity:0;}20%{opacity:.95;}70%{opacity:.35;}100%{opacity:0;}}
 @keyframes zGrass{0%,100%{transform:skewX(-4deg);}50%{transform:skewX(4deg);}}
 
