@@ -1,0 +1,294 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ziventa — Brewns-style preview</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;700;800;900&family=JetBrains+Mono:wght@400;500&family=Mrs+Saint+Delafield&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#1a120c;
+  --bg-2:#241910;
+  --glow:#6b3f1d;
+  --cream:#F3EBDD;
+  --cream-dim:rgba(243,235,221,.62);
+  --line:rgba(243,235,221,.14);
+  --gold:#D9A441;
+  --paper:#EFE6D6;
+  --ink:#1c140e;
+  --display:'Archivo',system-ui,sans-serif;
+  --mono:'JetBrains Mono',ui-monospace,monospace;
+  --script:'Mrs Saint Delafield',cursive;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--cream);font-family:var(--display);-webkit-font-smoothing:antialiased;overflow-x:hidden}
+img{display:block;max-width:100%}
+a{color:inherit;text-decoration:none}
+.mono{font-family:var(--mono);font-size:12px;letter-spacing:.14em;text-transform:uppercase}
+.wrap{max-width:1280px;margin:0 auto;padding:0 40px}
+
+/* preview banner */
+.pv{position:fixed;left:50%;bottom:18px;transform:translateX(-50%);z-index:60;background:var(--gold);color:var(--ink);
+  font:500 12px/1 var(--mono);letter-spacing:.08em;padding:10px 16px;border-radius:99px;box-shadow:0 8px 30px rgba(0,0,0,.4);white-space:nowrap}
+
+/* nav */
+nav{position:fixed;inset:0 0 auto 0;z-index:50;display:grid;grid-template-columns:1fr auto 1fr;align-items:center;padding:26px 40px;
+  background:linear-gradient(var(--bg),transparent)}
+nav .l,nav .r{display:flex;gap:34px;font-size:13px;font-weight:500;letter-spacing:.04em;text-transform:uppercase}
+nav .r{justify-content:flex-end;align-items:center}
+nav .logo img{height:26px}
+nav a{opacity:.85;transition:opacity .2s}
+nav a:hover{opacity:1}
+.cart{font-family:var(--mono);font-size:12px}
+.pill{border:1px solid var(--cream);padding:9px 16px;border-radius:99px}
+
+/* hero */
+.hero{position:relative;min-height:min(100vh,920px);display:grid;grid-template-columns:1.05fr 1fr;align-items:center;gap:20px;padding:120px 40px 80px;
+  max-width:1440px;margin:0 auto}
+.hero>div{min-width:0}
+.hero::before{content:"";position:absolute;inset:-10% -30%;z-index:-1;
+  background:radial-gradient(45% 50% at 58% 40%,var(--glow) 0%,rgba(107,63,29,.35) 40%,transparent 70%)}
+.eyebrow{color:var(--cream-dim);margin-bottom:22px}
+h1{font-weight:800;font-size:clamp(56px,8.6vw,132px);line-height:.9;letter-spacing:-.035em;text-transform:uppercase}
+.script{font-family:var(--script);font-weight:400;text-transform:none;letter-spacing:0;color:var(--gold);
+  font-size:clamp(56px,7vw,110px);line-height:.6;display:block;margin:10px 0 0 38%}
+.lede{max-width:360px;margin-top:40px;font-weight:700;font-size:15px;line-height:1.35;text-transform:uppercase}
+.lede span{color:var(--cream-dim)}
+.ctas{display:flex;flex-wrap:wrap;gap:20px 28px;margin-top:36px;align-items:center}
+.link{font-weight:700;font-size:14px;letter-spacing:.06em;text-transform:uppercase;border-bottom:1px solid currentColor;padding-bottom:4px}
+.link.dim{color:var(--cream-dim)}
+.btn{background:var(--cream);color:var(--ink);font-weight:700;font-size:14px;letter-spacing:.06em;text-transform:uppercase;padding:15px 24px;border-radius:99px}
+
+.stage{position:relative;height:640px}
+.pack{position:absolute;border-radius:14px;overflow:hidden;box-shadow:0 40px 80px rgba(0,0,0,.55),0 10px 20px rgba(0,0,0,.35)}
+.pack img{width:100%;height:100%;object-fit:cover}
+.pack.a{width:62%;right:2%;top:10%;transform:rotate(6deg);animation:float 7s ease-in-out infinite}
+.pack.b{width:46%;left:2%;bottom:4%;transform:rotate(-8deg);animation:float 7s ease-in-out -3.5s infinite}
+@keyframes float{50%{translate:0 -14px}}
+.tag{position:absolute;right:-2%;top:2%;z-index:3;background:rgba(28,20,14,.78);backdrop-filter:blur(10px);border:1px solid var(--line);
+  padding:14px 18px;min-width:280px}
+.tag .mono{color:var(--cream-dim);font-size:11px}
+.tag .row{display:flex;justify-content:space-between;align-items:baseline;margin:8px 0 10px;gap:20px}
+.tag b{font-size:26px;font-weight:800;text-transform:uppercase;letter-spacing:-.01em}
+.tag s{color:var(--cream-dim);font-family:var(--mono);font-size:12px;margin-right:6px}
+.tag .p{font-family:var(--mono);font-size:15px}
+.tag .foot{border-top:1px solid var(--line);padding-top:10px}
+.scroll{position:absolute;left:40px;bottom:32px;display:flex;gap:40px;color:var(--cream-dim)}
+.scroll i{display:block;width:1px;height:44px;background:var(--line)}
+
+/* marquee */
+.marq{border-block:1px solid var(--line);overflow:hidden;padding:18px 0;background:var(--bg-2)}
+.marq div{display:flex;gap:48px;width:max-content;animation:mq 40s linear infinite}
+.marq span{font-weight:800;font-size:22px;text-transform:uppercase;letter-spacing:-.01em;white-space:nowrap}
+.marq em{font-family:var(--script);font-style:normal;color:var(--gold);font-size:40px;font-weight:400;line-height:0}
+@keyframes mq{to{transform:translateX(-50%)}}
+
+/* sections */
+section{padding:130px 0}
+.sec-head{display:flex;justify-content:space-between;align-items:flex-end;gap:40px;margin-bottom:60px;flex-wrap:wrap}
+h2{font-weight:800;font-size:clamp(40px,5.6vw,84px);line-height:.92;letter-spacing:-.03em;text-transform:uppercase}
+h2 .script{display:inline;margin:0;font-size:1.1em;line-height:0}
+.sub{max-width:380px;color:var(--cream-dim);line-height:1.55;font-size:15px}
+
+/* statement */
+.statement{display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:center}
+.statement .photo{aspect-ratio:4/5;overflow:hidden;border-radius:6px;position:relative}
+.statement .photo img{width:100%;height:100%;object-fit:cover;filter:saturate(.85) contrast(1.05)}
+.statement .photo .mono{position:absolute;left:16px;bottom:16px;background:rgba(28,20,14,.7);padding:8px 10px;font-size:11px}
+.statement p{color:var(--cream-dim);line-height:1.65;font-size:17px;margin-top:22px;max-width:520px}
+.quote{margin-top:36px;border-left:2px solid var(--gold);padding-left:18px;font-weight:700;text-transform:uppercase;font-size:14px;line-height:1.45;max-width:440px}
+
+/* shop */
+.shop{background:var(--paper);color:var(--ink)}
+.shop .sub{color:rgba(28,20,14,.62)}
+.grid{display:grid;grid-template-columns:repeat(2,1fr);max-width:760px;margin:0 auto;gap:22px}
+.card{background:#fff9ef;border:1px solid rgba(28,20,14,.1);display:flex;flex-direction:column}
+.card .im{aspect-ratio:1/1;overflow:hidden;background:#e3d6c0;position:relative}
+.card .im img{width:100%;height:100%;object-fit:cover;transition:transform .6s}
+.card:hover .im img{transform:scale(1.05)}
+.card .badge{position:absolute;top:14px;left:14px;background:var(--ink);color:var(--cream);padding:7px 10px}
+.card .body{padding:20px 20px 22px;display:flex;flex-direction:column;gap:10px;flex:1}
+.card .meta{color:rgba(28,20,14,.55)}
+.card h3{font-weight:800;font-size:24px;text-transform:uppercase;letter-spacing:-.01em}
+.card p{font-size:14px;line-height:1.5;color:rgba(28,20,14,.7)}
+.card .buy{display:flex;justify-content:space-between;align-items:center;margin-top:auto;padding-top:14px;border-top:1px solid rgba(28,20,14,.12)}
+.price{font-family:var(--mono);font-size:15px}
+.price s{opacity:.45;margin-left:6px;font-size:12px}
+.add{background:var(--ink);color:var(--cream);font:700 12px/1 var(--display);letter-spacing:.08em;text-transform:uppercase;padding:12px 16px;border:0;border-radius:99px;cursor:pointer}
+
+/* process */
+.steps{display:grid;grid-template-columns:repeat(5,1fr);border-top:1px solid var(--line)}
+.step{padding:28px 22px 0 0;border-right:1px solid var(--line);margin-right:22px}
+.step:last-child{border-right:0;margin-right:0}
+.step .n{font-weight:900;font-size:64px;letter-spacing:-.04em;color:transparent;-webkit-text-stroke:1px rgba(243,235,221,.45)}
+.step h3{font-weight:800;text-transform:uppercase;font-size:20px;margin:18px 0 10px}
+.step p{color:var(--cream-dim);font-size:14px;line-height:1.55}
+
+/* membership */
+.member{background:var(--bg-2);border-block:1px solid var(--line)}
+.terms{display:grid;grid-template-columns:1.1fr 1fr;gap:60px;align-items:start}
+.ticket{background:var(--paper);color:var(--ink);padding:30px;position:relative}
+.ticket::before,.ticket::after{content:"";position:absolute;top:50%;width:26px;height:26px;border-radius:50%;background:var(--bg-2);translate:0 -50%}
+.ticket::before{left:-13px}.ticket::after{right:-13px}
+.ticket .row{display:flex;justify-content:space-between;padding:16px 0;border-bottom:1px dashed rgba(28,20,14,.25);font-family:var(--mono);font-size:14px}
+.ticket .row b{font-family:var(--display);font-weight:800;font-size:22px}
+.ticket .big{font-weight:900;font-size:56px;letter-spacing:-.03em;margin:8px 0 4px}
+.ticket .btn{display:inline-block;margin-top:24px;background:var(--ink);color:var(--cream)}
+
+/* footer */
+footer{padding:90px 0 110px}
+.fbig{font-weight:900;font-size:clamp(70px,15vw,230px);letter-spacing:-.05em;line-height:.8;text-transform:uppercase;color:var(--bg-2);
+  -webkit-text-stroke:1px var(--line);margin-bottom:50px}
+.fcols{display:grid;grid-template-columns:2fr 1fr 1fr 1.3fr;gap:40px;color:var(--cream-dim);font-size:14px;line-height:1.8}
+.fcols h4{color:var(--cream);margin-bottom:10px}
+
+@media (max-width:960px){
+  .wrap{padding:0 16px}
+  nav{padding:16px;grid-template-columns:auto 1fr}
+  nav .l{display:none}
+  nav .r{gap:14px}
+  nav .r .hide{display:none}
+  .hero{grid-template-columns:1fr;padding:96px 16px 60px;min-height:auto}
+  .script{margin-left:30%}
+  .stage{height:420px;margin-top:20px}
+  .tag{min-width:0;right:0;left:18%}
+  .scroll{display:none}
+  section{padding:80px 0}
+  .statement,.terms{grid-template-columns:1fr;gap:40px}
+  .grid{grid-template-columns:1fr}
+  .steps{grid-template-columns:1fr}
+  .step{border-right:0;margin-right:0;border-bottom:1px solid var(--line);padding-bottom:24px}
+  .fcols{grid-template-columns:1fr 1fr}
+  h1{font-size:clamp(44px,13vw,72px)}
+  .pill{padding:8px 12px;font-size:11px}
+  .tag .row{flex-wrap:wrap;gap:4px 16px}
+  .tag b{font-size:20px}
+  .pv{font-size:10px;white-space:normal;text-align:center;width:calc(100% - 32px)}
+}
+</style>
+</head>
+<body>
+
+<div class="pv">PREVIEW ONLY · Brewns-style mock-up · not on the live site</div>
+
+<nav>
+  <div class="l"><a href="#shop">Shop</a><a href="#club">Gir Gold Club</a><a href="#process">Our Bilona</a></div>
+  <a class="logo" href="#"><img src="img/ziventa-logo-light.svg" alt="Ziventa"></a>
+  <div class="r"><a class="hide" href="#">Account</a><span class="cart">CART [ 0 ]</span><a class="pill" href="#club">Reserve a seat</a></div>
+</nav>
+
+<header class="hero">
+  <div>
+    <p class="mono eyebrow">// A2 Gir cow ghee · Amreli, Gujarat</p>
+    <h1>Pure is<br>not enough.</h1>
+    <span class="script">nurtured daily</span>
+    <p class="lede">Curd-churned the Bilona way from our own Gir cows <span>for a closed circle of 250 families.</span></p>
+    <div class="ctas">
+      <a class="btn" href="#club">Reserve membership</a>
+      <a class="link dim" href="#process">How it's made ↗</a>
+    </div>
+  </div>
+  <div class="stage">
+    <div class="tag">
+      <div class="mono">// In the jar</div>
+      <div class="row"><b>Bilona Ghee</b><span class="p"><s>₹2,000</s>₹1,600</span></div>
+      <div class="mono foot">500 g · A2 Gir · Curd-churned</div>
+    </div>
+    <div class="pack a"><img src="img/box-cream.jpg" alt="Ziventa A2 cow ghee box"></div>
+    <div class="pack b"><img src="img/box-navy.jpg" alt="Ziventa A2 cow ghee box, navy edition"></div>
+  </div>
+  <div class="scroll mono"><i></i><span>Scroll</span><i></i></div>
+</header>
+
+<div class="marq"><div>
+  <span>100% A2 Gir cow milk</span><em>pure</em><span>Traditional Bilona method</span><em>slow</em><span>Curd-churned, never cream</span><em>honest</em><span>Founding members only — 250 seats</span><em>small</em><span>No preservatives, no shortcuts</span><em>pure</em>
+  <span>100% A2 Gir cow milk</span><em>pure</em><span>Traditional Bilona method</span><em>slow</em><span>Curd-churned, never cream</span><em>honest</em><span>Founding members only — 250 seats</span><em>small</em><span>No preservatives, no shortcuts</span><em>pure</em>
+</div></div>
+
+<section>
+  <div class="wrap statement">
+    <div class="photo"><img src="img/ziventa-02.jpg" alt="A Gir cow and her calf at Ziventa Gaushala"><span class="mono">Cow &amp; calf · the bond you protect</span></div>
+    <div>
+      <p class="mono eyebrow">// Why a membership, not a store</p>
+      <h2>Please don't join just for the <span class="script">ghee</span></h2>
+      <p>If that's all you're after, we'd rather you didn't. This isn't a bottle you buy once — it's a long-term commitment to our cows, our land, and the people who tend them every day.</p>
+      <p>When a family joins, we take it as trust. It's what pushes us to keep delivering the finest A2 Gir cow ghee and Panchgavya, batch after batch, season after season.</p>
+      <div class="quote">We keep our herd small so every member receives ghee that is genuinely pure — never stretched, never rushed.</div>
+    </div>
+  </div>
+</section>
+
+<section class="shop" id="shop">
+  <div class="wrap">
+    <div class="sec-head">
+      <div><p class="mono eyebrow" style="color:rgba(28,20,14,.55)">// For members</p><h2>Ghee &amp; Panchgavya,<br>by weight</h2></div>
+      <p class="sub">A small, honest range — every jar made in-house at the gaushala. Gir Gold Club members pay 25% less.</p>
+    </div>
+    <div class="grid">
+      <article class="card">
+        <div class="im"><span class="mono badge">Most loved</span><img src="img/box-cream.jpg" alt="Ziventa A2 Bilona ghee"></div>
+        <div class="body"><span class="mono meta">500 ml · Family</span><h3>Bilona Ghee</h3><p>Our most-loved size, made for the whole family.</p>
+          <div class="buy"><span class="price">₹2,775<s>₹3,700</s></span><button class="add">Add to cart</button></div></div>
+      </article>
+      <article class="card">
+        <div class="im"><img src="img/box-navy.jpg" alt="Ziventa A2 Bilona ghee"></div>
+        <div class="body"><span class="mono meta">1000 ml · Signature</span><h3>Bilona Ghee</h3><p>Our signature jar — best value for founding members.</p>
+          <div class="buy"><span class="price">₹5,250<s>₹6,999</s></span><button class="add">Add to cart</button></div></div>
+      </article>
+    </div>
+  </div>
+</section>
+
+<section id="process">
+  <div class="wrap">
+    <div class="sec-head">
+      <div><p class="mono eyebrow">// How it is made</p><h2>Our Bilona <span class="script">method</span></h2></div>
+      <p class="sub">Five unhurried steps from fresh milk to sealed jar. The long way round — curd first, never a cream separator.</p>
+    </div>
+    <div class="steps">
+      <div class="step"><div class="n">01</div><h3>Fresh A2 milk</h3><p>Milked daily from our own well-cared-for Gir cows at the gaushala.</p></div>
+      <div class="step"><div class="n">02</div><h3>Set into curd</h3><p>Naturally fermented overnight using traditional methods — no shortcuts.</p></div>
+      <div class="step"><div class="n">03</div><h3>Churned to makkhan</h3><p>The whole set curd is churned until pure makkhan separates out.</p></div>
+      <div class="step"><div class="n">04</div><h3>Cooked to gold</h3><p>Simmered in a steam-jacketed kettle, so nothing catches or scorches.</p></div>
+      <div class="step"><div class="n">05</div><h3>Filled &amp; sealed</h3><p>Machine-filled into premium jars — less handling, better hygiene.</p></div>
+    </div>
+  </div>
+</section>
+
+<section class="member" id="club">
+  <div class="wrap terms">
+    <div>
+      <p class="mono eyebrow">// Membership terms</p>
+      <h2>Simple, honest, <span class="script">refundable</span></h2>
+      <p class="sub" style="margin-top:24px;max-width:460px">A refundable deposit secures your place in the Club and unlocks a discounted, consistent member ghee rate — nothing hidden, nothing inflated.</p>
+      <div class="quote">"If a seat is open, it's open. If it isn't, we'll tell you honestly."</div>
+    </div>
+    <div class="ticket">
+      <span class="mono">Ziventa Gir Gold Membership</span>
+      <div class="big">₹5,000</div>
+      <span class="mono" style="opacity:.6">Refundable deposit</span>
+      <div class="row" style="margin-top:14px"><span>Member ghee rate</span><b>₹3,150/kg</b></div>
+      <div class="row"><span>Regular rate</span><span>₹4,000/kg</span></div>
+      <div class="row"><span>You save</span><b>20%</b></div>
+      <a class="btn" href="#">Reserve my seat</a>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <div class="fbig">Ziventa</div>
+    <div class="fcols">
+      <div><h4 class="mono">Ziventa Gaushala</h4>A small, dedicated gaushala raising Gir cows and preparing A2 Bilona ghee and Panchgavya in small batches.</div>
+      <div><h4 class="mono">Explore</h4>Our Story<br>Gir Gold Club<br>Bilona Process</div>
+      <div><h4 class="mono">Connect</h4>Your Account<br>Instagram<br>Contact Us</div>
+      <div><h4 class="mono">Reach us</h4>Plot No 21, Village Khari<br>Bagasara, Amreli, Gujarat 365456<br>+91 90335 25352</div>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>

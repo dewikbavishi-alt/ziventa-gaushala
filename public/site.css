@@ -452,6 +452,12 @@ img[data-blur="loaded"]{filter:blur(0);transform:scale(1);}
 }
 .membership-banner img{
   width:100%;height:clamp(150px,18vw,205px);object-fit:cover;display:block;
+  /* The photograph is a tall portrait and this is a wide strip, so cover shows
+     only a narrow horizontal band of it - 16% of the source height on a
+     desktop. Dead centre put the top of that band on the wall behind the
+     herd; 55% drops it onto the animals and leaves ground along the bottom,
+     which is also what the caption gradient needs to sit over. */
+  object-position:50% 55%;
   transition:transform .8s cubic-bezier(.2,.7,.3,1);
 }
 .membership-banner:hover img{transform:scale(1.05);}
