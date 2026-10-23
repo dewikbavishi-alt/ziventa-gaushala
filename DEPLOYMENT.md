@@ -159,6 +159,44 @@ in and then refuse to send as an address that is not yours.
 `MAIL_FROM` normally has to match `SMTP_USER` or be an alias on the same
 domain. This is the second surprise after a wrong password.
 
+### The two addresses, and why they differ
+
+The site publishes **girbyziventa@gmail.com**. The mail still *sends* from
+**girbyziventagaushala@gmail.com**, because that is the account Gmail
+authenticated, and Gmail will not send as an address it has not authorised -
+it rejects the message or silently rewrites the header.
+
+So the three settings do different jobs on purpose:
+
+| Variable | Value | Why |
+|---|---|---|
+| `SMTP_USER` | girbyziventa**gaushala**@gmail.com | the account that signs in |
+| `MAIL_FROM` | `Ziventa Nutriments <girbyziventagaushala@gmail.com>` | must be an address that account may send as |
+| `MAIL_REPLY_TO` | girbyziventa@gmail.com | no such restriction - this is where Reply actually goes |
+| `MAIL_TO` | girbyziventa@gmail.com | where order and enquiry alerts land |
+
+`MAIL_REPLY_TO` is what makes the published address real today: a customer
+pressing Reply reaches the new inbox even though From still shows the old one.
+
+To move `MAIL_FROM` onto the new address, one of these has to happen first:
+
+1. **Make it the sending account.** Generate an app password for
+   girbyziventa@gmail.com and point `SMTP_USER` / `SMTP_PASS` / `MAIL_FROM` at
+   it. Cleanest end state - one address everywhere.
+2. **Verify it as an alias.** In girbyziventagaushala@gmail.com, add
+   girbyziventa@gmail.com under Settings > Accounts > "Send mail as" and
+   confirm the verification email. `MAIL_FROM` can then use it while
+   `SMTP_USER` stays as it is.
+
+Do not change `MAIL_FROM` before one of those is done, and run
+`npm run email:test` straight afterwards - the test exists precisely to catch
+a From the server will not send as.
+
+These are environment variables, so **changing `.env.local` only changes local
+development**. Production reads them from the Vercel dashboard, under
+Settings > Environment Variables, and only applies them on the next
+deployment.
+
 Sending failures never propagate. `sendEmail` returns `{delivered, reason}` and
 never throws, because by the time it runs the order or enquiry is already in
 the database - losing a real order because a mail server hiccuped would be the

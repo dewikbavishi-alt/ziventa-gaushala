@@ -159,9 +159,16 @@ function fromAddress(): string {
   throw new Error('Cannot build a From address: neither MAIL_FROM nor SMTP_USER is set.');
 }
 
-/** Where order and enquiry alerts go. */
+/**
+ * Where order and enquiry alerts go.
+ *
+ * The fallback is the business address, not a personal one. If MAIL_TO ever
+ * goes missing - a new environment, a typo in the Vercel dashboard - orders
+ * should still land somewhere the business actually reads, rather than in one
+ * individual's inbox where nobody else can see them.
+ */
 export function businessInbox(): string {
-  return process.env.MAIL_TO ?? 'dewikbavishi4@gmail.com';
+  return process.env.MAIL_TO?.trim() || 'girbyziventa@gmail.com';
 }
 
 /**
