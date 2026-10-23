@@ -674,6 +674,21 @@ img[data-blur="loaded"]{filter:blur(0);transform:scale(1);}
   width:100%;aspect-ratio:5/4;border-radius:24px;margin:0 0 1rem;
   box-shadow:0 22px 44px rgba(36,56,45,.24);
 }
+/* An opened card shows its photograph at the card's own shape.
+ *
+ * The cell is 3:4 so the closed circle has something to crop from. Left at
+ * 3:4 inside a 5:4 window it gets cropped a SECOND time, discarding the top
+ * and bottom of the picture at exactly the moment it is meant to be looked
+ * at - which is why Gauri lost the top of her hump and sat off-centre once
+ * opened.
+ *
+ * Matching the two shapes means cover crops once, from a 4:3 photograph into
+ * a 5:4 box: a few percent off the sides and nothing off the top. The animal
+ * ends up centred and whole without --focus having to rescue her.
+ *
+ * Only .cell-full. The sprite quadrants measure their 204% offsets against a
+ * 3:4 cell and come apart if it changes. */
+.herd-card.is-open .cell-full{aspect-ratio:5/4;}
 .herd-card.is-open h3{font-size:1.5rem;margin-bottom:.35rem;}
 .herd-card.is-open .herd-short{display:none;}
 .herd-card.is-open .herd-more{display:block;}
@@ -687,6 +702,9 @@ img[data-blur="loaded"]{filter:blur(0);transform:scale(1);}
   .herd-grid[data-open]{grid-template-columns:repeat(2,minmax(0,1fr));}
   .herd-card.is-open{grid-column:1 / -1;}
   .herd-card.is-open .herd-avatar{aspect-ratio:4/3;}
+  /* The cell follows the avatar here too, or the second crop comes back on
+     exactly the narrow screens where the card is largest relative to it. */
+  .herd-card.is-open .cell-full{aspect-ratio:4/3;}
 }
 
 /* gallery */
