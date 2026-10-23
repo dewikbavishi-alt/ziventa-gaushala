@@ -97,12 +97,12 @@ export async function confirmPaidOrder(params: {
  * the mail server must not roll back money that has already moved, and must
  * not show the customer an error for something that worked.
  */
-export async function sendOrderEmails(orderId: string): Promise<void> {
+export async function sendOrderEmails(orderId: string): Promise<boolean> {
   const order = await prisma.order.findUnique({
     where: { id: orderId },
     include: { items: true },
   });
-  if (!order) return;
+  if (!order) return false;
 
   const data = {
     orderNumber: order.orderNumber,
@@ -136,6 +136,19 @@ export async function sendOrderEmails(orderId: string): Promise<void> {
   if (!toBusiness.delivered) {
     console.warn(`[order ${order.orderNumber}] alert not sent: ${toBusiness.reason}`);
   }
+
+  /**
+   * Whether the CUSTOMER's confirmation went, which is the one the checkout
+   * tells them about. The business alert failing is a problem for us, not a
+   * promise broken to them, and it is already in the log above.
+   *
+   * This used to return void while the route answered confirmationSent:true
+   * regardless - so a checkout said "a confirmation is on its way" whether or
+   * not one was. Mail can fail for a whole day (a wrong From, an expired app
+   * password) with every order still reporting success, and the only trace
+   * being a warning nobody is reading.
+   */
+  return toCustomer.delivered;
 }
 
 /**

@@ -394,14 +394,21 @@ export async function POST(request: Request) {
    * so it is confirmed now and both emails go immediately - which is exactly
    * what happened before the gateway existed.
    */
-  await sendOrderEmails(order.id);
+  /**
+   * Reported honestly. The order stands either way - it is already written
+   * and holding stock, and losing it because a mail server hiccuped would be
+   * the worse failure - but the page must not promise an email that never
+   * left. A customer told "check your inbox" who finds nothing assumes the
+   * order failed and orders again.
+   */
+  const confirmationSent = await sendOrderEmails(order.id);
 
   return NextResponse.json(
     {
       ok: true,
       orderNumber: order.orderNumber,
       amountPaise: order.totalPaise,
-      confirmationSent: true,
+      confirmationSent,
       // What the server actually charged at, so the receipt can say so rather
       // than guessing from whatever the browser believed.
       memberRate: cart.isMember,
