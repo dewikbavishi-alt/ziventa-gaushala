@@ -12,6 +12,20 @@ const eslintConfig = defineConfig([
     "out/**",
     "build/**",
     "next-env.d.ts",
+
+    /**
+     * Vendored libraries, minified. Nothing here is ours to fix.
+     *
+     * GSAP alone raised 16 errors and most of a few hundred warnings, all
+     * from its minifier aliasing `this` - which is normal in minified output
+     * and not a defect. The cost is not the noise: it is that a real error in
+     * our own code arrives on page three of a failing report and gets
+     * scrolled past, which already nearly happened once.
+     */
+    "public/vendor/**",
+
+    /** Standalone design mock-ups, not part of the built site. */
+    "design-previews/**",
   ]),
 ]);
 
