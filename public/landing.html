@@ -306,12 +306,6 @@ Color: warm cream ground, deep gaushala-green = trust/tradition, hand-ghee gold 
           <feMorphology in="key" operator="erode" radius="1.1" result="trim"/>
           <feComposite in="SourceGraphic" in2="trim" operator="in"/>
         </filter>
-        <!-- Leaves out a grey mark in the picture's bottom-left corner - a
-             leftover from wherever the image was captured, not part of the
-             cow. A display crop only. -->
-        <clipPath id="zgCowClip" clipPathUnits="objectBoundingBox">
-          <polygon points="0,0 1,0 1,1 0.08,1 0.08,0.92 0,0.92"/>
-        </clipPath>
       </defs>
 
       <rect class="zf-sky" x="0" y="-420" width="1200" height="600"/>
@@ -380,32 +374,36 @@ Color: warm cream ground, deep gaushala-green = trust/tradition, hand-ghee gold 
       <g transform="translate(112,168) scale(0.62)">
         <ellipse class="zc-shadow" fill="url(#zgShadow)" cx="104" cy="104" rx="96" ry="9"/>
         <g class="zc-pic zc-pic-a">
-          <image href="/assets/cow.jpeg" x="-1.0" y="-50.0" width="210" transform="matrix(-1 0 0 1 208.0 0)" height="172.1" preserveAspectRatio="xMidYMid meet" filter="url(#zgCowKey)" clip-path="url(#zgCowClip)"/>
+          <image href="/assets/cow-gir.jpg" x="-1.0" y="-50.0" width="210" transform="matrix(-1 0 0 1 208.0 0)" height="172.1" preserveAspectRatio="xMidYMid meet" filter="url(#zgCowKey)"/>
         </g>
       </g>
 
       <g transform="translate(600,152) scale(0.72)">
         <ellipse class="zc-shadow" fill="url(#zgShadow)" cx="104" cy="136" rx="96" ry="9"/>
         <g class="zc-pic zc-pic-b">
-          <image href="/assets/cow.jpeg" x="-18.5" y="-40.7" width="245" height="200.8" preserveAspectRatio="xMidYMid meet" filter="url(#zgCowKey)" clip-path="url(#zgCowClip)"/>
+          <image href="/assets/cow-gir.jpg" x="-18.5" y="-40.7" width="245" height="200.8" preserveAspectRatio="xMidYMid meet" filter="url(#zgCowKey)"/>
         </g>
       </g>
 
       <g transform="translate(930,178) scale(0.6)">
         <ellipse class="zc-shadow" fill="url(#zgShadow)" cx="104" cy="136" rx="96" ry="9"/>
         <g class="zc-pic zc-pic-c">
-          <image href="/assets/cow.jpeg" x="-18.5" y="-40.7" width="245" transform="matrix(-1 0 0 1 208.0 0)" height="200.8" preserveAspectRatio="xMidYMid meet" filter="url(#zgCowKey)" clip-path="url(#zgCowClip)"/>
+          <image href="/assets/cow-gir.jpg" x="-18.5" y="-40.7" width="245" transform="matrix(-1 0 0 1 208.0 0)" height="200.8" preserveAspectRatio="xMidYMid meet" filter="url(#zgCowKey)"/>
         </g>
       </g>
 
       <g transform="translate(268,212)">
         <ellipse class="zc-shadow" fill="url(#zgShadow)" cx="39" cy="126" rx="92" ry="9"/>
         <g class="zc-pic zc-pic-d">
-          <image href="/assets/cow.jpeg" x="-78.5" y="-45.4" width="235" height="192.6" preserveAspectRatio="xMidYMid meet" filter="url(#zgCowKey)" clip-path="url(#zgCowClip)"/>
+          <image href="/assets/cow-gir.jpg" x="-78.5" y="-45.4" width="235" height="192.6" preserveAspectRatio="xMidYMid meet" filter="url(#zgCowKey)"/>
         </g>
-        <g class="zw">
-          <path class="zw-squirt" d="M86 112 C87 118 88 122 89 128"/>
-          <path class="zw-squirt zw-squirt-2" d="M100 112 C99 118 98 122 97 128"/>
+        <!-- Shifted right so the hands meet the teats rather than the
+             middle of the udder. The teats in cow-gir.jpg sit at x 111-127
+             in this group's coordinates and her hands were at 84 and 100 -
+             under the udder, but short of the part she would actually hold. -->
+        <g class="zw" transform="translate(18,0)">
+          <path class="zw-squirt" d="M84 97 C85 105 86 113 86 121"/>
+          <path class="zw-squirt zw-squirt-2" d="M100 99 C99 107 98 114 97 121"/>
           <rect class="zw-stool" x="-6" y="110" width="44" height="8" rx="2"/>
           <rect class="zw-stool" x="0" y="118" width="6" height="14" rx="2"/>
           <rect class="zw-stool" x="26" y="118" width="6" height="14" rx="2"/>
@@ -423,14 +421,14 @@ Color: warm cream ground, deep gaushala-green = trust/tradition, hand-ghee gold 
           <path class="zw-pot" d="M146 116 C135 116 130 124 130 131 C130 139 138 144 149 144 C160 144 167 139 167 131 C167 124 162 116 152 116 Z"/>
           <rect class="zw-potrim" x="137" y="111" width="24" height="7" rx="2"/>
           <g class="zw-arm-g zw-arm-1">
-            <path class="zw-arm" d="M31 90 C47 94 64 100 78 104"/>
-            <path class="zw-bangle" d="M48 94 l3 6 M54 96 l3 6"/>
-            <circle class="zw-hand" cx="82" cy="105" r="7"/>
+            <path class="zw-arm" d="M31 90 C48 92 66 91 80 89"/>
+            <path class="zw-bangle" d="M49 88 l3 6 M55 88 l3 6"/>
+            <circle class="zw-hand" cx="84" cy="89" r="7"/>
           </g>
           <g class="zw-arm-g zw-arm-2">
-            <path class="zw-arm" d="M33 96 C51 99 78 102 96 104"/>
-            <path class="zw-bangle" d="M50 99 l2 6 M56 100 l2 6"/>
-            <circle class="zw-hand" cx="100" cy="105" r="7"/>
+            <path class="zw-arm" d="M33 96 C52 98 78 96 96 91"/>
+            <path class="zw-bangle" d="M51 93 l2 6 M57 93 l2 6"/>
+            <circle class="zw-hand" cx="100" cy="91" r="7"/>
           </g>
         </g>
       </g>
@@ -2949,20 +2947,25 @@ document.addEventListener('DOMContentLoaded', function(){
     <defs>
       <!-- The same display-only treatment as the hero's cows (see there):
            the picture's white backdrop made see-through and its pale rim
-           trimmed, and a stray grey corner mark cropped. Defined here too,
-           because the veil also serves pages that have no hero. -->
+           trimmed. Defined here too, because the veil also serves pages that
+           have no hero. -->
       <filter id="plCowKey" x="0" y="0" width="1" height="1" color-interpolation-filters="sRGB">
         <feColorMatrix in="SourceGraphic" type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  -14 -14 -14 0 39.2" result="key"/>
         <feMorphology in="key" operator="erode" radius="1.1" result="trim"/>
         <feComposite in="SourceGraphic" in2="trim" operator="in"/>
       </filter>
       <!-- The picture is shown in two pieces so the head can graze while the
-           legs stay planted: the body (everything but the head and neck,
-           and without the grey corner mark), and the head and neck on their
-           own, overlapping the body a little so no gap opens as it dips.
-           In the picture's own coordinates, where the cow faces left. -->
+           legs stay planted: the body (everything but the head and neck) and
+           the head and neck on their own, overlapping the body a little so no
+           gap opens as it dips. In the picture's own coordinates, where the
+           cow faces left.
+
+           The bottom-left notch these clips used to carry is gone: it cropped
+           a grey mark in the old picture, and the one it was hiding does not
+           exist in cow-gir.jpg - measured, not assumed. Left in, it would
+           have taken a bite out of the near foreleg. -->
       <clipPath id="plBodyClip" clipPathUnits="objectBoundingBox">
-        <polygon points="0.45,0 1,0 1,1 0.08,1 0.08,0.92 0,0.92 0,0.58 0.27,0.58 0.38,0.45 0.45,0.21"/>
+        <polygon points="0.45,0 1,0 1,1 0,1 0,0.58 0.27,0.58 0.38,0.45 0.45,0.21"/>
       </clipPath>
       <clipPath id="plHeadClip" clipPathUnits="objectBoundingBox">
         <polygon points="0,0 0.47,0 0.47,0.2 0.41,0.45 0.31,0.63 0,0.63"/>
@@ -2972,9 +2975,9 @@ document.addEventListener('DOMContentLoaded', function(){
     <!-- Facing the grass on the right. The body stands still; the head
          and neck dip to the grass with the same animation the drawn cow's
          head had (plGraze). -->
-    <image href="/assets/cow.jpeg" x="20.0" y="-15.0" width="210.0" height="172.1" transform="matrix(-1 0 0 1 250.0 0)" preserveAspectRatio="xMidYMid meet" filter="url(#plCowKey)" clip-path="url(#plBodyClip)"/>
+    <image href="/assets/cow-gir.jpg" x="20.0" y="-15.0" width="210.0" height="172.1" transform="matrix(-1 0 0 1 250.0 0)" preserveAspectRatio="xMidYMid meet" filter="url(#plCowKey)" clip-path="url(#plBodyClip)"/>
     <g class="pl-head">
-      <image href="/assets/cow.jpeg" x="20.0" y="-15.0" width="210.0" height="172.1" transform="matrix(-1 0 0 1 250.0 0)" preserveAspectRatio="xMidYMid meet" filter="url(#plCowKey)" clip-path="url(#plHeadClip)"/>
+      <image href="/assets/cow-gir.jpg" x="20.0" y="-15.0" width="210.0" height="172.1" transform="matrix(-1 0 0 1 250.0 0)" preserveAspectRatio="xMidYMid meet" filter="url(#plCowKey)" clip-path="url(#plHeadClip)"/>
     </g>
     <g class="zg zg-a">
       <path d="M212 141 c4 -11 3 -18 1 -23 M212 141 c-4 -10 -5 -15 -8 -19 M212 141 c8 -10 11 -15 13 -19"/>
