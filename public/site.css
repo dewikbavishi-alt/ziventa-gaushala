@@ -602,6 +602,24 @@ img[data-blur="loaded"]{filter:blur(0);transform:scale(1);}
 .cell-bl img{left:0;top:-104%;transform-origin:25% 75%;}
 .cell-br img{left:-104%;top:-104%;transform-origin:75% 75%;}
 
+/* A cow with her OWN photograph rather than a quadrant of the shared one.
+ *
+ * Everything above scales the image to 204% and slides it so one quarter
+ * shows; this undoes all of it so the whole frame is used. Declared after
+ * those rules on purpose - `.cell img` and `.cell-full img` have identical
+ * specificity, so order is what decides.
+ *
+ * 20% horizontally, not centred. The card is a 3:4 portrait and the photo a
+ * 4:3 landscape, so cover keeps the full height and crops 44% of the width.
+ * Centred, that cut through her muzzle; from 20% her head is whole, at the
+ * cost of a sliver of the cow beside her - which is what a shed looks like.
+ * The open card is 5:4, near enough the photo's own shape that almost
+ * nothing is cropped there. */
+.cell-full img{
+  position:absolute;left:0;top:0;width:100%;height:100%;
+  object-fit:cover;object-position:20% 50%;
+}
+
 /* Cards. Opening a cow happens IN the layout: its column widens, the round
    photo grows into a large soft-square one, the details appear beneath, and
    the other three narrow beside it. Nothing floats over the page, so nothing
