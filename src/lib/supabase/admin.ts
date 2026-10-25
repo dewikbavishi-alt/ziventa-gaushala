@@ -61,3 +61,50 @@ export async function accountExists(email: string): Promise<boolean> {
   const wanted = email.toLowerCase();
   return (body.users ?? []).some((u) => u.email?.toLowerCase() === wanted);
 }
+
+/**
+ * The same question for a phone number, which the admin `filter` does NOT
+ * search.
+ *
+ * `filter` matches on email only - pass it a number and it returns nothing, so
+ * every number would look unregistered and phone sign-in would create an
+ * account for each typo. This pages through users and compares the phone field
+ * instead.
+ *
+ * Linear in the size of the user table, which is fine at a few thousand and
+ * wrong at a million. If this shop ever outgrows it, keep a phone column on
+ * Customer and look it up there; Supabase has no indexed phone lookup on the
+ * admin API to replace this with.
+ *
+ * @param e164 must already be normalised - see src/lib/phone.ts.
+ */
+export async function accountExistsByPhone(e164: string): Promise<boolean> {
+  const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  const key = process.env.SUPABASE_SERVICE_ROLE_KEY;
+  if (!url || !key) throw new Error('Supabase admin is not configured');
+
+  const wanted = e164.replace(/\D/g, '');
+  const perPage = 200;
+  // A ceiling rather than "until empty": a bug in the paging condition would
+  // otherwise spin here on every sign-in attempt.
+  const maxPages = 25;
+
+  for (let page = 1; page <= maxPages; page++) {
+    const res = await fetch(`${url}/auth/v1/admin/users?page=${page}&per_page=${perPage}`, {
+      headers: { apikey: key, Authorization: `Bearer ${key}` },
+      cache: 'no-store',
+    });
+    if (!res.ok) throw new Error(`Admin user lookup failed: ${res.status}`);
+
+    const body = (await res.json()) as { users?: { phone?: string | null }[] };
+    const users = body.users ?? [];
+    if (users.length === 0) return false;
+
+    // Supabase stores the number without a plus, so compare digits only.
+    if (users.some((u) => u.phone && u.phone.replace(/\D/g, '') === wanted)) return true;
+    if (users.length < perPage) return false;
+  }
+
+  console.warn('[auth-sms] phone lookup hit the page ceiling; treating as not found');
+  return false;
+}

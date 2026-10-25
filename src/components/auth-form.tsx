@@ -4,6 +4,7 @@ import { useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { createClient } from '@/lib/supabase/client';
+import { toE164 } from '@/lib/phone';
 
 type Mode = 'email' | 'phone' | 'password';
 
@@ -235,22 +236,51 @@ export function AuthForm({
     router.refresh();
   }
 
-  /** Phone step 1: ask Supabase to text a 6-digit code. */
+  /**
+   * Phone step 1: ask OUR endpoint to text a code.
+   *
+   * It used to call supabase.auth.signInWithOtp from here. Two reasons it
+   * moved: `shouldCreateUser` was being decided in client code, so the
+   * sign-in path could be told to create accounts - which the email route has
+   * refused to do since two mistyped addresses turned into real accounts - and
+   * nothing counted the sends, which on a channel billed per message is an
+   * uncapped bill.
+   *
+   * The endpoint answers the same way whatever happens - sent, unknown number,
+   * refused - because whether a number has an account here is private. So this
+   * moves to the code step either way, exactly as the email flow does.
+   */
   async function sendCode(e: React.FormEvent) {
     e.preventDefault();
     setBusy(true);
     setMessage(null);
-    const { error } = await supabase.auth.signInWithOtp({
-      phone: toE164(phone),
-      options: { shouldCreateUser: isSignup },
-    });
-    setBusy(false);
-    if (error) {
-      setMessage({ kind: 'error', text: error.message });
-      return;
+
+    try {
+      const res = await fetch('/api/auth/send-sms', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ phone: phone.trim(), intent }),
+      });
+      const data = await res.json().catch(() => ({}));
+
+      // 409 is the one case answered specifically: signing up with a number
+      // that already has an account.
+      if (res.status === 409) {
+        setMessage({ kind: 'error', text: data.error ?? 'An account already exists for this number.' });
+        return;
+      }
+      if (!res.ok) {
+        setMessage({ kind: 'error', text: data.error ?? 'We could not send a code just now.' });
+        return;
+      }
+
+      setCodeSent(true);
+      setMessage({ kind: 'ok', text: `We sent a code to ${toE164(phone)}.` });
+    } catch {
+      setMessage({ kind: 'error', text: 'We could not reach our server. Please check your connection.' });
+    } finally {
+      setBusy(false);
     }
-    setCodeSent(true);
-    setMessage({ kind: 'ok', text: `We sent a 6-digit code to ${toE164(phone)}.` });
   }
 
   /** Phone step 2: check the code and sign in. */
@@ -631,11 +661,3 @@ export function AuthForm({
   );
 }
 
-/** Supabase needs E.164 (+919876543210). Assume India if no country code given. */
-function toE164(raw: string): string {
-  const digits = raw.replace(/\D/g, '');
-  if (raw.trim().startsWith('+')) return `+${digits}`;
-  if (digits.length === 10) return `+91${digits}`;
-  if (digits.length === 12 && digits.startsWith('91')) return `+${digits}`;
-  return `+${digits}`;
-}
