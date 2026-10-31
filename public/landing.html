@@ -296,16 +296,12 @@ Color: warm cream ground, deep gaushala-green = trust/tradition, hand-ghee gold 
         <filter id="zgFar" x="-2%" y="-20%" width="104%" height="140%">
           <feGaussianBlur stdDeviation="1.4"/>
         </filter>
-        <!-- Shows the cow picture without its white backdrop. The file itself
-             is untouched: at display time, near-white pixels become
-             see-through, and then the outline is pulled in by about a pixel,
-             because the picture's edge pixels are half white and would
-             otherwise leave a pale rim around every cow. -->
-        <filter id="zgCowKey" x="0" y="0" width="1" height="1" color-interpolation-filters="sRGB">
-          <feColorMatrix in="SourceGraphic" type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  -14 -14 -14 0 39.2" result="key"/>
-          <feMorphology in="key" operator="erode" radius="1.1" result="trim"/>
-          <feComposite in="SourceGraphic" in2="trim" operator="in"/>
-        </filter>
+        <!-- The cows are cow-gir-cut.webp: cow-gir.jpg with its white backdrop
+             already cut away (scripts/cut-cow.py). This used to be done here
+             with a display-time filter that also pulled the outline in by a
+             pixel to hide the pale rim - which shaved the thin horns down to
+             stubs on the smaller cows. The cut-out un-mixes the white from
+             the edge pixels instead, so there is no rim and nothing to trim. -->
       </defs>
 
       <rect class="zf-sky" x="0" y="-420" width="1200" height="600"/>
@@ -374,28 +370,28 @@ Color: warm cream ground, deep gaushala-green = trust/tradition, hand-ghee gold 
       <g transform="translate(112,168) scale(0.62)">
         <ellipse class="zc-shadow" fill="url(#zgShadow)" cx="104" cy="104" rx="96" ry="9"/>
         <g class="zc-pic zc-pic-a">
-          <image href="/assets/cow-gir.jpg" x="-1.0" y="-50.0" width="210" transform="matrix(-1 0 0 1 208.0 0)" height="172.1" preserveAspectRatio="xMidYMid meet" filter="url(#zgCowKey)"/>
+          <image href="/assets/cow-gir-cut.webp" x="-1.0" y="-50.0" width="210" transform="matrix(-1 0 0 1 208.0 0)" height="172.1" preserveAspectRatio="xMidYMid meet"/>
         </g>
       </g>
 
       <g transform="translate(600,152) scale(0.72)">
         <ellipse class="zc-shadow" fill="url(#zgShadow)" cx="104" cy="136" rx="96" ry="9"/>
         <g class="zc-pic zc-pic-b">
-          <image href="/assets/cow-gir.jpg" x="-18.5" y="-40.7" width="245" height="200.8" preserveAspectRatio="xMidYMid meet" filter="url(#zgCowKey)"/>
+          <image href="/assets/cow-gir-cut.webp" x="-18.5" y="-40.7" width="245" height="200.8" preserveAspectRatio="xMidYMid meet"/>
         </g>
       </g>
 
       <g transform="translate(930,178) scale(0.6)">
         <ellipse class="zc-shadow" fill="url(#zgShadow)" cx="104" cy="136" rx="96" ry="9"/>
         <g class="zc-pic zc-pic-c">
-          <image href="/assets/cow-gir.jpg" x="-18.5" y="-40.7" width="245" transform="matrix(-1 0 0 1 208.0 0)" height="200.8" preserveAspectRatio="xMidYMid meet" filter="url(#zgCowKey)"/>
+          <image href="/assets/cow-gir-cut.webp" x="-18.5" y="-40.7" width="245" transform="matrix(-1 0 0 1 208.0 0)" height="200.8" preserveAspectRatio="xMidYMid meet"/>
         </g>
       </g>
 
       <g transform="translate(268,212)">
         <ellipse class="zc-shadow" fill="url(#zgShadow)" cx="39" cy="126" rx="92" ry="9"/>
         <g class="zc-pic zc-pic-d">
-          <image href="/assets/cow-gir.jpg" x="-78.5" y="-45.4" width="235" height="192.6" preserveAspectRatio="xMidYMid meet" filter="url(#zgCowKey)"/>
+          <image href="/assets/cow-gir-cut.webp" x="-78.5" y="-45.4" width="235" height="192.6" preserveAspectRatio="xMidYMid meet"/>
         </g>
         <!-- Positions here are taken from the scene as it actually renders,
              measured off a magnified capture, not from sampling the picture
@@ -2935,15 +2931,6 @@ document.addEventListener('DOMContentLoaded', function(){
     <circle class="pl-sun" cx="125" cy="82" r="78"/>
     <path class="pl-ground" d="M-12 140 H262"/>
     <defs>
-      <!-- The same display-only treatment as the hero's cows (see there):
-           the picture's white backdrop made see-through and its pale rim
-           trimmed. Defined here too, because the veil also serves pages that
-           have no hero. -->
-      <filter id="plCowKey" x="0" y="0" width="1" height="1" color-interpolation-filters="sRGB">
-        <feColorMatrix in="SourceGraphic" type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  -14 -14 -14 0 39.2" result="key"/>
-        <feMorphology in="key" operator="erode" radius="1.1" result="trim"/>
-        <feComposite in="SourceGraphic" in2="trim" operator="in"/>
-      </filter>
       <!-- The picture is shown in two pieces so the head can graze while the
            legs stay planted: the body (everything but the head and neck) and
            the head and neck on their own, overlapping the body a little so no
@@ -2965,9 +2952,9 @@ document.addEventListener('DOMContentLoaded', function(){
     <!-- Facing the grass on the right. The body stands still; the head
          and neck dip to the grass with the same animation the drawn cow's
          head had (plGraze). -->
-    <image href="/assets/cow-gir.jpg" x="20.0" y="-15.0" width="210.0" height="172.1" transform="matrix(-1 0 0 1 250.0 0)" preserveAspectRatio="xMidYMid meet" filter="url(#plCowKey)" clip-path="url(#plBodyClip)"/>
+    <image href="/assets/cow-gir-cut.webp" x="20.0" y="-15.0" width="210.0" height="172.1" transform="matrix(-1 0 0 1 250.0 0)" preserveAspectRatio="xMidYMid meet" clip-path="url(#plBodyClip)"/>
     <g class="pl-head">
-      <image href="/assets/cow-gir.jpg" x="20.0" y="-15.0" width="210.0" height="172.1" transform="matrix(-1 0 0 1 250.0 0)" preserveAspectRatio="xMidYMid meet" filter="url(#plCowKey)" clip-path="url(#plHeadClip)"/>
+      <image href="/assets/cow-gir-cut.webp" x="20.0" y="-15.0" width="210.0" height="172.1" transform="matrix(-1 0 0 1 250.0 0)" preserveAspectRatio="xMidYMid meet" clip-path="url(#plHeadClip)"/>
     </g>
     <g class="zg zg-a">
       <path d="M212 141 c4 -11 3 -18 1 -23 M212 141 c-4 -10 -5 -15 -8 -19 M212 141 c8 -10 11 -15 13 -19"/>

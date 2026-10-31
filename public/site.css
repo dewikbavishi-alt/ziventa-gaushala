@@ -43,6 +43,12 @@
    are position:fixed. What was scrolling into view was empty space. */
 html,body{overflow-x:hidden;}
 html{scroll-behavior:smooth;}
+/* #top is the hero, which sits below the trust strip, so landing on
+   /#top (the logo link puts it in the address bar, and browsers then offer
+   it from history) scrolled the strip away and parked the hero's logo under
+   the sticky header. A margin taller than anything above it makes the
+   browser clamp to the true top of the page instead. */
+#top{scroll-margin-top:100vh;}
 @supports (overflow-x:clip){
   html,body{overflow-x:clip;}
 }
