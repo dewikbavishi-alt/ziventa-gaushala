@@ -589,7 +589,7 @@ Color: warm cream ground, deep gaushala-green = trust/tradition, hand-ghee gold 
   </div>
   <!--
     Each cow opens IN the layout rather than over it: the round photo grows
-    into a large soft-square one with the details beneath, the other three
+    into a large soft-square one with the details beneath, the others
     narrow to make room, and the section's height follows - so nothing is
     ever covered. GSAP Flip animates the change (script in the shell); the
     open state itself is plain CSS, so it still works without the script's
@@ -627,6 +627,15 @@ Color: warm cream ground, deep gaushala-green = trust/tradition, hand-ghee gold 
       <div class="herd-body">
         <div class="herd-avatar"><span class="cell cell-full" style="--focus:50%"><img src="assets/cow-latika.jpg" alt="Latika, a young Gir calf walking across the yard at Ziventa Nutriments" loading="lazy"></span></div>
         <h3>Latika</h3>
+        <div class="herd-more">
+          <ul class="herd-facts"><li>Gir breed</li><li>Ziventa Nutriments®</li></ul>
+        </div>
+      </div>
+    </div>
+    <div class="herd-card reveal" tabindex="0" role="button" aria-expanded="false" data-i="4">
+      <div class="herd-body">
+        <div class="herd-avatar"><span class="cell cell-full" style="--focus:50%"><img src="assets/cow-nithya.jpg" alt="Nithya, a white Gir cow at Ziventa Nutriments, with an egret beside her in the shed" loading="lazy"></span></div>
+        <h3>Nithya</h3>
         <div class="herd-more">
           <ul class="herd-facts"><li>Gir breed</li><li>Ziventa Nutriments®</li></ul>
         </div>
@@ -2770,8 +2779,8 @@ document.addEventListener('DOMContentLoaded', function(){
       reply:'<p>Our range. The first price is what anyone pays, the second is the Gir Gold Club member rate:</p><ul><li>Bilona Ghee 500ml — ₹3,700 / ₹2,775 (most loved)</li><li>Bilona Ghee 1000ml — ₹6,999 / ₹5,250 (best value)</li></ul><p>Every jar is made in-house at the gaushala, in small batches.</p><a class="zv-cta" href="#shop" data-zv-nav="1">Open the shop <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14" key="1ays0h"/><path d="m12 5 7 7-7 7" key="xquz4c"/></svg></a>'
     },
     {
-      test:/\b(cows?|herd|gir cow|kamdhenu|radha|ganga|nandini|cattle|animal)\b/i,
-      reply:'<p>Every jar traces back to our small, well-cared-for herd of Gir cows — each one named and looked after individually: <strong>Lata</strong>, <strong>Gauri</strong>, <strong>Bagli</strong> and <strong>Latika</strong>.</p><a class="zv-cta" href="#herd" data-zv-nav="1">Meet the herd <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14" key="1ays0h"/><path d="m12 5 7 7-7 7" key="xquz4c"/></svg></a>'
+      test:/\b(cows?|herd|gir cow|kamdhenu|radha|ganga|nandini|nithya|cattle|animal)\b/i,
+      reply:'<p>Every jar traces back to our small, well-cared-for herd of Gir cows — each one named and looked after individually: <strong>Lata</strong>, <strong>Gauri</strong>, <strong>Bagli</strong>, <strong>Latika</strong> and <strong>Nithya</strong>.</p><a class="zv-cta" href="#herd" data-zv-nav="1">Meet the herd <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14" key="1ays0h"/><path d="m12 5 7 7-7 7" key="xquz4c"/></svg></a>'
     },
     {
       test:/\b(join|sign up|pre[- ]?register|apply|waiting list|seat|how do i become)\b/i,

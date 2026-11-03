@@ -397,7 +397,7 @@ path: /
   </div>
   <!--
     Each cow opens IN the layout rather than over it: the round photo grows
-    into a large soft-square one with the details beneath, the other three
+    into a large soft-square one with the details beneath, the others
     narrow to make room, and the section's height follows - so nothing is
     ever covered. GSAP Flip animates the change (script in the shell); the
     open state itself is plain CSS, so it still works without the script's
@@ -435,6 +435,15 @@ path: /
       <div class="herd-body">
         <div class="herd-avatar"><span class="cell cell-full" style="--focus:50%"><img src="assets/cow-latika.jpg" alt="Latika, a young Gir calf walking across the yard at Ziventa Nutriments" loading="lazy"></span></div>
         <h3>Latika</h3>
+        <div class="herd-more">
+          <ul class="herd-facts"><li>Gir breed</li><li>Ziventa Nutriments®</li></ul>
+        </div>
+      </div>
+    </div>
+    <div class="herd-card reveal" tabindex="0" role="button" aria-expanded="false" data-i="4">
+      <div class="herd-body">
+        <div class="herd-avatar"><span class="cell cell-full" style="--focus:50%"><img src="assets/cow-nithya.jpg" alt="Nithya, a white Gir cow at Ziventa Nutriments, with an egret beside her in the shed" loading="lazy"></span></div>
+        <h3>Nithya</h3>
         <div class="herd-more">
           <ul class="herd-facts"><li>Gir breed</li><li>Ziventa Nutriments®</li></ul>
         </div>

@@ -599,7 +599,7 @@ img[data-blur="loaded"]{filter:blur(0);transform:scale(1);}
 
 /* herd */
 .herd{padding:2.7rem 1.5rem;background:var(--green-tint);border-top:1px solid var(--border);}
-.herd-grid{max-width:980px;margin:0 auto;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:1.5rem;text-align:center;}
+.herd-grid{max-width:980px;margin:0 auto;display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:1.5rem;text-align:center;}
 /* 2x2 grid quadrant cropping */
 .cell{display:block;position:absolute;overflow:hidden;}
 .cell img{position:absolute;width:204%;height:204%;object-fit:fill;max-width:none;}
@@ -635,7 +635,7 @@ img[data-blur="loaded"]{filter:blur(0);transform:scale(1);}
 
 /* Cards. Opening a cow happens IN the layout: its column widens, the round
    photo grows into a large soft-square one, the details appear beneath, and
-   the other three narrow beside it. Nothing floats over the page, so nothing
+   the others narrow beside it. Nothing floats over the page, so nothing
    is ever covered - the section simply grows and the content below moves
    down with it. The script animates the change with GSAP Flip; everything
    here is the resting state at either end, so without the script's animation
@@ -664,10 +664,11 @@ img[data-blur="loaded"]{filter:blur(0);transform:scale(1);}
 }
 
 /* Open. The widened column comes from the grid, one rule per position. */
-.herd-grid[data-open="0"]{grid-template-columns:minmax(0,2.4fr) repeat(3,minmax(0,1fr));}
-.herd-grid[data-open="1"]{grid-template-columns:minmax(0,1fr) minmax(0,2.4fr) repeat(2,minmax(0,1fr));}
-.herd-grid[data-open="2"]{grid-template-columns:repeat(2,minmax(0,1fr)) minmax(0,2.4fr) minmax(0,1fr);}
-.herd-grid[data-open="3"]{grid-template-columns:repeat(3,minmax(0,1fr)) minmax(0,2.4fr);}
+.herd-grid[data-open="0"]{grid-template-columns:minmax(0,2.4fr) repeat(4,minmax(0,1fr));}
+.herd-grid[data-open="1"]{grid-template-columns:minmax(0,1fr) minmax(0,2.4fr) repeat(3,minmax(0,1fr));}
+.herd-grid[data-open="2"]{grid-template-columns:repeat(2,minmax(0,1fr)) minmax(0,2.4fr) repeat(2,minmax(0,1fr));}
+.herd-grid[data-open="3"]{grid-template-columns:repeat(3,minmax(0,1fr)) minmax(0,2.4fr) minmax(0,1fr);}
+.herd-grid[data-open="4"]{grid-template-columns:repeat(4,minmax(0,1fr)) minmax(0,2.4fr);}
 .herd-card.is-open{cursor:default;}
 .herd-card.is-open .herd-body{align-items:flex-start;text-align:left;}
 .herd-card.is-open .herd-avatar{
@@ -700,6 +701,9 @@ img[data-blur="loaded"]{filter:blur(0);transform:scale(1);}
 @media (max-width:900px){
   .herd-grid[data-open]{grid-template-columns:repeat(2,minmax(0,1fr));}
   .herd-card.is-open{grid-column:1 / -1;}
+  /* Five cows in two columns leave the last alone on her row - centred
+     there rather than stranded in the left column. */
+  .herd-grid:not([data-open]) .herd-card:last-child:nth-child(odd){grid-column:1 / -1;}
   .herd-card.is-open .herd-avatar{aspect-ratio:4/3;}
   /* The cell follows the avatar here too, or the second crop comes back on
      exactly the narrow screens where the card is largest relative to it. */
