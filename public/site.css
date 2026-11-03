@@ -708,10 +708,16 @@ img[data-blur="loaded"]{filter:blur(0);transform:scale(1);}
 
 /* gallery */
 .gallery{padding:2.7rem 1.5rem;background:var(--card-bg);border-top:1px solid var(--border);}
+/* Every frame takes its photograph's own shape - a fixed height, the width
+   following from the width/height attributes - so nothing is cropped: no
+   object-fit:cover trimming the sides, no zoom pushing edges out of frame.
+   The rows wrap and centre rather than sit in a two-column grid, because a
+   portrait and a landscape photo at one height are different widths. */
 .gallery-grid{
-  max-width:980px;margin:0 auto;display:grid;grid-template-columns:repeat(2,1fr);gap:1.2rem;
+  max-width:980px;margin:0 auto;display:flex;flex-wrap:wrap;justify-content:center;gap:1.2rem;
 }
 .gallery-item{
+  flex:0 0 auto;
   margin:0;position:relative;overflow:hidden;border-radius:var(--radius);
   box-shadow:var(--shadow);border:1px solid var(--border);background:var(--cream-alt);
 }
@@ -723,11 +729,7 @@ img[data-blur="loaded"]{filter:blur(0);transform:scale(1);}
 .gallery-grid .gallery-item:nth-child(3){animation-delay:.16s;}
 .gallery-grid .gallery-item:nth-child(4){animation-delay:.24s;}
 @keyframes galleryWipe{from{clip-path:inset(0 100% 0 0);}to{clip-path:inset(0 0 0 0);}}
-.gallery-item img{
-  width:100%;height:185px;object-fit:cover;display:block;
-  transition:transform .6s cubic-bezier(.2,.7,.3,1);
-}
-.gallery-item:hover img{transform:scale(1.07);}
+.gallery-item img{width:auto;height:260px;max-width:100%;display:block;}
 .gallery-item figcaption{
   position:absolute;left:0;right:0;bottom:0;padding:1.6rem 1.2rem .95rem;
   background:linear-gradient(180deg, transparent, rgba(36,56,45,.88));
@@ -741,10 +743,9 @@ img[data-blur="loaded"]{filter:blur(0);transform:scale(1);}
 /* Sliding gallery, as in the design preview: the section is made tall, its
    contents pin under the header, and the vertical scroll through that height
    moves the row of photos sideways (the script sets the height and the
-   transform). Each photo also drifts a little inside its frame (--ix), which
-   is what makes the row feel like it is passing the camera rather than
-   being dragged. Only on a wide screen with motion allowed - the script adds
-   .gallery-slide, so without it this is all inert. */
+   transform). The photos no longer drift inside an oversized frame - that
+   zoom cut their edges off. Only on a wide screen with motion allowed - the
+   script adds .gallery-slide, so without it this is all inert. */
 .gallery.gallery-slide{height:var(--gh,auto);padding:0;}
 .gallery-slide .gallery-pin{
   position:sticky;top:0;height:100vh;overflow:hidden;
@@ -759,17 +760,12 @@ img[data-blur="loaded"]{filter:blur(0);transform:scale(1);}
   transform-origin:0 50%;transform:scaleX(var(--gp,0));
 }
 .gallery-slide .gallery-grid{
-  display:flex;align-items:flex-start;gap:1.75rem;max-width:none;margin:0;
+  display:flex;flex-wrap:nowrap;align-items:flex-start;gap:1.75rem;max-width:none;margin:0;
   padding-right:max(1.5rem,calc((100vw - 1060px)/2));will-change:translate;
 }
-.gallery-slide .gallery-item{flex:0 0 auto;width:min(36vw,420px);}
 /* Every other photo sits lower, so the row reads as a strip of prints. */
 .gallery-slide .gallery-item:nth-child(even){margin-top:60px;}
-.gallery-slide .gallery-item img{
-  height:min(56vh,480px);transform:translateX(var(--ix,0px)) scale(1.15);
-  transition:none;
-}
-.gallery-slide .gallery-item:hover img{transform:translateX(var(--ix,0px)) scale(1.2);transition:transform .6s cubic-bezier(.2,.7,.3,1);}
+.gallery-slide .gallery-item img{height:min(52vh,440px);max-width:none;}
 
 /* process */
 .process{padding:2.7rem 1.5rem;background:var(--card-bg);position:relative;overflow:hidden;}
@@ -1683,13 +1679,15 @@ body.zv-member .price-hint-member{display:block;text-decoration:line-through;}
      rather than four thumbnails. The row runs edge to edge, so the next
      photo peeking in shows there is more. */
   .gallery-grid{
-    display:flex;gap:.8rem;overflow-x:auto;scroll-snap-type:x mandatory;
+    display:flex;flex-wrap:nowrap;justify-content:flex-start;gap:.8rem;overflow-x:auto;scroll-snap-type:x mandatory;
     margin:0 -1.5rem;padding:0 1.5rem .4rem;scrollbar-width:none;
     -webkit-overflow-scrolling:touch;
   }
   .gallery-grid::-webkit-scrollbar{display:none;}
-  .gallery-item{flex:0 0 80vw;scroll-snap-align:center;}
-  .gallery-item img{height:min(62vh,380px);}
+  /* One height for all four, set so a landscape photo is 84vw wide - the
+     portrait one is then narrower, but whole. */
+  .gallery-item{scroll-snap-align:center;}
+  .gallery-item img{height:56vw;max-width:none;}
   .gallery-item figcaption{font-size:.82rem;padding:1.4rem .9rem .75rem;}
   .footer-inner{grid-template-columns:1fr;}
 

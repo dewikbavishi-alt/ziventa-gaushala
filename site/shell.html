@@ -1276,7 +1276,6 @@ document.addEventListener('DOMContentLoaded', function(){
       var mid=window.innerWidth/2, best=0, bestD=1e9;
       galleryFigs.forEach(function(fig,i){
         var r=fig.getBoundingClientRect(), c=r.left+r.width/2-mid;
-        fig.style.setProperty('--ix',(c*-0.06).toFixed(1)+'px');
         // Wipe each photo in as it slides on. The gallery observer above
         // cannot do it here: a photo still fully clipped by its wipe counts as
         // invisible to IntersectionObserver, and sliding sideways inside the
